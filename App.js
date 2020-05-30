@@ -5,8 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 /**** Views ****/
-import HomeGuest from './Views/Home/HomeGuest';
-import SignIn from './Views/SignSteps/SignIn';
+import HomeGuest from './Project/Views/Home/HomeGuest';
+import SignIn from './Project/Views/SignSteps/SignIn';
 
 
 const Stack = createStackNavigator();

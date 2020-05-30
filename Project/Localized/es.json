@@ -1,0 +1,14 @@
+{
+  "components": {
+    "loginActions": {
+      "signIn": "Inicia sesión",
+      "register": "Regístrate"
+    },
+    "fullLogo": {
+      "logoTitle": "Cuida de otros"
+    }
+  },
+  "views": {
+
+  }
+}
