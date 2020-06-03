@@ -1,3 +1,14 @@
 {
-  
+  "components": {
+    "loginActions": {
+      "signIn": "Sign In",
+      "register": "Register"
+    },
+    "fullLogo": {
+      "logoTitle": "Take care of others"
+    }
+  },
+  "views": {
+
+  }
 }
