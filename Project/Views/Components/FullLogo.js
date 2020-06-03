@@ -1,16 +1,26 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 
+import { Layout } from '../../Theme/Layout';
+
 const styles = StyleSheet.create({
-  container: {
+  logo: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     margin: 'auto'
   },
+  figureBig: {
+    flex: 0.95
+  },
+  figureMedium: {
+    flex: 0.5
+  },
+  figureLittle: {
+    flex: 0.45
+  },
   image: {
-    width: '70%',
-    height: '8%'
+    flex: 1
   },
   text: {
     marginTop: 20,
@@ -21,12 +31,24 @@ const styles = StyleSheet.create({
 });
 
 
-export default function FullLogo() {
-  const uriLogo = require('../../Assets/care-me-logo.png');
+export default function FullLogo(props) {
+  const mode = props.mode || 'medium';
+  const imgStyles = [
+    styles.image,
+    mode === 'little' && styles.figureLittle,
+    mode === 'medium' && styles.figureMedium,
+    mode === 'big'    && styles.figureBig
+  ];
+  const uriLogo = require('../../Assets/careme-full-logo.png');
+
   return (
-    <View style={styles.container}>
-      <Image source={uriLogo} style={styles.image}></Image>
-      <Text style={styles.text}>Cuida a otros</Text>
+    <View style={styles.logo}>
+      <View style={styles.figure}>
+        <Image source={uriLogo} resizeMode='contain' style={imgStyles}></Image>
+      </View>
+      {
+        props.displayLabel && <Text style={styles.text}>Cuida a otros</Text>
+      }
     </View>
   );
 }

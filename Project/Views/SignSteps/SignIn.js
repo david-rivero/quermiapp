@@ -32,7 +32,7 @@ export default function SignIn() {
   return (
     <View style={styles.container}>
        <ImageBackground source={image} style={styles.image} resizeMode='cover'>
-        <FullLogo style={styles.fullLogo}></FullLogo>
+        <FullLogo mode='medium' style={styles.fullLogo} displayLabel={true}></FullLogo>
         <LoginActions style={styles.loginActions}></LoginActions>
       </ImageBackground>
     </View>

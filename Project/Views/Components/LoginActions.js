@@ -28,59 +28,49 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function LoginActions(props) {
-  let view = null;
-  if (props.home) {
-    view = (
-      <View style={styles.container}>
-        <TouchableOpacity style={[styles.button, styles.buttonPrimary]}
-                          onPress={() => redirectToSignIn(props.navigation)}>
-          <Text style={styles.buttonText}>Inicia sesión</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.buttonSecoundary]} onPress={naiveActionClick}>
-          <Text style={styles.buttonText}>Regístrate</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  } else {
-    view = (
-      <View style={styles.container}>
-        <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={naiveActionClick}>
-          <Text style={styles.buttonText}>Inicia sesión</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={naiveActionClick}>
-          <Text style={styles.buttonLink}>¿No tienes una cuenta? Regístrate</Text>
-        </TouchableOpacity>
-      </View>
-    );
+export default class LoginActions extends React.Component {
+  constructor(props) {
+    super(props);
   }
-  return view;
-}
 
-/* Actions */
-async function signIn (){
-  try {
-    await GoogleSignin.hasPlayServices();
-    const userInfo = await GoogleSignin.signIn();
-    this.setState({ userInfo });
-  } catch (error) {
+  redirectToSignIn(navigation) {
+    navigation.navigate('SignIn');
+  }
+
+  redirectToSignUp(navigation) {
+    navigation.navigate('SignUp');
+  }
+
+  naiveActionClick() {
     
   }
-}
 
-async function getCurrentUserInfo () {
-  try {
-    const userInfo = await GoogleSignin.signInSilently();
-    this.setState({ userInfo });
-  } catch (error) {
-    
+  render() {
+    let view = null;
+    if (this.props.home) {
+      view = (
+        <View style={styles.container}>
+          <TouchableOpacity style={[styles.button, styles.buttonPrimary]}
+                            onPress={() => this.redirectToSignIn(this.props.navigation)}>
+            <Text style={styles.buttonText}>Inicia sesión</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.button, styles.buttonSecoundary]} onPress={() => this.redirectToSignUp(this.props.navigation)}>
+            <Text style={styles.buttonText}>Regístrate</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      view = (
+        <View style={styles.container}>
+          <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={this.naiveActionClick}>
+            <Text style={styles.buttonText}>Inicia sesión</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.redirectToSignUp(this.props.navigation)}>
+            <Text style={styles.buttonLink}>¿No tienes una cuenta? Regístrate</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return view;
   }
-}
-
-function redirectToSignIn(navigation) {
-  navigation.navigate('SignIn');
-}
-
-function naiveActionClick() {
-  
 }

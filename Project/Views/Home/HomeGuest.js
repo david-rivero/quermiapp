@@ -4,11 +4,9 @@ import { StyleSheet, View, ImageBackground } from 'react-native';
 import FullLogo from '../Components/FullLogo';
 import LoginActions from '../Components/LoginActions';
 
+import { Layout } from '../../Theme/Layout';
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center'
-  },
   image: {
     flex: 1,
     justifyContent: 'center',
@@ -31,9 +29,9 @@ export default function HomeGuest({ navigation }) {
   const image = require('../../Assets/fikri-rasyid-LeHEDlWT8zM-unsplash.jpg');
 
   return (
-    <View style={styles.container}>
+    <View style={Layout.container}>
        <ImageBackground source={image} style={styles.image} resizeMode='cover'>
-        <FullLogo style={styles.fullLogo}></FullLogo>
+        <FullLogo style={styles.fullLogo} mode='medium' displayLabel={true}></FullLogo>
         <LoginActions home={isHome} navigation={navigation} style={styles.loginActions}></LoginActions>
       </ImageBackground>
     </View>
