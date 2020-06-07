@@ -6,17 +6,18 @@ import { Layout } from '../../../../Theme/Layout';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center'
+    width: '100%'
   }
 });
 
-export default function SignUpUserPass(props) {
+export default function SignUpUserPass(_) {
   return (
-    <View style={styles.container}>
+    <View style={Layout.container}>
       <Text>Por último te pedimos</Text>
-      <TextInput placeholder="Tu email" style={Layout.textInput}></TextInput>
-      <TextInput placeholder="Tu contraseña" style={Layout.textInput}></TextInput>
+      <View style={styles.container}>
+        <TextInput placeholder="Tu email" style={Layout.textInput}></TextInput>
+        <TextInput placeholder="Tu contraseña" style={Layout.textInput}></TextInput>
+      </View>
     </View>
   );
 }

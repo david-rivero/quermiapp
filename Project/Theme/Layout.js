@@ -11,7 +11,6 @@ export const Layout = StyleSheet.create({
     width: '100%'
   },
   image: {
-    height: 'auto',
     width: '100%'
   },
   title: {

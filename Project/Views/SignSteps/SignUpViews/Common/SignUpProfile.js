@@ -28,11 +28,11 @@ export default class SignUpProfile extends React.Component {
       itemsOptions: [
         {
           label: 'Persona a cuidar',
-          value: 'personToCare'
+          value: 'PATIENT'
         },
         {
           label: 'Prestador de cuidados',
-          value: 'personCareProvider'
+          value: 'CARE_PROVIDER'
         }
       ],
       profileValue: null
@@ -43,6 +43,7 @@ export default class SignUpProfile extends React.Component {
     this.setState({
       profileValue: value
     });
+    this.props.onChangeProfileValue(value);
   }
 
   render() {

@@ -10,11 +10,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     justifyContent: 'flex-start'
   },
-  fullLogo: {
-    flex: 1,
-    width: '80%',
-    justifyContent: 'flex-start'
-  },
   viewCarousel: {
     flex: 2
   }
@@ -24,8 +19,8 @@ export default class SignUp extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <FullLogo mode='little' style={styles.fullLogo} />
-        <SignUpViewsCarousel style={styles.viewCarousel} />
+        <FullLogo mode='little' styles={styles.logo} />
+        <SignUpViewsCarousel navigation={this.props.navigation} style={styles.viewCarousel} />
       </View>
     );
   }

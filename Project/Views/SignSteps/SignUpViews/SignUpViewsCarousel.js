@@ -53,9 +53,14 @@ export default class SignUpCarousel extends React.Component {
   };
 
   updateCarouselIndex = () => {
-    this.setState({
-      indexActive: this.state.indexActive + 1
-    });
+    const isLatestPage = (this.state.indexActive === 7 && !this.state.isPatient) || (this.state.indexActive === 6 && this.state.isPatient);
+    if (isLatestPage) {
+      this.signToHome();
+    } else {
+      this.setState({
+        indexActive: this.state.indexActive + 1
+      });
+    }
   };
 
   setProfileStatus = profileStatus => {
@@ -64,13 +69,17 @@ export default class SignUpCarousel extends React.Component {
     });
   }
 
+  signToHome() {
+    this.props.navigation.navigate('HomeSignedIn');
+  }
+
   render() {
     const nextCaretLogo = require('../../../Assets/caret-right.png') 
     return (
       <View style={styles.container}>
         <View style={styles.container}>
           {
-            this.state.indexActive === 0 && <SignUpProfile style={styles.signUpView} />
+            this.state.indexActive === 0 && <SignUpProfile onChangeProfileValue={this.setProfileStatus} style={styles.signUpView} />
           }
           {
             this.state.indexActive === 1 && <SignUpName style={styles.signUpView} />
@@ -91,7 +100,7 @@ export default class SignUpCarousel extends React.Component {
             (this.state.indexActive === 6 && !this.state.isPatient) && <SignUpCareReferences style={styles.signUpView} />
           }
           {
-            (this.state.indexActive === 7 && !this.state.isPatient) || (this.state.indexActive === 6 && this.state.isPatient) &&
+            ((this.state.indexActive === 7 && !this.state.isPatient) || (this.state.indexActive === 6 && this.state.isPatient)) &&
             <SignUpUserPass style={styles.signUpView} />
           }
         </View>
@@ -102,12 +111,11 @@ export default class SignUpCarousel extends React.Component {
         }
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.buttonNext} onPress={() => this.updateCarouselIndex()}>
-            <Text>Next</Text>
+            <Text>Siguiente</Text>
             <Image source={nextCaretLogo} style={styles.nextCaretLogo}></Image>
           </TouchableOpacity>
         </View>
       </View>
     );
-    // Next >
   }
 }

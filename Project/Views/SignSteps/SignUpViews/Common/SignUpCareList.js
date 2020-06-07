@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 
 const styles = StyleSheet.create({
@@ -9,58 +9,82 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function SignUpCareList(props) {
-  const itemsOptions = [
-    {
-      label: 'Atención en el hogar',
-      status: false
-    },
-    {
-      label: 'Supermercado',
-      status: false
-    },
-    {
-      label: 'Paseo',
-      status: false
-    },
-    {
-      label: 'Trámites',
-      status: false
-    },
-    {
-      label: 'Farmacia',
-      status: false
-    },
-    {
-      label: 'Limpieza en el hogar',
-      status: false
-    },
-    {
-      label: 'Higiene',
-      status: false
-    },
-    {
-      label: 'Otros',
-      status: false
-    }
-  ];
-  const labelText = props.isPatient ? '¿Qué cuidados necesitas?' : '¿Qué cuidados ofreces?'
+export default class SignUpCareList extends React.Component {
+  state = {
+    itemsOptions: [
+      {
+        label: 'Atención en el hogar',
+        status: 'unchecked',
+        checked: false
+      },
+      {
+        label: 'Supermercado',
+        status: 'unchecked',
+        checked: false
+      },
+      {
+        label: 'Paseo',
+        status: 'unchecked',
+        checked: false
+      },
+      {
+        label: 'Trámites',
+        status: 'unchecked',
+        checked: false
+      },
+      {
+        label: 'Farmacia',
+        status: 'unchecked',
+        checked: false
+      },
+      {
+        label: 'Limpieza en el hogar',
+        status: 'unchecked',
+        checked: false
+      },
+      {
+        label: 'Higiene',
+        status: 'unchecked',
+        checked: false
+      },
+      {
+        label: 'Otros',
+        status: 'unchecked',
+        checked: false
+      }
+    ]
+  };
 
-  return (
-    <View style={styles.container}>
-      <Text>{labelText}</Text>
-      <View>
-        {
-          itemsOptions.map((item, index) => {
-            // onPress={() => { this.setState({ checked: !checked }); }}
-            return (
-              <Checkbox.Item label={item.label}
-                             status={item.status} 
-                             key={index} />
-            )
-          })
-        }
+  toggleCheck = (item, index) => {
+    const items = [...this.state.itemsOptions];
+    item.checked = !item.checked;
+    item.status = item.checked ? 'checked' : 'unchecked';
+    items[index] = item;
+
+    this.setState({
+      itemsOptions: items
+    })
+  }
+
+  render() {
+    const labelText = this.props.isPatient ? '¿Qué cuidados necesitas?' : '¿Qué cuidados ofreces?'
+  
+    return (
+      <View style={styles.container}>
+        <Text>{labelText}</Text>
+        <ScrollView>
+          {
+            this.state.itemsOptions.map((item, index) => {
+              return (
+                <Checkbox.Item label={item.label}
+                               onPress={() => { this.toggleCheck(item, index) }}
+                               status={item.status} 
+                               key={index} />
+              )
+            })
+          }
+        </ScrollView>
       </View>
-    </View>
-  );
+    );
+  }
 }

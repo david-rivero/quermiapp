@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { Colors } from '../../Theme/Colors';
 
 const styles = StyleSheet.create({
   button: {
@@ -15,16 +16,17 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline'
   },
   buttonText: {
-    color: '#ffffff',
     fontWeight: 'bold',
     textAlign: 'center',
     textTransform: 'uppercase'
   },
   buttonPrimary: {
-    backgroundColor: '#A67547'
+    backgroundColor: Colors.pink,
+    color: Colors.white
   },
   buttonSecoundary: {
-    backgroundColor: '#DBB18A'
+    backgroundColor: Colors.white,
+    color: Colors.black
   }
 });
 

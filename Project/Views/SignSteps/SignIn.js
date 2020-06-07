@@ -26,14 +26,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function SignIn() {
+export default function SignIn({ navigation }) {
   const image = require('../../Assets/fikri-rasyid-LeHEDlWT8zM-unsplash.jpg');
 
   return (
     <View style={styles.container}>
        <ImageBackground source={image} style={styles.image} resizeMode='cover'>
         <FullLogo mode='medium' style={styles.fullLogo} displayLabel={true}></FullLogo>
-        <LoginActions style={styles.loginActions}></LoginActions>
+        <LoginActions style={styles.loginActions} navigation={navigation}></LoginActions>
       </ImageBackground>
     </View>
   );
