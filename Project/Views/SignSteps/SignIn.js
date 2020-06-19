@@ -7,13 +7,8 @@ import LoginActions from '../Components/LoginActions';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
-  },
-  image: {
-    flex: 1,
     justifyContent: 'center',
-    padding: 15,
-    opacity: 0.75
+    padding: 12
   },
   fullLogo: {
     flex: 0.25
@@ -31,10 +26,8 @@ export default function SignIn({ navigation }) {
 
   return (
     <View style={styles.container}>
-       <ImageBackground source={image} style={styles.image} resizeMode='cover'>
-        <FullLogo mode='medium' style={styles.fullLogo} displayLabel={true}></FullLogo>
-        <LoginActions style={styles.loginActions} navigation={navigation}></LoginActions>
-      </ImageBackground>
+      <FullLogo mode='medium' style={styles.fullLogo} displayLabel={true}></FullLogo>
+      <LoginActions style={styles.loginActions} navigation={navigation}></LoginActions>
     </View>
   );
 }

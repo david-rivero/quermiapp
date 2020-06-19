@@ -7,24 +7,29 @@ const styles = StyleSheet.create({
   logo: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center'
+  },
+  figure: {
     justifyContent: 'center',
-    margin: 'auto'
+    alignItems: 'center',
+    width: '100%',
+    flex: 1
   },
   figureBig: {
-    flex: 0.95
+    width: 250
   },
   figureMedium: {
-    flex: 0.5
+    width: 180
   },
   figureLittle: {
-    flex: 0.45
+    width: 120
   },
   image: {
     flex: 1
   },
   text: {
     marginTop: 20,
-    color: 'white',
+    color: 'black',
     fontSize: 20,
     textAlign: 'center'
   }
@@ -42,7 +47,7 @@ export default function FullLogo(props) {
   const uriLogo = require('../../Assets/careme-full-logo.png');
 
   return (
-    <View style={styles.logo}>
+    <View style={[styles.logo, props.stylesContainer]}>
       <View style={styles.figure}>
         <Image source={uriLogo} resizeMode='contain' style={imgStyles}></Image>
       </View>

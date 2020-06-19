@@ -7,11 +7,10 @@ import LoginActions from '../Components/LoginActions';
 import { Layout } from '../../Theme/Layout';
 
 const styles = StyleSheet.create({
-  image: {
+  container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 15,
-    opacity: 0.75
+    padding: 12
   },
   fullLogo: {
     flex: 1
@@ -29,11 +28,9 @@ export default function HomeGuest({ navigation }) {
   const image = require('../../Assets/fikri-rasyid-LeHEDlWT8zM-unsplash.jpg');
 
   return (
-    <View style={Layout.container}>
-       <ImageBackground source={image} style={styles.image} resizeMode='cover'>
-        <FullLogo style={styles.fullLogo} mode='medium' displayLabel={true}></FullLogo>
-        <LoginActions home={isHome} navigation={navigation} style={styles.loginActions}></LoginActions>
-      </ImageBackground>
+    <View style={[Layout.container, styles.container]}>
+      <FullLogo style={styles.fullLogo} mode='medium' displayLabel={true}></FullLogo>
+      <LoginActions home={isHome} navigation={navigation} style={styles.loginActions}></LoginActions>
     </View>
   );
 }
