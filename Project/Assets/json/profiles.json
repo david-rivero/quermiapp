@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Fernando",
+    "isPremium": false,
+    "age": 22,
+    "rateQ": 4,
+    "gallery": [
+      {
+        "key": "feliciaVarzari"
+      }
+    ],
+    "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasasr el tiempo sobretodo jugando a las cartas con la gente que cuido.",
+    "services": [
+      "Paseo",
+      "Compras",
+      "Atención en el hogar",
+      "Cocina",
+      "Aseado"
+    ],
+    "experience": [
+      "2 años en el hogar de ancianos La Rosa",
+      "Voluntario en Rotaract",
+      "Cuidado de persona mayor Mario Fernández. Tel 099 052 129"
+    ],
+    "languages": [
+      "Español",
+      "Inglés",
+      "Portugués"
+    ],
+    "timeAvailability": "12:00 - 18:00"
+  },
+  {
+    "name": "Fernando",
+    "isPremium": false,
+    "age": 22,
+    "rateQ": 4,
+    "gallery": [
+      {
+        "key": "feliciaVarzari"
+      }
+    ],
+    "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasasr el tiempo sobretodo jugando a las cartas con la gente que cuido.",
+    "services": [
+      "Paseo",
+      "Compras",
+      "Atención en el hogar",
+      "Cocina",
+      "Aseado"
+    ],
+    "experience": [
+      "2 años en el hogar de ancianos La Rosa",
+      "Voluntario en Rotaract",
+      "Cuidado de persona mayor Mario Fernández. Tel 099 052 129"
+    ],
+    "languages": [
+      "Español",
+      "Inglés",
+      "Portugués"
+    ],
+    "timeAvailability": "12:00 - 18:00"
+  },
+  {
+    "name": "Fernando",
+    "isPremium": false,
+    "age": 22,
+    "rateQ": 4,
+    "gallery": [
+      {
+        "key": "feliciaVarzari"
+      }
+    ],
+    "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasasr el tiempo sobretodo jugando a las cartas con la gente que cuido.",
+    "services": [
+      "Paseo",
+      "Compras",
+      "Atención en el hogar",
+      "Cocina",
+      "Aseado"
+    ],
+    "experience": [
+      "2 años en el hogar de ancianos La Rosa",
+      "Voluntario en Rotaract",
+      "Cuidado de persona mayor Mario Fernández. Tel 099 052 129"
+    ],
+    "languages": [
+      "Español",
+      "Inglés",
+      "Portugués"
+    ],
+    "timeAvailability": "12:00 - 18:00"
+  },
+  {
+    "name": "Fernando",
+    "isPremium": false,
+    "age": 22,
+    "rateQ": 4,
+    "gallery": [
+      {
+        "key": "feliciaVarzari"
+      }
+    ],
+    "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasasr el tiempo sobretodo jugando a las cartas con la gente que cuido.",
+    "services": [
+      "Paseo",
+      "Compras",
+      "Atención en el hogar",
+      "Cocina",
+      "Aseado"
+    ],
+    "experience": [
+      "2 años en el hogar de ancianos La Rosa",
+      "Voluntario en Rotaract",
+      "Cuidado de persona mayor Mario Fernández. Tel 099 052 129"
+    ],
+    "languages": [
+      "Español",
+      "Inglés",
+      "Portugués"
+    ],
+    "timeAvailability": "12:00 - 18:00"
+  }
+]
