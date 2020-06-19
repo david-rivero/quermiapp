@@ -18,15 +18,12 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 5
   },
-  viewContainer: {
-    flex: 1
+  subContainer: {
+    justifyContent: 'flex-start',
   },
   signUpView: {
     flex: 1,
-    justifyContent: 'center',
-    borderColor: 'black',
-    borderStyle: 'dashed',
-    borderWidth: 2
+    justifyContent: 'center'
   },
   buttonContainer: {
     alignItems: 'flex-end',
@@ -77,7 +74,7 @@ export default class SignUpCarousel extends React.Component {
     const nextCaretLogo = require('../../../Assets/caret-right.png') 
     return (
       <View style={styles.container}>
-        <View style={styles.container}>
+        <View style={[styles.container, styles.subContainer]}>
           {
             this.state.indexActive === 0 && <SignUpProfile onChangeProfileValue={this.setProfileStatus} style={styles.signUpView} />
           }

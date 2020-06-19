@@ -4,7 +4,13 @@ import { Colors } from '../../../../Theme/Colors';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'flex-start',
+    paddingTop: '25%'
+  },
+  textProfileTitle: {
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
   },
   inputContent: {
     flex: 1,
@@ -29,7 +35,7 @@ export default function SignUpProfilePhoto(_) {
   const imagePhoto = require('../../../../Assets/picture.png');
   return (
     <View style={styles.container}>
-      <Text style={styles.textContainer}>Te pedimos una foto para tu perfil</Text>
+      <Text style={styles.textProfileTitle}>Te pedimos una foto para tu perfil</Text>
       <View style={styles.inputContent}>
         <View style={styles.photoInput}>
           <Image source={imagePhoto} style={styles.img} resizeMode='contain' />

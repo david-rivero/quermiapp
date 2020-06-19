@@ -5,7 +5,17 @@ import { TextInput } from 'react-native-gesture-handler';
 
 import { Layout } from '../../../../Theme/Layout';
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    paddingTop: '25%'
+  },
+  textProfileTitle: {
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
+  }
+});
 
 export default class SignUpBirthDate extends React.Component {
   constructor(props) {
@@ -47,7 +57,7 @@ export default class SignUpBirthDate extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>¿Cuándo naciste?</Text>
+        <Text style={styles.textProfileTitle}>¿Cuándo naciste?</Text>
         <TextInput placeholder="Tu fecha" value={this._formatDate(this.state.date)} onFocus={this.showDatepicker} style={Layout.textInput}></TextInput>
         {
           this.state.datePickerStatus.show &&

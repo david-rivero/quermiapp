@@ -6,18 +6,24 @@ import { RadioButton } from 'react-native-paper';
 const styles = StyleSheet.create({
   container: {
     flex: 2,
-    justifyContent: 'center'
+    justifyContent: 'flex-start',
+    paddingTop: '25%'
+  },
+  textProfileTitle: {
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
   },
   radioBtnContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
+    borderBottomColor: '#424242',
+    borderBottomWidth: 0.5,
     borderStyle: 'solid',
-    paddingVertical: 12
+    paddingVertical: 12,
+    marginBottom: 10
   },
-  radioBtn: {
-    marginLeft: 'auto'
+  radioText: {
+    flex: 1
   }
 });
 
@@ -49,15 +55,15 @@ export default class SignUpProfile extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Cuéntanos quién eres</Text>
+        <Text style={styles.textProfileTitle}>Cuéntanos quién eres</Text>
         <RadioButton.Group onValueChange={profileValue => this.setProfileStatus(profileValue)}
                            value={this.state.profileValue}>
           {
             this.state.itemsOptions.map((item, index) => {
               return (
                 <View key={index} style={styles.radioBtnContainer}>
-                  <Text>{item.label}</Text>
-                  <RadioButton style={styles.radioBtn} value={item.value} />
+                  <Text style={styles.radioText}>{item.label}</Text>
+                  <RadioButton value={item.value} />
                 </View>
               );
             })

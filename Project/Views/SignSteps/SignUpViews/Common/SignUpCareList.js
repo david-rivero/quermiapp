@@ -5,7 +5,14 @@ import { Checkbox } from 'react-native-paper';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
+  },
+  textProfileTitle: {
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
+  },
+  checkItem: {
+    color: 'black'
   }
 });
 
@@ -71,12 +78,13 @@ export default class SignUpCareList extends React.Component {
   
     return (
       <View style={styles.container}>
-        <Text>{labelText}</Text>
+        <Text style={styles.textProfileTitle}>{labelText}</Text>
         <ScrollView>
           {
             this.state.itemsOptions.map((item, index) => {
               return (
-                <Checkbox.Item label={item.label}
+                <Checkbox.Item style={styles.checkItem}
+                               label={item.label}
                                onPress={() => { this.toggleCheck(item, index) }}
                                status={item.status} 
                                key={index} />

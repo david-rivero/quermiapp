@@ -6,15 +6,20 @@ import { Layout } from '../../../../Theme/Layout';
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    flex: 1
-  }
+    flex: 1,
+    justifyContent: 'flex-start',
+    paddingTop: '25%'
+  },
+  textProfileTitle: {
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
+  },
 });
 
 export default function SignUpName(_) {
   return (
     <View style={styles.container}>
-      <Text>¿Cómo te llamas?</Text>
+      <Text style={styles.textProfileTitle}>¿Cómo te llamas?</Text>
       <TextInput placeholder="Tu nombre" style={Layout.textInput}></TextInput>
     </View>
   );

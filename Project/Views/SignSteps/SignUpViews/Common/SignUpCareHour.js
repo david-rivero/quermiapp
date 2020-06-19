@@ -10,6 +10,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
+  textProfileTitle: {
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
+  },
   timeInput: {
     margin: 12,
     flex: 1,
@@ -64,7 +68,7 @@ export default class SignUpCareHour extends React.Component {
     const labelText = this.props.isPatient ? '¿Qué horarios necesitas?' : '¿Qué horarios dispones?'
     return (
       <View style={styles.container}>
-        <Text>{labelText}</Text>
+        <Text style={styles.textProfileTitle}>{labelText}</Text>
         <View style={styles.inputTimeRow}>
           <Text>De</Text>
           <TextInput placeholder="Hora"
