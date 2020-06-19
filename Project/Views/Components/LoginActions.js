@@ -35,12 +35,12 @@ export default class LoginActions extends React.Component {
     super(props);
   }
 
-  redirectToSignIn(navigation) {
-    navigation.navigate('SignIn');
+  redirectToSignIn() {
+    this.props.navigation.navigate('SignIn');
   }
 
-  redirectToSignUp(navigation) {
-    navigation.navigate('SignUp');
+  redirectToSignUp() {
+    this.props.navigation.navigate('SignUp');
   }
 
   naiveActionClick() {
@@ -53,10 +53,10 @@ export default class LoginActions extends React.Component {
       view = (
         <View style={styles.container}>
           <TouchableOpacity style={[styles.button, styles.buttonPrimary]}
-                            onPress={() => this.redirectToSignIn(this.props.navigation)}>
+                            onPress={() => this.redirectToSignIn()}>
             <Text style={styles.buttonText}>Inicia sesión</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.buttonSecoundary]} onPress={() => this.redirectToSignUp(this.props.navigation)}>
+          <TouchableOpacity style={[styles.button, styles.buttonSecoundary]} onPress={() => this.redirectToSignUp()}>
             <Text style={styles.buttonText}>Regístrate</Text>
           </TouchableOpacity>
         </View>
@@ -67,7 +67,7 @@ export default class LoginActions extends React.Component {
           <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={this.naiveActionClick}>
             <Text style={styles.buttonText}>Inicia sesión</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.redirectToSignUp(this.props.navigation)}>
+          <TouchableOpacity onPress={() => this.redirectToSignUp()}>
             <Text style={styles.buttonLink}>¿No tienes una cuenta? Regístrate</Text>
           </TouchableOpacity>
         </View>

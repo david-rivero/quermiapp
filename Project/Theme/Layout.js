@@ -3,9 +3,7 @@ import { Colors } from './Colors';
 
 export const Layout = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    fontFamily: 'Noto Sans JP, Sans Serif',
+    //fontFamily: 'Noto Sans JP, Sans Serif',
     fontSize: 18,
     height: '100%',
     width: '100%'
@@ -14,11 +12,12 @@ export const Layout = StyleSheet.create({
     width: '100%'
   },
   title: {
-    fontFamily: 'Lato, Sans Serif',
-    fontSize: 24
+    //fontFamily: 'Lato, Sans Serif',
+    fontSize: 24,
+    fontWeight: '500'
   },
   text: {
-    fontFamily: 'Noto Sans JP, Sans Serif'
+    //fontFamily: 'Noto Sans JP, Sans Serif'
   },
   textInput: {
     backgroundColor: Colors.transparent,
