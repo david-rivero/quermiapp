@@ -1,12 +1,18 @@
 import * as React from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
+import Actions from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
 import { ImageImports } from '../../ImageImports';
 import profiles from '../../Assets/json/profiles.json';
 
+
 const styles = StyleSheet.create({
+  container: {
+    position:  'relative'
+  },
   gallery: {
     flex: 1,
     height: '50%'
@@ -47,12 +53,19 @@ const styles = StyleSheet.create({
   },
   profileSectionTitle: {
     fontWeight: 'bold'
+  },
+  actionsStyles: {
+    position: 'absolute',
+    bottom: '2.5%',
+    left: 0,
+    zIndex: 1,
+    width: '100%'
   }
 });
 
 export default class SearchProfile extends React.Component {
   state = {
-    profiles: profiles,
+    profiles: [...profiles],
     currentProfileIndex: 0,
     galleryEnabledIndex: 0
   };
@@ -66,14 +79,24 @@ export default class SearchProfile extends React.Component {
 
   }
 
-  swipeProfile = () => {
+  swipeProfile = (gestureName, _) => {
+    let indexUpdate = 0;
+    if (gestureName === 'SWIPE_RIGHT' && this.state.currentProfileIndex > 0) {
+      indexUpdate = -1;
+    } else if (gestureName === 'SWIPE_LEFT' && this.state.currentProfileIndex < this.state.profiles.length -1) {
+      indexUpdate = +1;
+    }
 
+    this.setState({
+      currentProfileIndex: this.state.currentProfileIndex + indexUpdate
+    });
   }
 
   render() {
     const profile = this.state.profiles[this.state.currentProfileIndex];
     return (
-      <View style={[Layout.container]}>
+      <GestureRecognizer style={[Layout.container, styles.container]}
+                         onSwipe={(gestureName, gestureState) => this.swipeProfile(gestureName, gestureState)}>
         <View style={styles.gallery}>
           {
             profile.gallery.map((image, index) => {
@@ -89,7 +112,7 @@ export default class SearchProfile extends React.Component {
         </View>
         <ScrollView style={styles.scrollView}>
           <View style={styles.initSection}>
-            <Text style={styles.profileName}>{profile.name}</Text>
+          <Text style={styles.profileName}>{profile.name}</Text>
             <Text style={styles.profileAge}>{profile.age} años</Text>
             <View style={styles.starQContainer}>
               {
@@ -137,14 +160,6 @@ export default class SearchProfile extends React.Component {
             <View><Text style={styles.profileSectionTitle}>Horario:</Text><Text>{profile.timeAvailability}</Text></View>
           </View>
         </ScrollView>
-        <View style={styles.actions}>
-          <TouchableOpacity style={styles.actionLink}>
-            <Image />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionLink}>
-            <Image />
-          </TouchableOpacity>
-        </View>
         <View style={styles.swipes}>
           <TouchableOpacity style={styles.actionSwipe}>
             <Image />
@@ -153,7 +168,8 @@ export default class SearchProfile extends React.Component {
             <Image />
           </TouchableOpacity>
         </View>
-      </View>
+        <Actions actionsStyles={styles.actionsStyles} navigation={this.props.navigation}></Actions>
+      </GestureRecognizer>
     );
   }  
 }

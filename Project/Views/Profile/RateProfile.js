@@ -7,7 +7,11 @@ import Header from '../Components/Header';
 import { Layout } from '../../Theme/Layout';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   contentSection: {
+    flex: 1,
     marginTop: 30,
     paddingHorizontal: 10
   },
@@ -27,7 +31,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   reportActions: {
-    marginRight: 5
+    marginRight: 10
   },
   reportActionsText: {
     textDecorationLine: 'underline'
@@ -52,67 +56,95 @@ const styles = StyleSheet.create({
   textAreaComment: {
     backgroundColor: 'transparent',
     marginVertical: 10
+  },
+  rateSection: {
+    marginVertical: 15
+  },
+  homeRedirectAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10
+  },
+  homeRedirectionIcon: {
+    marginRight: 5,
+    width: 10,
+    transform: [{rotate: '180deg'}]
   }
 });
 
-export default function RateProfile() {
-  const profile = {
-    imgProfile: require('../../Assets/felicia-varzari-8ZLLpY9r1cM-unsplash.jpg'),
-    name: 'Fernando',
-    rateQ: 4
-  };
+export default class RateProfile extends React.Component {
+  redirectToHome = () => {
+    this.props.navigation.navigate('HomeSignedIn');
+  }
 
-  return (
-    <View style={Layout.container}>
-      <Header></Header>
-      <View style={styles.contentSection}>
-        <View style={styles.headerRateProfile}>
-          <Image source={profile.imgProfile} resizeMode='contain' style={styles.image} />
+  render() {
+    const caretLogo = require('../../Assets/caret-right.png');
+    const profile = {
+      imgProfile: require('../../Assets/felicia-varzari-8ZLLpY9r1cM-unsplash.jpg'),
+      name: 'Fernando',
+      rateQ: 4
+    };
+
+    return (
+      <View style={styles.container}>
+        <Header></Header>
+        <View style={styles.contentSection}>
+          <View style={styles.headerRateProfile}>
+            <Image source={profile.imgProfile} resizeMode='contain' style={styles.image} />
+            <View>
+              <Text style={styles.profileName}>{profile.name}</Text>
+              <View style={styles.reportActionsContainer}>
+                <TouchableOpacity style={styles.reportActions}>
+                  <Text style={styles.reportActionsText}>Reportar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.reportActions}>
+                  <Text style={styles.reportActionsText}>Bloquear</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.starContainer}>
+                {
+                  Array.from(Array(5), (_, index) => {
+                    let imageStar;
+                    if (index + 1 <= profile.rateQ) {
+                      imageStar = require('../../Assets/images/star-selected.png')
+                    } else {
+                      imageStar = require('../../Assets/images/star.png')
+                    }
+                    return <Image source={imageStar}
+                                  style={styles.imageStar}
+                                  resizeMode='contain'
+                                  key={`star-profile-${index}`} />;
+                  })
+                }
+              </View>
+            </View>
+          </View>
           <View>
-            <Text style={styles.profileName}>{profile.name}</Text>
-            <View style={styles.reportActionsContainer}>
-              <TouchableOpacity style={styles.reportActions}>
-                <Text style={styles.reportActionsText}>Reportar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.reportActions}>
-                <Text style={styles.reportActionsText}>Bloquear</Text>
-              </TouchableOpacity>
+            <View style={styles.rateSection}>
+              <Text>¿Qué calificación le das?</Text>
+              <View style={[styles.starContainer, styles.starContainerToSelect]}>
+                {
+                  Array.from(Array(5), (_, index) => {
+                    return <Image source={require('../../Assets/images/star.png')}
+                                  style={styles.imageStarToSelect}
+                                  resizeMode='contain'
+                                  key={`star-q-profile-${index}`} />;
+                  })
+                }
+              </View>
             </View>
-            <View style={styles.starContainer}>
-              {
-                Array.from(Array(5), (_, index) => {
-                  let imageStar;
-                  if (index + 1 <= profile.rateQ) {
-                    imageStar = require('../../Assets/images/star-selected.png')
-                  } else {
-                    imageStar = require('../../Assets/images/star.png')
-                  }
-                  return <Image source={imageStar}
-                                style={styles.imageStar}
-                                resizeMode='contain'
-                                key={`star-profile-${index}`} />;
-                })
-              }
+            <View style={styles.rateSection}>
+              <Text>Escríbenos acerca de tu experiencia con {profile.name}</Text>
+              <TextInput style={styles.textAreaComment} placeholder="Cuenta tu experiencia" />
             </View>
+            <Button title="Calificar" />
           </View>
         </View>
-        <View>
-          <Text>¿Qué calificación le das?</Text>
-          <View style={[styles.starContainer, styles.starContainerToSelect]}>
-            {
-              Array.from(Array(5), (_, index) => {
-                return <Image source={require('../../Assets/images/star.png')}
-                              style={styles.imageStarToSelect}
-                              resizeMode='contain'
-                              key={`star-q-profile-${index}`} />;
-              })
-            }
-          </View>
-          <Text>Escríbenos acerca de tu experiencia con {profile.name}</Text>
-          <TextInput style={styles.textAreaComment} placeholder="Cuenta tu experiencia" />
-          <Button title="Calificar" />
-        </View>
+        <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToHome()}>
+          <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
+          <Text>Atrás</Text>
+        </TouchableOpacity>
       </View>
-    </View>
-  );
+    );
+  }
 }

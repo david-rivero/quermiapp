@@ -3,7 +3,7 @@ import { Colors } from './Colors';
 
 export const Layout = StyleSheet.create({
   container: {
-    //fontFamily: 'Noto Sans JP, Sans Serif',
+    //fontFamily: 'Noto Sans JP, Sans Serif'
     fontSize: 18,
     height: '100%',
     width: '100%'

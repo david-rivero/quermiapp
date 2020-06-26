@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { StyleSheet, View, ImageBackground } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
+import { Layout } from '../../Theme/Layout';
 import FullLogo from '../Components/FullLogo';
 import LoginActions from '../Components/LoginActions';
 
@@ -11,23 +13,24 @@ const styles = StyleSheet.create({
     padding: 12
   },
   fullLogo: {
-    flex: 0.25
+    flex: 0.5
   },
   loginActions: {
-    flex: 1,
-    borderWidth: 2,
-    borderColor: 'white',
-    borderStyle: 'dashed'
+    marginTop: 60
   }
 });
 
 export default function SignIn({ navigation }) {
-  const image = require('../../Assets/fikri-rasyid-LeHEDlWT8zM-unsplash.jpg');
-
   return (
     <View style={styles.container}>
-      <FullLogo mode='medium' style={styles.fullLogo} displayLabel={true}></FullLogo>
-      <LoginActions style={styles.loginActions} navigation={navigation}></LoginActions>
+      <FullLogo mode='medium' stylesContainer={styles.fullLogo} displayLabel={true}></FullLogo>
+      <View>
+        <TextInput placeholder="Tu email" style={Layout.textInput}></TextInput>
+        <TextInput placeholder="Tu contraseña" secureTextEntry={true} style={Layout.textInput}></TextInput>
+      </View>
+      <View style={styles.loginActions}>
+        <LoginActions navigation={navigation}></LoginActions>
+      </View>
     </View>
   );
 }

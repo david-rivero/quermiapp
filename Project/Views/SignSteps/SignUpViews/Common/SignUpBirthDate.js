@@ -1,6 +1,6 @@
 import * as React from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
 import { Layout } from '../../../../Theme/Layout';
@@ -31,7 +31,7 @@ export default class SignUpBirthDate extends React.Component {
 
   _formatDate = (date) => {
     const day = date.getDate();
-    const month = date.getMonth();
+    const month = `${date.getMonth() < 9 && '0'}${date.getMonth() + 1}`;
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
@@ -52,6 +52,7 @@ export default class SignUpBirthDate extends React.Component {
         show: true
       }
     });
+    Keyboard.dismiss();
   }
 
   render() {

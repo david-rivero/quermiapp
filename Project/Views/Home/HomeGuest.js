@@ -13,13 +13,16 @@ const styles = StyleSheet.create({
     padding: 12
   },
   fullLogo: {
-    flex: 1
+    flex: 0.5
   },
   loginActions: {
     flex: 1,
     borderWidth: 2,
     borderColor: 'white',
     borderStyle: 'dashed'
+  },
+  contentTop: {
+    marginTop: 'auto'
   }
 });
 
@@ -29,8 +32,12 @@ export default function HomeGuest({ navigation }) {
 
   return (
     <View style={[Layout.container, styles.container]}>
-      <FullLogo style={styles.fullLogo} mode='medium' displayLabel={true}></FullLogo>
-      <LoginActions home={isHome} navigation={navigation} style={styles.loginActions}></LoginActions>
+      <View style={[{flex: 1}, styles.contentTop]}>
+        <FullLogo stylesContainer={styles.fullLogo} mode='medium' displayLabel={true}></FullLogo>
+      </View>
+      <View style={styles.contentTop}>
+        <LoginActions home={isHome} navigation={navigation} style={styles.loginActions}></LoginActions>
+      </View>
     </View>
   );
 }

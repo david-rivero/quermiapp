@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInput } from 'react-native-paper';
 
@@ -62,6 +62,7 @@ export default class SignUpCareHour extends React.Component {
         time: new Date(1598051730000)
       }
     });
+    Keyboard.dismiss();
   }
   
   render() {

@@ -43,8 +43,8 @@ export default class LoginActions extends React.Component {
     this.props.navigation.navigate('SignUp');
   }
 
-  naiveActionClick() {
-    
+  redirectToHomeSigned() {
+    this.props.navigation.navigate('HomeSignedIn');
   }
 
   render() {
@@ -64,7 +64,7 @@ export default class LoginActions extends React.Component {
     } else {
       view = (
         <View style={styles.container}>
-          <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={this.naiveActionClick}>
+          <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={() => this.redirectToHomeSigned()}>
             <Text style={styles.buttonText}>Inicia sesión</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => this.redirectToSignUp()}>

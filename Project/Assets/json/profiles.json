@@ -9,7 +9,24 @@
         "key": "feliciaVarzari"
       }
     ],
-    "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasasr el tiempo sobretodo jugando a las cartas con la gente que cuido.",
+    "latestMessages": [
+      {
+        "date": "2020-05-01T08:03:43Z",
+        "message": "Un gusto",
+        "unread": true
+      },
+      {
+        "date": "2020-05-01T08:03:28Z",
+        "message": "Como andás?",
+        "unread": true
+      },
+      {
+        "date": "2020-05-01T08:03:21Z",
+        "message": "Hola Sergio",
+        "unread": true
+      }
+    ],
+    "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasar el tiempo sobretodo jugando a las cartas con la gente que cuido.",
     "services": [
       "Paseo",
       "Compras",
@@ -30,93 +47,73 @@
     "timeAvailability": "12:00 - 18:00"
   },
   {
-    "name": "Fernando",
+    "name": "Marcela",
     "isPremium": false,
-    "age": 22,
-    "rateQ": 4,
+    "age": 26,
+    "rateQ": 5,
     "gallery": [
       {
-        "key": "feliciaVarzari"
+        "key": "tylerNix"
       }
     ],
-    "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasasr el tiempo sobretodo jugando a las cartas con la gente que cuido.",
+    "latestMessages": [
+      {
+        "date": "2020-05-01T08:03:28Z",
+        "message": "Todo bien?"
+      },
+      {
+        "date": "2020-05-01T08:03:21Z",
+        "message": "Hola Sergio"
+      }
+    ],
+    "description": "Marcela, me he dedicado desde jóven a cuidar niños y personas mayores, y me gusta la vocación de cuidar y atender personas. Enfermera en formación.",
     "services": [
       "Paseo",
       "Compras",
       "Atención en el hogar",
-      "Cocina",
       "Aseado"
     ],
     "experience": [
-      "2 años en el hogar de ancianos La Rosa",
-      "Voluntario en Rotaract",
-      "Cuidado de persona mayor Mario Fernández. Tel 099 052 129"
+      "5 años cuidando ancianos",
+      "Estudiante del Instituto de Enfermería Patrón Morales"
     ],
     "languages": [
       "Español",
-      "Inglés",
-      "Portugués"
+      "Inglés"
     ],
-    "timeAvailability": "12:00 - 18:00"
+    "timeAvailability": "08:00 - 12:00"
   },
   {
-    "name": "Fernando",
+    "name": "Nicolás",
     "isPremium": false,
-    "age": 22,
+    "age": 24,
     "rateQ": 4,
     "gallery": [
       {
-        "key": "feliciaVarzari"
+        "key": "ashkanForouzani"
       }
     ],
-    "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasasr el tiempo sobretodo jugando a las cartas con la gente que cuido.",
-    "services": [
-      "Paseo",
-      "Compras",
-      "Atención en el hogar",
-      "Cocina",
-      "Aseado"
-    ],
-    "experience": [
-      "2 años en el hogar de ancianos La Rosa",
-      "Voluntario en Rotaract",
-      "Cuidado de persona mayor Mario Fernández. Tel 099 052 129"
-    ],
-    "languages": [
-      "Español",
-      "Inglés",
-      "Portugués"
-    ],
-    "timeAvailability": "12:00 - 18:00"
-  },
-  {
-    "name": "Fernando",
-    "isPremium": false,
-    "age": 22,
-    "rateQ": 4,
-    "gallery": [
+    "latestMessages": [
       {
-        "key": "feliciaVarzari"
+        "date": "2020-05-01T08:03:21Z",
+        "message": "Buenas Sergio, encantado de conocerte."
       }
     ],
-    "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasasr el tiempo sobretodo jugando a las cartas con la gente que cuido.",
+    "description": "Nicolás, me encanta jugar con la gente y pasar un buen rato. Recreador en proceso.",
     "services": [
       "Paseo",
-      "Compras",
-      "Atención en el hogar",
-      "Cocina",
-      "Aseado"
+      "Juegos",
+      "Actividades al aire libre",
+      "Atención en el hogar"
     ],
     "experience": [
-      "2 años en el hogar de ancianos La Rosa",
-      "Voluntario en Rotaract",
-      "Cuidado de persona mayor Mario Fernández. Tel 099 052 129"
+      "Cuidador de ancianos para la familia Romero. Tel 099 052 129",
+      "3 años como recreador con niños y ancianos",
+      "Estudiante de la Licenciatura de Recreación en la UBAL"
     ],
     "languages": [
-      "Español",
-      "Inglés",
-      "Portugués"
+      "Español"
     ],
-    "timeAvailability": "12:00 - 18:00"
+    "timeAvailability": "12:00 - 20:00"
   }
 ]
