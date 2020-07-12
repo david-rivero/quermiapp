@@ -151,6 +151,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+          storeFile file('your_key_name.keystore')
+          storePassword 'admin1234'
+          keyAlias 'your_key_alias'
+          keyPassword 'admin1234'
+        }
     }
     buildTypes {
         debug {
@@ -181,6 +187,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-image-picker')
+    implementation project(':react-native-camera')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

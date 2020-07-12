@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInput } from 'react-native-paper';
 
+import SignUpBaseStep from './SignUpBaseStep';
 import { Layout } from '../../../../Theme/Layout';
 
 const styles = StyleSheet.create({
@@ -21,22 +22,20 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpCareHour extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      timePickerStartStatus: {
-        mode: 'time',
-        show: false,
-        time: new Date(1598051730000)
-      },
-      timePickerEndStatus: {
-        mode: 'time',
-        show: false,
-        time: new Date(1598051730000)
-      }
-    };
-  }
+export default class SignUpCareHour extends SignUpBaseStep {
+  state = {
+    ...this.getInitialStepState(),
+    timePickerStartStatus: {
+      mode: 'time',
+      show: false,
+      time: new Date(1598051730000)
+    },
+    timePickerEndStatus: {
+      mode: 'time',
+      show: false,
+      time: new Date(1598051730000)
+    }
+  };
 
   _formatTime = (time) => {
     const hour = time.getHours();
@@ -52,6 +51,7 @@ export default class SignUpCareHour extends React.Component {
         time: time
       }
     });
+    this.validateStep();
   }
 
   showTimePicker = location => {

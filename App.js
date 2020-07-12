@@ -15,6 +15,7 @@ import Match from './Project/Views/Profile/Match';
 import ChatList from './Project/Views/Home/ChatList';
 import ChatDetail from './Project/Views/Home/ChatDetail';
 import RateProfile from './Project/Views/Profile/RateProfile';
+import Camera from './Project/Views/Home/Camera';
 
 
 const Stack = createStackNavigator();
@@ -36,6 +37,7 @@ export default function App() {
           <Stack.Screen name="ChatList" component={ChatList} />
           <Stack.Screen name="ChatDetail" component={ChatDetail} />
           <Stack.Screen name="RateProfile" component={RateProfile} />
+          <Stack.Screen name="Camera" component={Camera} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

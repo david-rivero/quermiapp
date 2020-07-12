@@ -19,7 +19,8 @@
     "react-native-camera": "^3.31.0",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-paper": "^3.10.1",
-    "react-native-safe-area-context": "0.7.3"
+    "react-native-safe-area-context": "0.7.3",
+    "react-native-swipe-gestures": "^1.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",

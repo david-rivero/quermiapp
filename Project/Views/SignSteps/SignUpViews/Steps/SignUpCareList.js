@@ -2,6 +2,8 @@ import * as React from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 
+import SignUpBaseStep from './SignUpBaseStep';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -16,8 +18,9 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpCareList extends React.Component {
+export default class SignUpCareList extends SignUpBaseStep {
   state = {
+    ...this.getInitialStepState(),
     itemsOptions: [
       {
         label: 'Atención en el hogar',
@@ -70,7 +73,9 @@ export default class SignUpCareList extends React.Component {
 
     this.setState({
       itemsOptions: items
-    })
+    });
+    // FIXME: Check at least one element
+    this.validateStep();
   }
 
   render() {

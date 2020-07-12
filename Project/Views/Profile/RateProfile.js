@@ -73,8 +73,18 @@ const styles = StyleSheet.create({
 });
 
 export default class RateProfile extends React.Component {
+  state = {
+    currentRateSelected: 0
+  };
+  
   redirectToHome = () => {
     this.props.navigation.navigate('HomeSignedIn');
+  }
+
+  selectRate = index => {
+    this.setState({
+      currentRateSelected: index + 1
+    });
   }
 
   render() {
@@ -125,10 +135,20 @@ export default class RateProfile extends React.Component {
               <View style={[styles.starContainer, styles.starContainerToSelect]}>
                 {
                   Array.from(Array(5), (_, index) => {
-                    return <Image source={require('../../Assets/images/star.png')}
-                                  style={styles.imageStarToSelect}
-                                  resizeMode='contain'
-                                  key={`star-q-profile-${index}`} />;
+                    let imageStar;
+                    if (index + 1 <= this.state.currentRateSelected) {
+                      imageStar = require('../../Assets/images/star-selected.png')
+                    } else {
+                      imageStar = require('../../Assets/images/star.png')
+                    }
+
+                    return (
+                      <TouchableOpacity onPress={() => this.selectRate(index)} key={`star-q-profile-${index}`}>
+                        <Image source={imageStar}
+                               style={styles.imageStarToSelect}
+                               resizeMode='contain' />
+                      </TouchableOpacity>
+                    );
                   })
                 }
               </View>
