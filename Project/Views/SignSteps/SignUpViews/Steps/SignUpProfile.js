@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
+import SignUpBaseStep from './SignUpBaseStep';
 import { RadioButton } from 'react-native-paper';
 
 const styles = StyleSheet.create({
@@ -27,28 +28,27 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpProfile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      itemsOptions: [
-        {
-          label: 'Persona a cuidar',
-          value: 'PATIENT'
-        },
-        {
-          label: 'Prestador de cuidados',
-          value: 'CARE_PROVIDER'
-        }
-      ],
-      profileValue: null
-    };
-  }
+export default class SignUpProfile extends SignUpBaseStep {
+  state = {
+    ...this.getInitialStepState(),
+    itemsOptions: [
+      {
+        label: 'Persona a cuidar',
+        value: 'PATIENT'
+      },
+      {
+        label: 'Prestador de cuidados',
+        value: 'CARE_PROVIDER'
+      }
+    ],
+    profileValue: null
+  };
 
   setProfileStatus = value => {
     this.setState({
       profileValue: value
     });
+    this.validateStep();
     this.props.onChangeProfileValue(value);
   }
 

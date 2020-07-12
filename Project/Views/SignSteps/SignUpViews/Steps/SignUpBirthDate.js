@@ -3,6 +3,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
+import SignUpBaseStep from './SignUpBaseStep';
 import { Layout } from '../../../../Theme/Layout';
 
 const styles = StyleSheet.create({
@@ -17,17 +18,15 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpBirthDate extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      datePickerStatus: {
-        mode: 'date',
-        show: false
-      },
-      date: new Date(1598051730000)
-    };
-  }
+export default class SignUpBirthDate extends SignUpBaseStep {
+  state = {
+    ...this.getInitialStepState(),
+    datePickerStatus: {
+      mode: 'date',
+      show: false
+    },
+    date: new Date(1598051730000)
+  };
 
   _formatDate = (date) => {
     const day = date.getDate();
@@ -43,6 +42,7 @@ export default class SignUpBirthDate extends React.Component {
         show: false
       }
     });
+    this.validateStep();
   }
 
   showDatepicker = () => {
