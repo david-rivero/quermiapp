@@ -187,7 +187,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-image-picker')
     implementation project(':react-native-camera')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
