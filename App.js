@@ -11,6 +11,7 @@ import SignIn from './Project/Views/SignSteps/SignIn';
 import SignUp from './Project/Views/SignSteps/SignUp';
 import HomeSignedIn from './Project/Views/Home/HomeSignedIn';
 import SearchProfile from './Project/Views/Profile/SearchProfile';
+import DetailProfileOnSearch from './Project/Views/Profile/DetailProfileOnSearch';
 import Match from './Project/Views/Profile/Match';
 import ChatList from './Project/Views/Home/ChatList';
 import ChatDetail from './Project/Views/Home/ChatDetail';
@@ -33,6 +34,7 @@ export default function App() {
           <Stack.Screen name="SignUp" component={SignUp} />
           <Stack.Screen name="HomeSignedIn" component={HomeSignedIn} />
           <Stack.Screen name="SearchProfile" component={SearchProfile} />
+          <Stack.Screen name="DetailProfileOnSearch" component={DetailProfileOnSearch} />
           <Stack.Screen name="Match" component={Match} />
           <Stack.Screen name="ChatList" component={ChatList} />
           <Stack.Screen name="ChatDetail" component={ChatDetail} />

@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Image, Text, ScrollView, StyleSheet } from 'react-native';
 
 import Actions from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
 import { ImageImports } from '../../ImageImports'
-import profiles from '../../Assets/json/profiles.json';
 
 
 const styles = StyleSheet.create({
@@ -62,12 +61,20 @@ const styles = StyleSheet.create({
 });
 
 export default class DetailProfileOnSearch extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      profile: this.props.route.params.profile,
+      galleryEnabledIndex: 0
+    };
+  }
+
   render() {
     return (
       <View style={[Layout.container, styles.container]}>
         <View style={styles.gallery}>
           {
-            profile.gallery.map((image, index) => {
+            this.state.profile.gallery.map((image, index) => {
               if (this.state.galleryEnabledIndex === index) {
                 return <Image style={styles.imageGallery}
                               source={ImageImports[image.key]}
@@ -80,13 +87,13 @@ export default class DetailProfileOnSearch extends React.Component {
         </View>
         <ScrollView style={styles.scrollView}>
           <View style={styles.initSection}>
-          <Text style={styles.profileName}>{profile.name}</Text>
-            <Text style={styles.profileAge}>{profile.age} años</Text>
+          <Text style={styles.profileName}>{this.state.profile.name}</Text>
+            <Text style={styles.profileAge}>{this.state.profile.age} años</Text>
             <View style={styles.starQContainer}>
               {
                 Array.from(Array(5), (_, index) => {
                   let imageStar;
-                  if (index + 1 <= profile.rateQ) {
+                  if (index + 1 <= this.state.profile.rateQ) {
                     imageStar = require('../../Assets/images/star-selected.png')
                   } else {
                     imageStar = require('../../Assets/images/star.png')
@@ -98,13 +105,13 @@ export default class DetailProfileOnSearch extends React.Component {
                 })
               }
             </View>
-            <Text>{profile.description}</Text>
+            <Text>{this.state.profile.description}</Text>
           </View>
           <View style={styles.descriptionSection}>
             <View style={styles.profileSectionInfo}>
               <Text style={styles.profileSectionTitle}>Servicios</Text>
               {
-                profile.services.map((service, index) => {
+                this.state.profile.services.map((service, index) => {
                   return <Text key={`profile-service-${index}`}>{service}</Text>;
                 })
               }
@@ -112,7 +119,7 @@ export default class DetailProfileOnSearch extends React.Component {
             <View style={styles.profileSectionInfo}>
               <Text style={styles.profileSectionTitle}>Experiencia</Text>
               {
-                profile.experience.map((experience, index) => {
+                this.state.profile.experience.map((experience, index) => {
                   return <Text key={`profile-experience-${index}`}>{experience}</Text>;
                 })
               }
@@ -120,15 +127,15 @@ export default class DetailProfileOnSearch extends React.Component {
             <View style={styles.profileSectionInfo}>
               <Text style={styles.profileSectionTitle}>Idiomas</Text>
               {
-                profile.languages.map((lang, index) => {
+                this.state.profile.languages.map((lang, index) => {
                   return <Text key={`profile-lang-${index}`}>{lang}</Text>;
                 })
               }
             </View>
-            <View><Text style={styles.profileSectionTitle}>Horario:</Text><Text>{profile.timeAvailability}</Text></View>
+            <View><Text style={styles.profileSectionTitle}>Horario:</Text><Text>{this.state.profile.timeAvailability}</Text></View>
           </View>
         </ScrollView>
-        <Actions actionsStyles={styles.actionsStyles} navigation={this.props.navigation}></Actions>
+        <Actions actionsStyles={styles.actionsStyles} navigation={this.props.navigation} isDetail={true}></Actions>
       </View>
     );
   }
