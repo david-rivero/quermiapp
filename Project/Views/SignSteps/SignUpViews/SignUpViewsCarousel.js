@@ -32,10 +32,13 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     width: '50%'
   },
-  nextDisabled: {
-    color: '#848484'
-  },
-  nextDisabledLogo: {
+  // nextDisabled: {
+  //   color: '#848484'
+  // },
+  // nextDisabledLogo: {
+  //   opacity: 0.5
+  // },
+  nextDisabledArea: {
     opacity: 0.5
   },
   buttonNext: {
@@ -156,10 +159,10 @@ export default class SignUpCarousel extends React.Component {
           (this.state.indexActive < 8 && this.state.isPatient)) && 
           <View style={styles.buttonContainer}>
             <TouchableOpacity disabled={!this.state.nextStep}
-                              style={styles.buttonNext}
+                              style={[styles.buttonNext, !this.nextStep ? styles.nextDisabledArea : null]}
                               onPress={() => this.updateCarouselIndex()}>
-              <Text style={!this.state.nextStep && styles.nextDisabled}>Siguiente</Text>
-              <Image style={[styles.nextCaretLogo, !this.state.nextStep &&styles.nextDisabledLogo]}
+              <Text>Siguiente</Text>
+              <Image style={styles.nextCaretLogo}
                     source={nextCaretLogo} />
             </TouchableOpacity>
           </View>

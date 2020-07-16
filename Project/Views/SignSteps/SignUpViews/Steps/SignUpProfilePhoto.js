@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 
 export default class SignUpProfilePhoto extends SignUpBaseStep {
   state = {
-    //...this.getInitialStepState(),
+    ...this.getInitialStepState(),
     cameraEnabled: false
   };
 
@@ -48,11 +48,10 @@ export default class SignUpProfilePhoto extends SignUpBaseStep {
     const imagePhoto = require('../../../../Assets/picture.png');
 
     // FIXME: Validate automatically step
-    // if (!this.state.checkedStep) {
-    //   this.validateStep();
-    // }
+    if (!this.state.checkedStep) {
+      this.validateStep();
+    }
 
-    // <CameraComponent style={styles.camera}/>
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>Te pedimos una foto para tu perfil</Text>

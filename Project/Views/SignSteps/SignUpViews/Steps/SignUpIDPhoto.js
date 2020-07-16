@@ -2,10 +2,36 @@ import * as React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
 
 import SignUpBaseStep from './SignUpBaseStep';
+import { Colors } from '../../../../Theme/Colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
-
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    paddingTop: '25%'
+  },
+  textProfileTitle: {
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
+  },
+  inputContent: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 25
+  },
+  photoInput: {
+    borderWidth: 1,
+    borderColor: Colors.black,
+    borderStyle: 'solid',
+    width: 135,
+    height: 120,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  img: {
+    width: 50
+  }
 });
 
 export default class SignUpIDPhoto extends SignUpBaseStep {

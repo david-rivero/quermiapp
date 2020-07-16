@@ -24,13 +24,15 @@ const styles = StyleSheet.create({
   },
   checkRow: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginLeft: -25,
+    marginBottom: 10
   },
   declarationText: {
   
   },
-  checkboxDisclaimer: {
-
+  checkboxDisclaimerText: {
+    flex: 1
   }
 });
 
@@ -65,9 +67,9 @@ export default class SignUpDisclaimer extends SignUpBaseStep {
         </View>
         <View style={styles.checkRow}>
           <Checkbox.Item style={styles.checkboxDisclaimer}
-                                onPress={() => { this.toggleCheck() }}
-                                status={this.state.termsNCondsChecked} />
-          <Text>He leído y aceptado los Términos y Condiciones declarados previamente.</Text>
+                         onPress={() => { this.toggleCheck() }}
+                         status={this.state.termsNCondsChecked} />
+          <Text style={styles.checkboxDisclaimerText}>He leído y aceptado los Términos y Condiciones declarados previamente.</Text>
         </View>
         <View>
           <Button title="Continuar" onPress={() => this.redirectToHome()} />

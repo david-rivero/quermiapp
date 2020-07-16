@@ -44,7 +44,7 @@ export default function FullLogo(props) {
     mode === 'medium' && styles.figureMedium,
     mode === 'big'    && styles.figureBig
   ];
-  const uriLogo = require('../../Assets/careme-full-logo.png');
+  const uriLogo = require('../../Assets/images/quermi-full-logo.png');
 
   return (
     <View style={[styles.logo, props.stylesContainer]}>

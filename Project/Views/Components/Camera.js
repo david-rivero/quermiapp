@@ -17,12 +17,21 @@ const styles = StyleSheet.create({
   capture: {
     flex: 0,
     backgroundColor: '#fff',
-    borderRadius: 5,
+    borderRadius: 100,
+    height: 60,
+    width: 60,
     padding: 15,
     paddingHorizontal: 20,
     alignSelf: 'center',
     margin: 20,
   },
+  snapButton: {
+    position: 'absolute',
+    bottom: 20,
+    flex: 0,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  }
 });
 
 export default class CameraComponent extends React.PureComponent {
@@ -63,9 +72,8 @@ export default class CameraComponent extends React.PureComponent {
             console.log(barcodes);
           }}
         />
-        <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
+        <View>
           <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
-            <Text style={{ fontSize: 14 }}> SNAP </Text>
           </TouchableOpacity>
         </View>
       </View>
