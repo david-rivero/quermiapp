@@ -12,7 +12,6 @@
   "dependencies": {
     "@react-native-community/datetimepicker": "^2.4.0",
     "@react-native-community/masked-view": "^0.1.10",
-    "@react-native-community/toolbar-android": "0.1.0-rc.2",
     "@react-navigation/native": "^5.4.3",
     "@react-navigation/stack": "^5.4.0",
     "native-base": "^2.13.12",
@@ -23,7 +22,8 @@
     "react-native-paper": "^3.10.1",
     "react-native-safe-area-context": "0.7.3",
     "react-native-screens": "^2.9.0",
-    "react-native-swipe-gestures": "^1.0.5"
+    "react-native-swipe-gestures": "^1.0.5",
+    "react-native-vector-icons": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
