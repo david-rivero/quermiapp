@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInput } from 'react-native-paper';
+import store from '../../../../Store/store';
+import LanguageProvider from '../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { Layout } from '../../../../Theme/Layout';
@@ -22,7 +25,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpCareHour extends SignUpBaseStep {
+class SignUpCareHour extends SignUpBaseStep {
+  // Remove component state
   state = {
     ...this.getInitialStepState(),
     timePickerStartStatus: {
@@ -66,7 +70,8 @@ export default class SignUpCareHour extends SignUpBaseStep {
   }
   
   render() {
-    const labelText = this.props.isPatient ? '¿Qué horarios necesitas?' : '¿Qué horarios dispones?'
+    const langProvider = LanguageProvider(store.getState().language);
+    const labelText = this.props.isPatient ? langProvider.views.signUp.signUpCareHourPersonToCareTitle : langProvider.views.signUp.signUpCareHourCarePersonTitle;
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{labelText}</Text>
@@ -100,3 +105,9 @@ export default class SignUpCareHour extends SignUpBaseStep {
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(SignUpCareHour);

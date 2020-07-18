@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Layout } from '../../Theme/Layout';
 import { Colors } from '../../Theme/Colors';
+import store from '../../Store/store';
+import LanguageProvider from '../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
 
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class HomeSignedIn extends React.Component {
+class HomeSignedIn extends React.Component {
   redirectToSearchProfile = () => {
     this.props.navigation.navigate('SearchProfile');
   }
@@ -55,7 +58,7 @@ export default class HomeSignedIn extends React.Component {
   }
 
   render() {
-    const isPatientProfile = true;
+    const langProvider = LanguageProvider(store.getState().language);
     const caretLogoWhite = require('../../Assets/caret-right-white.png');
     const caretLogo = require('../../Assets/caret-right.png');
 
@@ -65,11 +68,11 @@ export default class HomeSignedIn extends React.Component {
           <View style={styles.mainActionContent}>
           <View style={styles.homeTitle}>
             <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/nurse-white.png')} />
-            <Text style={[styles.mainActionText, Layout.title]}>Busca un acompañante</Text>
+            <Text style={[styles.mainActionText, Layout.title]}>{langProvider.views.homeSignedIn.findPartnerTitle}</Text>
           </View>
-          <Text style={styles.mainActionText}>Busca una persona que te brinde la mejor atención que necesitás</Text>
+          <Text style={styles.mainActionText}>{langProvider.views.homeSignedIn.findPartnerDesc}</Text>
           <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToSearchProfile()}>
-            <Text style={styles.mainActionText}>Busca un acompañante</Text>
+            <Text style={styles.mainActionText}>{langProvider.views.homeSignedIn.findPartnerAction}</Text>
             <Image style={styles.homeRedirectionIcon} source={caretLogoWhite} resizeMode='contain' />
           </TouchableOpacity>
         </View>
@@ -77,22 +80,22 @@ export default class HomeSignedIn extends React.Component {
           <View style={styles.homeSubView}>
             <View style={styles.homeTitle}>
               <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/speech-bubble.png')} />
-              <Text style={[Layout.title]}>Coordina actividades</Text>
+              <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.scheduleActivitiesTitle}</Text>
             </View>
-            <Text>Escribe a tus acompañante y coordina las actividades necesarias para una buena experiencia</Text>
+            <Text>{langProvider.views.homeSignedIn.scheduleActivitiesDesc}</Text>
             <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToChatGroup()}>
-              <Text>Escribe a tu acompañante</Text>
+              <Text>{langProvider.views.homeSignedIn.scheduleActivitiesAction}</Text>
               <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
             </TouchableOpacity>
           </View>
           <View style={styles.homeSubView}>
             <View style={styles.homeTitle}>
               <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/heart.png')} />
-              <Text style={[Layout.title]}>Califica a tu acompañante</Text>
+              <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.rateProfileTitle}</Text>
             </View>
-            <Text>Califica tu experiencia con tu actual acompañante para mejorar nuestros servicios</Text>
+            <Text>{langProvider.views.homeSignedIn.rateProfileDesc}</Text>
             <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToRateProfile()}>
-              <Text>Califica a tu acompañante</Text>
+              <Text>{langProvider.views.homeSignedIn.rateProfileAction}</Text>
               <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
             </TouchableOpacity>
           </View>
@@ -101,3 +104,9 @@ export default class HomeSignedIn extends React.Component {
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(HomeSignedIn);

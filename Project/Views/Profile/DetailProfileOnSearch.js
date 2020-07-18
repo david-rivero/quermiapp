@@ -1,9 +1,12 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { View, Image, Text, ScrollView, StyleSheet } from 'react-native';
+import store from '../../Store/store';
+import LanguageProvider from '../Providers/LanguageProvider';
 
 import Actions from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
-import { ImageImports } from '../../ImageImports'
+import { ImageImports } from '../../ImageImports';
 
 
 const styles = StyleSheet.create({
@@ -60,9 +63,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class DetailProfileOnSearch extends React.Component {
+class DetailProfileOnSearch extends React.Component {
   constructor(props) {
     super(props);
+    // Remove component state
     this.state = {
       profile: this.props.route.params.profile,
       galleryEnabledIndex: 0
@@ -70,6 +74,7 @@ export default class DetailProfileOnSearch extends React.Component {
   }
 
   render() {
+    const langProvider = LanguageProvider(store.getState().language);
     return (
       <View style={[Layout.container, styles.container]}>
         <View style={styles.gallery}>
@@ -88,7 +93,7 @@ export default class DetailProfileOnSearch extends React.Component {
         <ScrollView style={styles.scrollView}>
           <View style={styles.initSection}>
           <Text style={styles.profileName}>{this.state.profile.name}</Text>
-            <Text style={styles.profileAge}>{this.state.profile.age} años</Text>
+            <Text style={styles.profileAge}>{this.state.profile.age} {langProvider.views.detailProfileOnSearch.yearLabel}</Text>
             <View style={styles.starQContainer}>
               {
                 Array.from(Array(5), (_, index) => {
@@ -109,15 +114,15 @@ export default class DetailProfileOnSearch extends React.Component {
           </View>
           <View style={styles.descriptionSection}>
             <View style={styles.profileSectionInfo}>
-              <Text style={styles.profileSectionTitle}>Servicios</Text>
+            <Text style={styles.profileSectionTitle}>{langProvider.views.detailProfileOnSearch.servicesLabel}</Text>
               {
                 this.state.profile.services.map((service, index) => {
-                  return <Text key={`profile-service-${index}`}>{service}</Text>;
+                  return <Text key={`profile-service-${index}`}>{langProvider.components.services[service]}</Text>;
                 })
               }
             </View>
             <View style={styles.profileSectionInfo}>
-              <Text style={styles.profileSectionTitle}>Experiencia</Text>
+              <Text style={styles.profileSectionTitle}>{langProvider.views.detailProfileOnSearch.experienceLabel}</Text>
               {
                 this.state.profile.experience.map((experience, index) => {
                   return <Text key={`profile-experience-${index}`}>{experience}</Text>;
@@ -125,14 +130,14 @@ export default class DetailProfileOnSearch extends React.Component {
               }
             </View>
             <View style={styles.profileSectionInfo}>
-              <Text style={styles.profileSectionTitle}>Idiomas</Text>
+              <Text style={styles.profileSectionTitle}>{langProvider.views.detailProfileOnSearch.langLabel}</Text>
               {
                 this.state.profile.languages.map((lang, index) => {
-                  return <Text key={`profile-lang-${index}`}>{lang}</Text>;
+                  return <Text key={`profile-lang-${index}`}>{langProvider.components.lang[lang]}</Text>;
                 })
               }
             </View>
-            <View><Text style={styles.profileSectionTitle}>Horario:</Text><Text>{this.state.profile.timeAvailability}</Text></View>
+            <View><Text style={styles.profileSectionTitle}>{langProvider.views.detailProfileOnSearch.timeAvailabilityLabel}:</Text><Text>{this.state.profile.timeAvailability}</Text></View>
           </View>
         </ScrollView>
         <Actions actionsStyles={styles.actionsStyles} navigation={this.props.navigation} isDetail={true}></Actions>
@@ -140,3 +145,9 @@ export default class DetailProfileOnSearch extends React.Component {
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(DetailProfileOnSearch);

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { StyleSheet, View, ImageBackground } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import FullLogo from '../Components/FullLogo';
 import LoginActions from '../Components/LoginActions';
+import LanguageSelector from '../Components/LanguageSelector';
 
 import { Layout } from '../../Theme/Layout';
 
@@ -32,6 +33,7 @@ export default function HomeGuest({ navigation }) {
 
   return (
     <View style={[Layout.container, styles.container]}>
+      <LanguageSelector />
       <View style={[{flex: 1}, styles.contentTop]}>
         <FullLogo stylesContainer={styles.fullLogo} mode='medium' displayLabel={true}></FullLogo>
       </View>

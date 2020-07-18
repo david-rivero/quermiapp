@@ -2,13 +2,96 @@
   "components": {
     "loginActions": {
       "signIn": "Sign In",
-      "register": "Register"
+      "register": "Register",
+      "registerFirstTime": "First time here? Create an account"
     },
     "fullLogo": {
       "logoTitle": "Take care of others"
+    },
+    "backButton": {
+      "backLabel": "Back"
+    },
+    "lang": {
+      "es": "Spanish",
+      "en": "English",
+      "pt": "Portuguese"
+    },
+    "services": {
+      "homeCareLabel": "Home caring",
+      "cookingLabel": "Cooking",
+      "marketLabel": "Supermarket",
+      "walkLabel": "Walk",
+      "procedureLabel": "Procedures",
+      "pharmaLabel": "Pharmacy",
+      "homeCleanLabel": "Home cleaning",
+      "hygieneServiceLabel": "Self hygiene",
+      "gamesLabel": "Games",
+      "otherOptLabel": "Other"
     }
   },
   "views": {
-
+    "chatDetail": {
+      "distanceReport": "1 km away from you"
+    },
+    "chatList": {
+      "chatLabel": "Messages"
+    },
+    "homeSignedIn": {
+      "findPartnerTitle": "Find a partner",
+      "findPartnerDesc": "Find a person who gives you the best service you need",
+      "findPartnerAction": "Find your next partner",
+      "scheduleActivitiesTitle": "Organize activities",
+      "scheduleActivitiesDesc": "Write your partner and organize a new activity",
+      "scheduleActivitiesAction": "Write to your partner",
+      "rateProfileTitle": "Rate your partner",
+      "rateProfileDesc": "Rate your experience with your current partner to improve our services",
+      "rateProfileAction": "Rate"
+    },
+    "detailProfileOnSearch": {
+      "yearLabel": "years",
+      "servicesLabel": "Services",
+      "experienceLabel": "Experience",
+      "langLabel": "Language skills",
+      "timeAvailabilityLabel": "Time availability"
+    },
+    "rateProfile": {
+      "reportLabel": "Report",
+      "blockLabel": "Block",
+      "rateProfileLabel": "Gives a rate score",
+      "rateProfileCommentDesc": "Detail more about your experience with",
+      "rateProfileCommentPlaceholder": "Write your experience",
+      "rateProfileCommentAction": "Rate"
+    },
+    "signIn": {
+      "emailPlaceholder": "Your email",
+      "passwordPlaceholder": "Your password"
+    },
+    "signUp": {
+      "nextLabel": "Next",
+      "signUpBirthDateTitle": "When did you born?",
+      "signUpCareHourFromLabel": "From",
+      "signUpCareHourToLabel": "to",
+      "signUpCareHourCarePersonTitle": "Which time are you available?",
+      "signUpCareHourPersonToCareTitle": "Which hours do you need?",
+      "signUpCareListCarePersonTitle": "Which services can you provide?",
+      "signUpCareListPersonToCareTitle": "Which services do you need?",
+      "signUpCareRefsTitle": "Add a name and a phone of your reference person to validate your experience",
+      "signUpCareRefsNameLabel": "Name",
+      "signUpCareRefsPhoneLabel": "Phone",
+      "signUpCareRefsActionLabel": "Add reference",
+      "signUpDisclaimerTitle": "Before you join",
+      "signUpDisclaimerDesc": "If it is the first time you join to Quermi or if you already use this app, please read our Terms and Conditions before you join.",
+      "signUpDisclaimerLink": "Read more",
+      "signUpDisclaimerCheckLabel": "I read and accept the Terms and Conditions declared previously.",
+      "signUpDisclaimerContinue": "Continue",
+      "signUpIDPhotoTitle": "Please take a photo of your ID card to check your identity",
+      "signUpNameTitle": "What's your name?",
+      "signUpNamePlaceholder": "Your name",
+      "signUpProfileTitle": "Tells us who you are",
+      "signUpProfilePatientOption": "Person to care",
+      "signUpProfileCarePersonOption": "Care person provider",
+      "signUpProfilePhotoTitle": "Please take a photo of yourself for your profile photo",
+      "signUpUserPassTitle": "Finally, we need from you"
+    }
   }
 }

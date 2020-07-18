@@ -1,6 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Colors } from '../../Theme/Colors';
+import store from '../../Store/store';
+import LanguageProvider from '../Providers/LanguageProvider';
+
 
 const styles = StyleSheet.create({
   button: {
@@ -30,7 +34,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class LoginActions extends React.Component {
+class LoginActions extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -49,15 +53,17 @@ export default class LoginActions extends React.Component {
 
   render() {
     let view = null;
+    const langProvider = LanguageProvider(store.getState().language);
+
     if (this.props.home) {
       view = (
         <View style={styles.container}>
           <TouchableOpacity style={[styles.button, styles.buttonPrimary]}
                             onPress={() => this.redirectToSignIn()}>
-            <Text style={styles.buttonText}>Inicia sesión</Text>
+            <Text style={styles.buttonText}>{langProvider.components.loginActions.signIn}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.buttonSecoundary]} onPress={() => this.redirectToSignUp()}>
-            <Text style={styles.buttonText}>Regístrate</Text>
+            <Text style={styles.buttonText}>{langProvider.components.loginActions.register}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -65,10 +71,10 @@ export default class LoginActions extends React.Component {
       view = (
         <View style={styles.container}>
           <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={() => this.redirectToHomeSigned()}>
-            <Text style={styles.buttonText}>Inicia sesión</Text>
+            <Text style={styles.buttonText}>{langProvider.components.loginActions.signIn}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => this.redirectToSignUp()}>
-            <Text style={styles.buttonLink}>¿No tienes una cuenta? Regístrate</Text>
+            <Text style={styles.buttonLink}>{langProvider.components.loginActions.registerFirstTime}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -76,3 +82,9 @@ export default class LoginActions extends React.Component {
     return view;
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(LoginActions);

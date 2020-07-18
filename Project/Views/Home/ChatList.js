@@ -1,6 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import store from '../../Store/store';
+import LanguageProvider from '../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
 import { ImageImports } from '../../ImageImports';
@@ -60,9 +63,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class ChatList extends React.Component {
+class ChatList extends React.Component {
   constructor(props) {
     super(props);
+    // Remove component state
     this.state = {
       chatGroups: [...profiles],
       unreadProfiles: 1
@@ -78,6 +82,7 @@ export default class ChatList extends React.Component {
   }
 
   render() {
+    const langProvider = LanguageProvider(store.getState().language);
     const caretLogo = require('../../Assets/caret-right.png');
 
     return (
@@ -85,7 +90,7 @@ export default class ChatList extends React.Component {
         <Header></Header>
         <View style={styles.subView}>
           <View style={styles.notifSection}>
-            <Text style={styles.titleText}>Mensajes</Text>
+            <Text style={styles.titleText}>{langProvider.views.chatList.chatLabel}</Text>
             { this.state.unreadProfiles > 0 && <Text style={styles.unreadNotif}>1</Text>}
           </View>
           <ScrollView style={styles.scrollSection}>
@@ -109,9 +114,15 @@ export default class ChatList extends React.Component {
         </View>
         <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToHome()}>
           <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
-          <Text>Atrás</Text>
+          <Text>{langProvider.components.backButton.backLabel}</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(ChatList);

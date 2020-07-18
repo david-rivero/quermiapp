@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { StyleSheet, Text, View, Image } from 'react-native';
+import store from '../../Store/store';
+import LanguageProvider from '../Providers/LanguageProvider';
 
-import { Layout } from '../../Theme/Layout';
 
 const styles = StyleSheet.create({
   logo: {
@@ -36,7 +38,8 @@ const styles = StyleSheet.create({
 });
 
 
-export default function FullLogo(props) {
+function FullLogo(props) {
+  const langProvider = LanguageProvider(store.getState().language);
   const mode = props.mode || 'medium';
   const imgStyles = [
     styles.image,
@@ -52,8 +55,17 @@ export default function FullLogo(props) {
         <Image source={uriLogo} resizeMode='contain' style={imgStyles}></Image>
       </View>
       {
-        props.displayLabel && <Text style={styles.text}>Cuida a otros</Text>
+        props.displayLabel && <Text style={styles.text}>
+          {langProvider.components.fullLogo.logoTitle}
+        </Text>
       }
     </View>
   );
 }
+
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(FullLogo);

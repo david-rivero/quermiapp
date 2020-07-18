@@ -2,13 +2,96 @@
   "components": {
     "loginActions": {
       "signIn": "Inicia sesión",
-      "register": "Regístrate"
+      "register": "Regístrate",
+      "registerFirstTime": "¿No tienes una cuenta? Regístrate"
     },
     "fullLogo": {
       "logoTitle": "Cuida de otros"
+    },
+    "backButton": {
+      "backLabel": "Atrás"
+    },
+    "lang": {
+      "es": "Español",
+      "en": "Inglés",
+      "pt": "Portugués"
+    },
+    "services": {
+      "homeCareLabel": "Atención en el hogar",
+      "cookingLabel": "Compras",
+      "marketLabel": "Supermercado",
+      "walkLabel": "Paseo",
+      "procedureLabel": "Trámites",
+      "pharmaLabel": "Farmacia",
+      "homeCleanLabel": "Limpieza en el hogar",
+      "hygieneServiceLabel": "Higiene",
+      "gamesLabel": "Juegos",
+      "otherOptLabel": "Otros"
     }
   },
   "views": {
-
+    "chatDetail": {
+      "distanceReport": "A 1 km de distancia"
+    },
+    "chatList": {
+      "chatLabel": "Mensajes"
+    },
+    "homeSignedIn": {
+      "findPartnerTitle": "Busca un acompañante",
+      "findPartnerDesc": "Busca una persona que te brinde la mejor atención que necesitás",
+      "findPartnerAction": "Busca un acompañante",
+      "scheduleActivitiesTitle": "Coordina actividades",
+      "scheduleActivitiesDesc": "Escribe a tus acompañante y coordina las actividades necesarias para una buena experiencia",
+      "scheduleActivitiesAction": "Escribe a tu acompañante",
+      "rateProfileTitle": "Califica a tu acompañante",
+      "rateProfileDesc": "Califica tu experiencia con tu actual acompañante para mejorar nuestros servicios",
+      "rateProfileAction": "Califica a tu acompañante"
+    },
+    "detailProfileOnSearch": {
+      "yearLabel": "años",
+      "servicesLabel": "Servicios",
+      "experienceLabel": "Experiencia",
+      "langLabel": "Idiomas",
+      "timeAvailabilityLabel": "Horario"
+    },
+    "rateProfile": {
+      "reportLabel": "Reportar",
+      "blockLabel": "Bloquear",
+      "rateProfileLabel": "¿Qué calificación le das?",
+      "rateProfileCommentDesc": "Escríbenos acerca de tu experiencia con",
+      "rateProfileCommentPlaceholder": "Cuenta tu experiencia",
+      "rateProfileCommentAction": "Calificar"
+    },
+    "signIn": {
+      "emailPlaceholder": "Tu email",
+      "passwordPlaceholder": "Tu contraseña"
+    },
+    "signUp": {
+      "nextLabel": "Siguiente",
+      "signUpBirthDateTitle": "¿Cuándo naciste?",
+      "signUpCareHourFromLabel": "De",
+      "signUpCareHourToLabel": "a",
+      "signUpCareHourCarePersonTitle": "¿Qué horarios dispones?",
+      "signUpCareHourPersonToCareTitle": "¿Qué horarios necesitas?",
+      "signUpCareListCarePersonTitle": "¿Qué cuidados ofreces?",
+      "signUpCareListPersonToCareTitle": "¿Qué cuidados necesitas?",
+      "signUpCareRefsTitle": "Ingresa nombre y teléfono de tus referencias para validar tu experiencia",
+      "signUpCareRefsNameLabel": "Nombre",
+      "signUpCareRefsPhoneLabel": "Teléfono",
+      "signUpCareRefsActionLabel": "Agregar referencia",
+      "signUpDisclaimerTitle": "Antes de unirte",
+      "signUpDisclaimerDesc": "Si has usado ya Quermi o es tu primera vez, te recomendamos que leas nuestros Términos y Condiciones antes de continuar.",
+      "signUpDisclaimerLink": "Leer más",
+      "signUpDisclaimerCheckLabel": "He leído y aceptado los Términos y Condiciones declarados previamente.",
+      "signUpDisclaimerContinue": "Continuar",
+      "signUpIDPhotoTitle": "Te pedimos la foto de tu DNI para comprobar tu identidad",
+      "signUpNameTitle": "¿Cómo te llamas?",
+      "signUpNamePlaceholder": "Tu nombre",
+      "signUpProfileTitle": "Cuéntanos quién eres",
+      "signUpProfilePatientOption": "Persona a cuidar",
+      "signUpProfileCarePersonOption": "Prestador de cuidados",
+      "signUpProfilePhotoTitle": "Te pedimos una foto para tu perfil",
+      "signUpUserPassTitle": "Por último te pedimos"
+    }
   }
 }

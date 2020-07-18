@@ -28,11 +28,11 @@
     ],
     "description": "Soy Fernando, y me gusta dedicar mi tiempo libre a entretener a otros, a hacer reír. Me gusta pasar el tiempo sobretodo jugando a las cartas con la gente que cuido.",
     "services": [
-      "Paseo",
-      "Compras",
-      "Atención en el hogar",
-      "Cocina",
-      "Aseado"
+      "walkLabel",
+      "marketLabel",
+      "homeCareLabel",
+      "cookingLabel",
+      "hygieneServiceLabel"
     ],
     "experience": [
       "2 años en el hogar de ancianos La Rosa",
@@ -40,9 +40,9 @@
       "Cuidado de persona mayor Mario Fernández. Tel 099 052 129"
     ],
     "languages": [
-      "Español",
-      "Inglés",
-      "Portugués"
+      "es",
+      "en",
+      "pt"
     ],
     "timeAvailability": "12:00 - 18:00"
   },
@@ -68,18 +68,18 @@
     ],
     "description": "Marcela, me he dedicado desde jóven a cuidar niños y personas mayores, y me gusta la vocación de cuidar y atender personas. Enfermera en formación.",
     "services": [
-      "Paseo",
-      "Compras",
-      "Atención en el hogar",
-      "Aseado"
+      "walkLabel",
+      "marketLabel",
+      "homeCareLabel",
+      "hygieneServiceLabel"
     ],
     "experience": [
       "5 años cuidando ancianos",
       "Estudiante del Instituto de Enfermería Patrón Morales"
     ],
     "languages": [
-      "Español",
-      "Inglés"
+      "es",
+      "en"
     ],
     "timeAvailability": "08:00 - 12:00"
   },
@@ -101,10 +101,9 @@
     ],
     "description": "Nicolás, me encanta jugar con la gente y pasar un buen rato. Recreador en proceso.",
     "services": [
-      "Paseo",
-      "Juegos",
-      "Actividades al aire libre",
-      "Atención en el hogar"
+      "walkLabel",
+      "gamesLabel",
+      "homeCareLabel"
     ],
     "experience": [
       "Cuidador de ancianos para la familia Romero. Tel 099 052 129",
@@ -112,7 +111,7 @@
       "Estudiante de la Licenciatura de Recreación en la UBAL"
     ],
     "languages": [
-      "Español"
+      "es"
     ],
     "timeAvailability": "12:00 - 20:00"
   }

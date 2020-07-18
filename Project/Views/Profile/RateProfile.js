@@ -1,10 +1,12 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { View, Image, Text, Button, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TextInput } from 'react-native-paper';
+import store from '../../Store/store';
+import LanguageProvider from '../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
-import { Layout } from '../../Theme/Layout';
 
 const styles = StyleSheet.create({
   container: {
@@ -72,7 +74,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class RateProfile extends React.Component {
+class RateProfile extends React.Component {
+  // Remove component state
   state = {
     currentRateSelected: 0
   };
@@ -88,6 +91,7 @@ export default class RateProfile extends React.Component {
   }
 
   render() {
+    const langProvider = LanguageProvider(store.getState().language);
     const caretLogo = require('../../Assets/caret-right.png');
     const profile = {
       imgProfile: require('../../Assets/felicia-varzari-8ZLLpY9r1cM-unsplash.jpg'),
@@ -105,10 +109,10 @@ export default class RateProfile extends React.Component {
               <Text style={styles.profileName}>{profile.name}</Text>
               <View style={styles.reportActionsContainer}>
                 <TouchableOpacity style={styles.reportActions}>
-                  <Text style={styles.reportActionsText}>Reportar</Text>
+                  <Text style={styles.reportActionsText}>{langProvider.views.rateProfile.reportLabel}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.reportActions}>
-                  <Text style={styles.reportActionsText}>Bloquear</Text>
+                  <Text style={styles.reportActionsText}>{langProvider.views.rateProfile.blockLabel}</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.starContainer}>
@@ -131,7 +135,7 @@ export default class RateProfile extends React.Component {
           </View>
           <View>
             <View style={styles.rateSection}>
-              <Text>¿Qué calificación le das?</Text>
+              <Text>{langProvider.views.rateProfile.rateProfileLabel}</Text>
               <View style={[styles.starContainer, styles.starContainerToSelect]}>
                 {
                   Array.from(Array(5), (_, index) => {
@@ -154,17 +158,23 @@ export default class RateProfile extends React.Component {
               </View>
             </View>
             <View style={styles.rateSection}>
-              <Text>Escríbenos acerca de tu experiencia con {profile.name}</Text>
-              <TextInput style={styles.textAreaComment} placeholder="Cuenta tu experiencia" />
+              <Text>{langProvider.views.rateProfile.rateProfileCommentDesc} {profile.name}</Text>
+              <TextInput style={styles.textAreaComment} placeholder={langProvider.views.rateProfile.rateProfileCommentPlaceholder} />
             </View>
-            <Button title="Calificar" />
+            <Button title={langProvider.views.rateProfile.rateProfileCommentAction} />
           </View>
         </View>
         <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToHome()}>
           <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
-          <Text>Atrás</Text>
+          <Text>{langProvider.components.backButton.backLabel}</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(RateProfile);

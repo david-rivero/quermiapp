@@ -1,6 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Checkbox } from 'react-native-paper';
+import store from '../../../../Store/store';
+import LanguageProvider from '../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 
@@ -18,47 +21,48 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpCareList extends SignUpBaseStep {
+class SignUpCareList extends SignUpBaseStep {
+  // Remove component state
   state = {
     ...this.getInitialStepState(),
     itemsOptions: [
       {
-        label: 'Atención en el hogar',
+        label: 'homeCareLabel',
         status: 'unchecked',
         checked: false
       },
       {
-        label: 'Supermercado',
+        label: 'marketLabel',
         status: 'unchecked',
         checked: false
       },
       {
-        label: 'Paseo',
+        label: 'walkLabel',
         status: 'unchecked',
         checked: false
       },
       {
-        label: 'Trámites',
+        label: 'procedureLabel',
         status: 'unchecked',
         checked: false
       },
       {
-        label: 'Farmacia',
+        label: 'pharmaLabel',
         status: 'unchecked',
         checked: false
       },
       {
-        label: 'Limpieza en el hogar',
+        label: 'homeCleanLabel',
         status: 'unchecked',
         checked: false
       },
       {
-        label: 'Higiene',
+        label: 'hygieneServiceLabel',
         status: 'unchecked',
         checked: false
       },
       {
-        label: 'Otros',
+        label: 'otherOptLabel',
         status: 'unchecked',
         checked: false
       }
@@ -79,7 +83,8 @@ export default class SignUpCareList extends SignUpBaseStep {
   }
 
   render() {
-    const labelText = this.props.isPatient ? '¿Qué cuidados necesitas?' : '¿Qué cuidados ofreces?'
+    const langProvider = LanguageProvider(store.getState().language);
+    const labelText = this.props.isPatient ? langProvider.views.signUp.signUpCareListPersonToCareTitle : langProvider.views.signUp.signUpCareListCarePersonTitle;
   
     return (
       <View style={styles.container}>
@@ -89,7 +94,7 @@ export default class SignUpCareList extends SignUpBaseStep {
             this.state.itemsOptions.map((item, index) => {
               return (
                 <Checkbox.Item style={styles.checkItem}
-                               label={item.label}
+                               label={langProvider.components.services[item.label]}
                                onPress={() => { this.toggleCheck(item, index) }}
                                status={item.status} 
                                key={index} />
@@ -101,3 +106,9 @@ export default class SignUpCareList extends SignUpBaseStep {
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(SignUpCareList);

@@ -1,6 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native';
 import SignUpCarouselIndex from './SignUpCarouselIndex';
+import store from '../../../Store/store';
+import LanguageProvider from '../../Providers/LanguageProvider';
+
 
 /** Views */
 import SignUpProfile from './Steps/SignUpProfile';
@@ -54,7 +58,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpCarousel extends React.Component {
+class SignUpCarousel extends React.Component {
+  // Replace component state!!
   state = {
     isPatient: false,
     nextStep: false,
@@ -84,7 +89,9 @@ export default class SignUpCarousel extends React.Component {
   }
 
   render() {
+    const langProvider = LanguageProvider(store.getState().language);
     const nextCaretLogo = require('../../../Assets/caret-right.png');
+
     return (
       <View style={styles.container}>
         <View style={[styles.container, styles.subContainer]}>
@@ -161,7 +168,7 @@ export default class SignUpCarousel extends React.Component {
             <TouchableOpacity disabled={!this.state.nextStep}
                               style={[styles.buttonNext, !this.nextStep ? styles.nextDisabledArea : null]}
                               onPress={() => this.updateCarouselIndex()}>
-              <Text>Siguiente</Text>
+              <Text>{langProvider.views.signUp.nextLabel}</Text>
               <Image style={styles.nextCaretLogo}
                     source={nextCaretLogo} />
             </TouchableOpacity>
@@ -171,3 +178,9 @@ export default class SignUpCarousel extends React.Component {
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(SignUpCarousel);

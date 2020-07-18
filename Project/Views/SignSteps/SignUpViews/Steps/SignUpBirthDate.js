@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import store from '../../../../Store/store';
+import LanguageProvider from '../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { Layout } from '../../../../Theme/Layout';
@@ -18,7 +21,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpBirthDate extends SignUpBaseStep {
+class SignUpBirthDate extends SignUpBaseStep {
+  // Replace state!
   state = {
     ...this.getInitialStepState(),
     datePickerStatus: {
@@ -56,9 +60,10 @@ export default class SignUpBirthDate extends SignUpBaseStep {
   }
 
   render() {
+    const langProvider = LanguageProvider(store.getState().language);
     return (
       <View style={styles.container}>
-        <Text style={styles.textProfileTitle}>¿Cuándo naciste?</Text>
+        <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpBirthDateTitle}</Text>
         <TextInput placeholder="Tu fecha" value={this._formatDate(this.state.date)} onFocus={this.showDatepicker} style={Layout.textInput}></TextInput>
         {
           this.state.datePickerStatus.show &&
@@ -70,3 +75,9 @@ export default class SignUpBirthDate extends SignUpBaseStep {
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(SignUpBirthDate);

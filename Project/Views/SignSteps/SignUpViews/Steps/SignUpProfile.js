@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { StyleSheet, View, Text } from 'react-native';
+import store from '../../../../Store/store';
+import LanguageProvider from '../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { RadioButton } from 'react-native-paper';
@@ -28,16 +31,17 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpProfile extends SignUpBaseStep {
+class SignUpProfile extends SignUpBaseStep {
+  // Remove component state
   state = {
     ...this.getInitialStepState(),
     itemsOptions: [
       {
-        label: 'Persona a cuidar',
+        label: 'signUpProfilePatientOption',
         value: 'PATIENT'
       },
       {
-        label: 'Prestador de cuidados',
+        label: 'signUpProfileCarePersonOption',
         value: 'CARE_PROVIDER'
       }
     ],
@@ -53,16 +57,17 @@ export default class SignUpProfile extends SignUpBaseStep {
   }
 
   render() {
+    const langProvider = LanguageProvider(store.getState().language);
     return (
       <View style={styles.container}>
-        <Text style={styles.textProfileTitle}>Cuéntanos quién eres</Text>
+        <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpProfileTitle}</Text>
         <RadioButton.Group onValueChange={profileValue => this.setProfileStatus(profileValue)}
                            value={this.state.profileValue}>
           {
             this.state.itemsOptions.map((item, index) => {
               return (
                 <View key={index} style={styles.radioBtnContainer}>
-                  <Text style={styles.radioText}>{item.label}</Text>
+                  <Text style={styles.radioText}>{langProvider.views.signUp[item.label]}</Text>
                   <RadioButton value={item.value} />
                 </View>
               );
@@ -73,3 +78,9 @@ export default class SignUpProfile extends SignUpBaseStep {
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(SignUpProfile);

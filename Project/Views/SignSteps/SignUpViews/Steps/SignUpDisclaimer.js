@@ -1,6 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { View, StyleSheet, Text, Button } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import store from '../../../../Store/store';
+import LanguageProvider from '../../../Providers/LanguageProvider';
 
 import { Checkbox } from 'react-native-paper';
 
@@ -36,17 +39,22 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpDisclaimer extends SignUpBaseStep {
+class SignUpDisclaimer extends SignUpBaseStep {
+  // Remove component state
   state = {
     ...this.getInitialStepState(),
-    termsNCondsChecked: false
+    termsNCondsChecked: 'unchecked',
+    termsNCondsBool: false
   };
 
   toggleCheck = () => {
+    const toggleCheckSt = !this.state.termsNCondsBool ? 'checked' : 'unchecked';
+    this.state.termsNCondsBool = !this.state.termsNCondsBool;
+
     this.setState({
-      termsNCondsChecked: !this.state.termsNCondsChecked
+      termsNCondsChecked: toggleCheckSt
     });
-    if (this.state.termsNCondsChecked) {
+    if (this.state.termsNCondsBool) {
       this.validateStep();
     }
   }
@@ -56,25 +64,32 @@ export default class SignUpDisclaimer extends SignUpBaseStep {
   }
 
   render() {
+    const langProvider = LanguageProvider(store.getState().language);
     return (
       <View style={styles.container}>
         <View style={styles.textContainer}>
-          <Text style={styles.title}>Antes de unirte</Text>
+          <Text style={styles.title}>{langProvider.views.signUp.signUpDisclaimerTitle}</Text>
           <View style={styles.declarationText}>
-            <Text>Si has usado ya Quermi o es tu primera vez, te recomendamos que leas nuestros Términos y Condiciones antes de continuar.</Text>
-            <TouchableOpacity onPress={() => {}}><Text>Leer más</Text></TouchableOpacity>
+            <Text>{langProvider.views.signUp.signUpDisclaimerDesc}</Text>
+            <TouchableOpacity onPress={() => {}}><Text>{langProvider.views.signUp.signUpDisclaimerLink}</Text></TouchableOpacity>
           </View>
         </View>
         <View style={styles.checkRow}>
           <Checkbox.Item style={styles.checkboxDisclaimer}
                          onPress={() => { this.toggleCheck() }}
                          status={this.state.termsNCondsChecked} />
-          <Text style={styles.checkboxDisclaimerText}>He leído y aceptado los Términos y Condiciones declarados previamente.</Text>
+          <Text style={styles.checkboxDisclaimerText}>{langProvider.views.signUp.signUpDisclaimerCheckLabel}</Text>
         </View>
         <View>
-          <Button title="Continuar" onPress={() => this.redirectToHome()} />
+          <Button title={langProvider.views.signUp.signUpDisclaimerContinue} onPress={() => this.redirectToHome()} />
         </View>
       </View>
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(SignUpDisclaimer);

@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { StyleSheet, View, Text, Image } from 'react-native';
+import store from '../../../../Store/store';
+import LanguageProvider from '../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { Colors } from '../../../../Theme/Colors';
@@ -34,7 +37,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUpProfilePhoto extends SignUpBaseStep {
+class SignUpProfilePhoto extends SignUpBaseStep {
+  // Remove component state
   state = {
     ...this.getInitialStepState(),
     cameraEnabled: false
@@ -45,6 +49,7 @@ export default class SignUpProfilePhoto extends SignUpBaseStep {
   };
 
   render() {
+    const langProvider = LanguageProvider(store.getState().language);
     const imagePhoto = require('../../../../Assets/picture.png');
 
     // FIXME: Validate automatically step
@@ -54,7 +59,7 @@ export default class SignUpProfilePhoto extends SignUpBaseStep {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.textProfileTitle}>Te pedimos una foto para tu perfil</Text>
+        <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpProfilePhotoTitle}</Text>
         <View style={styles.inputContent}>
           <TouchableOpacity style={styles.photoInput} onPress={() => this.setCamera()}>
             <Image source={imagePhoto} style={styles.img} resizeMode='contain' />
@@ -64,3 +69,9 @@ export default class SignUpProfilePhoto extends SignUpBaseStep {
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+export default connect(mapStateToProps, null)(SignUpProfilePhoto);
