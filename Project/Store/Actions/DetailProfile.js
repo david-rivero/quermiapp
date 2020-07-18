@@ -1,0 +1,3 @@
+export const RATE_PROFILE = 'RATE_PROFILE';
+export const UPDATE_MY_PROFILE = 'UPDATE_MY_PROFILE';
+export const LOAD_LANGUAGE = 'LOAD_LANGUAGE';

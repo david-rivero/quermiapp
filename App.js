@@ -4,6 +4,10 @@ import * as React from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Provider } from 'react-redux';
+
+/**Store**/
+import store from './Project/Store/store';
 
 /**** Views ****/
 import HomeGuest from './Project/Views/Home/HomeGuest';
@@ -26,22 +30,24 @@ const screenOptions = {
 
 export default function App() {
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={screenOptions} initialRouteName="HomeGuest">
-          <Stack.Screen name="HomeGuest" component={HomeGuest} />
-          <Stack.Screen name="SignIn" component={SignIn} />
-          <Stack.Screen name="SignUp" component={SignUp} />
-          <Stack.Screen name="HomeSignedIn" component={HomeSignedIn} />
-          <Stack.Screen name="SearchProfile" component={SearchProfile} />
-          <Stack.Screen name="DetailProfileOnSearch" component={DetailProfileOnSearch} />
-          <Stack.Screen name="Match" component={Match} />
-          <Stack.Screen name="ChatList" component={ChatList} />
-          <Stack.Screen name="ChatDetail" component={ChatDetail} />
-          <Stack.Screen name="RateProfile" component={RateProfile} />
-          <Stack.Screen name="Camera" component={Camera} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <Provider store={store}>
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={screenOptions} initialRouteName="HomeGuest">
+            <Stack.Screen name="HomeGuest" component={HomeGuest} />
+            <Stack.Screen name="SignIn" component={SignIn} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="HomeSignedIn" component={HomeSignedIn} />
+            <Stack.Screen name="SearchProfile" component={SearchProfile} />
+            <Stack.Screen name="DetailProfileOnSearch" component={DetailProfileOnSearch} />
+            <Stack.Screen name="Match" component={Match} />
+            <Stack.Screen name="ChatList" component={ChatList} />
+            <Stack.Screen name="ChatDetail" component={ChatDetail} />
+            <Stack.Screen name="RateProfile" component={RateProfile} />
+            <Stack.Screen name="Camera" component={Camera} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </Provider>
   );
 }
