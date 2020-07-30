@@ -2,8 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Checkbox } from 'react-native-paper';
+import { SIGN_UP_STEP_SET_PROFILE_INFO, SIGN_UP_STEP_PROFILE_SERVICES } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 
@@ -21,69 +22,41 @@ const styles = StyleSheet.create({
   }
 });
 
+
 class SignUpCareList extends SignUpBaseStep {
-  // Remove component state
-  state = {
-    ...this.getInitialStepState(),
-    itemsOptions: [
-      {
-        label: 'homeCareLabel',
-        status: 'unchecked',
-        checked: false
-      },
-      {
-        label: 'marketLabel',
-        status: 'unchecked',
-        checked: false
-      },
-      {
-        label: 'walkLabel',
-        status: 'unchecked',
-        checked: false
-      },
-      {
-        label: 'procedureLabel',
-        status: 'unchecked',
-        checked: false
-      },
-      {
-        label: 'pharmaLabel',
-        status: 'unchecked',
-        checked: false
-      },
-      {
-        label: 'homeCleanLabel',
-        status: 'unchecked',
-        checked: false
-      },
-      {
-        label: 'hygieneServiceLabel',
-        status: 'unchecked',
-        checked: false
-      },
-      {
-        label: 'otherOptLabel',
-        status: 'unchecked',
-        checked: false
-      }
-    ]
-  };
-
   toggleCheck = (item, index) => {
-    const items = [...this.state.itemsOptions];
-    item.checked = !item.checked;
-    item.status = item.checked ? 'checked' : 'unchecked';
-    items[index] = item;
-
-    this.setState({
-      itemsOptions: items
-    });
-    // FIXME: Check at least one element
-    this.validateStep();
+    let newCareListState = [...this.props.itemsOptions];
+    newCareListState[index].checked = !item.checked;
+    newCareListState[index].status = item.checked ? 'checked' : 'unchecked';
+    store.dispatch({
+      type: SIGN_UP_STEP_PROFILE_SERVICES,
+      payload: [...newCareListState]
+    })
+    this.saveCareServices(newCareListState);
   }
 
+  saveCareServices = careListServices => {
+    const careServices = careListServices
+      .filter(item => item.checked)
+      .map(item => { return {value: item.label, name: item.name}; });
+
+    store.dispatch({
+      type: SIGN_UP_STEP_SET_PROFILE_INFO,
+      payload: {
+        profileField: 'services',
+        profileData: careServices
+      }
+    });
+
+    if (careServices.length) {
+      this.validateStep();
+    } else {
+      this.uncheckStep();
+    }
+  };
+
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
     const labelText = this.props.isPatient ? langProvider.views.signUp.signUpCareListPersonToCareTitle : langProvider.views.signUp.signUpCareListCarePersonTitle;
   
     return (
@@ -91,14 +64,14 @@ class SignUpCareList extends SignUpBaseStep {
         <Text style={styles.textProfileTitle}>{labelText}</Text>
         <ScrollView>
           {
-            this.state.itemsOptions.map((item, index) => {
+            this.props.itemsOptions.map((item, index) => {
               return (
                 <Checkbox.Item style={styles.checkItem}
                                label={langProvider.components.services[item.label]}
                                onPress={() => { this.toggleCheck(item, index) }}
                                status={item.status} 
                                key={index} />
-              )
+              );
             })
           }
         </ScrollView>
@@ -108,7 +81,8 @@ class SignUpCareList extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language
+    language: state.language,
+    itemsOptions: state.registerStatus.careListServices
   };
 }
 export default connect(mapStateToProps, null)(SignUpCareList);

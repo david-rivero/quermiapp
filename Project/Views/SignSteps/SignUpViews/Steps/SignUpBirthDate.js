@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { SIGN_UP_STEP_SET_PROFILE_INFO, SIGN_UP_STEP_DATETIMEPICKER } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { Layout } from '../../../../Theme/Layout';
@@ -22,53 +23,64 @@ const styles = StyleSheet.create({
 });
 
 class SignUpBirthDate extends SignUpBaseStep {
-  // Replace state!
-  state = {
-    ...this.getInitialStepState(),
-    datePickerStatus: {
-      mode: 'date',
-      show: false
-    },
-    date: new Date(1598051730000)
-  };
-
-  _formatDate = (date) => {
-    const day = date.getDate();
-    const month = `${date.getMonth() < 9 && '0'}${date.getMonth() + 1}`;
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+  _formatDate = date => {
+    if (date) {
+      const day = date.getDate();
+      const month = `${date.getMonth() < 9 && '0'}${date.getMonth() + 1}`;
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+    return '';
   }
 
-  setDate = (_, selectedDate) => {
-    this.setState({
-      date: selectedDate,
-      datePickerStatus: {
-        show: false
+  setDate = (e, selectedDate) => {
+    store.dispatch({
+      type: SIGN_UP_STEP_DATETIMEPICKER,
+      payload: {
+        pickerType: 'datePickerStatus',
+        data: {
+          mode: 'date',
+          show: false
+        }
       }
     });
-    this.validateStep();
+
+    if (e.type === 'set') {
+      store.dispatch({
+        type: SIGN_UP_STEP_SET_PROFILE_INFO,
+        payload: {
+          profileField: 'birthDate',
+          profileData: selectedDate
+        }
+      });
+      this.validateStep();
+    }
   }
 
   showDatepicker = () => {
-    this.setState({
-      datePickerStatus: {
-        mode: 'date',
-        show: true
+    store.dispatch({
+      type: SIGN_UP_STEP_DATETIMEPICKER,
+      payload: {
+        pickerType: 'datePickerStatus',
+        data: {
+          mode: 'date',
+          show: true
+        }
       }
     });
     Keyboard.dismiss();
   }
 
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpBirthDateTitle}</Text>
-        <TextInput placeholder="Tu fecha" value={this._formatDate(this.state.date)} onFocus={this.showDatepicker} style={Layout.textInput}></TextInput>
+        <TextInput placeholder="Tu fecha" value={this._formatDate(this.props.date)} onFocus={this.showDatepicker} style={Layout.textInput}></TextInput>
         {
-          this.state.datePickerStatus.show &&
-          <DateTimePicker value={this.state.date}
-                          mode={this.state.datePickerStatus.mode}
+          this.props.datePickerStatus.show &&
+          <DateTimePicker value={this.props.date}
+                          mode={this.props.datePickerStatus.mode}
                           onChange={this.setDate} />
         }
       </View>
@@ -77,7 +89,9 @@ class SignUpBirthDate extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language
+    language: state.language,
+    datePickerStatus: state.registerStatus.datePickerStatus,
+    date: state.profile.birthDate
   };
 }
 export default connect(mapStateToProps, null)(SignUpBirthDate);

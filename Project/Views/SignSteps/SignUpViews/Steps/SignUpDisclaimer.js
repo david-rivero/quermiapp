@@ -2,8 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, Button } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { SIGN_UP_STEP_TERMS_CONDS } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import LanguageProvider from '../../../../Providers/LanguageProvider';
+
 
 import { Checkbox } from 'react-native-paper';
 
@@ -40,31 +42,27 @@ const styles = StyleSheet.create({
 });
 
 class SignUpDisclaimer extends SignUpBaseStep {
-  // Remove component state
-  state = {
-    ...this.getInitialStepState(),
-    termsNCondsChecked: 'unchecked',
-    termsNCondsBool: false
-  };
-
   toggleCheck = () => {
-    const toggleCheckSt = !this.state.termsNCondsBool ? 'checked' : 'unchecked';
-    this.state.termsNCondsBool = !this.state.termsNCondsBool;
-
-    this.setState({
-      termsNCondsChecked: toggleCheckSt
+    store.dispatch({
+      type: SIGN_UP_STEP_TERMS_CONDS,
+      payload: {
+        termsNCondsChecked: !this.props.termsNCondsBool ? 'checked' : 'unchecked',
+        termsNCondsBool: !this.props.termsNCondsBool
+      }
     });
-    if (this.state.termsNCondsBool) {
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.termsNCondsBool !== this.props.termsNCondsBool &&
+        this.props.termsNCondsBool) {
       this.validateStep();
+    } else {
+      this.uncheckStep();
     }
   }
 
-  redirectToHome = () => {
-    this.props.navigation.navigate('HomeSignedIn');
-  }
-
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <View style={styles.textContainer}>
@@ -77,11 +75,12 @@ class SignUpDisclaimer extends SignUpBaseStep {
         <View style={styles.checkRow}>
           <Checkbox.Item style={styles.checkboxDisclaimer}
                          onPress={() => { this.toggleCheck() }}
-                         status={this.state.termsNCondsChecked} />
+                         status={this.props.termsNCondsChecked} />
           <Text style={styles.checkboxDisclaimerText}>{langProvider.views.signUp.signUpDisclaimerCheckLabel}</Text>
         </View>
         <View>
-          <Button title={langProvider.views.signUp.signUpDisclaimerContinue} onPress={() => this.redirectToHome()} />
+          <Button title={langProvider.views.signUp.signUpDisclaimerContinue} 
+                  onPress={() => this.props.checkFinalStep()} />
         </View>
       </View>
     );
@@ -89,7 +88,9 @@ class SignUpDisclaimer extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language
+    language: state.language,
+    termsNCondsChecked: state.registerStatus.termsAndConditions.termsNCondsChecked,
+    termsNCondsBool: state.registerStatus.termsAndConditions.termsNCondsBool
   };
 }
 export default connect(mapStateToProps, null)(SignUpDisclaimer);

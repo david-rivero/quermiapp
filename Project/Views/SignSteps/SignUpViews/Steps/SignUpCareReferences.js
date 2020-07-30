@@ -2,8 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import store from '../../../../Store/store';
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { Layout } from '../../../../Theme/Layout';
@@ -19,16 +18,11 @@ const styles = StyleSheet.create({
 });
 
 class SignUpCareReferences extends SignUpBaseStep {
-  // Remove state component
-  state = {
-    ...this.getInitialStepState()
-  };
-
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
 
     // FIXME: Validate automatically step
-    if (!this.state.checkedStep) {
+    if (!this.props.checkedStep) {
       this.validateStep();
     }
 
@@ -46,7 +40,8 @@ class SignUpCareReferences extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language
+    language: state.language,
+    checkedStep: state.registerStatus.nextStep // Remove this state
   };
 }
 export default connect(mapStateToProps, null)(SignUpCareReferences);

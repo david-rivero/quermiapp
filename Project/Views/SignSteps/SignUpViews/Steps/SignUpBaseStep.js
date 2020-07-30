@@ -1,16 +1,11 @@
 import * as React from 'react';
 
 export default class SignUpBaseStep extends React.Component {
-  getInitialStepState = () => {
-    return {
-      checkedStep: false
-    };
+  validateStep = () => {
+    this.props.onChangeCheckedStep(true);
   }
 
-  validateStep = () => {
-    this.setState({
-      checkedStep: true
-    });
-    this.props.onChangeCheckedStep(true);
+  uncheckStep = () => {
+    this.props.onChangeCheckedStep(false);
   }
 }

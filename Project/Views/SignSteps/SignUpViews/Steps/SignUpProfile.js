@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text } from 'react-native';
+import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { RadioButton } from 'react-native-paper';
@@ -30,41 +31,38 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+const itemsOptions = [
+  {
+    label: 'signUpProfilePatientOption',
+    value: 'PATIENT'
+  },
+  {
+    label: 'signUpProfileCarePersonOption',
+    value: 'CARE_PROVIDER'
+  }
+];
 
 class SignUpProfile extends SignUpBaseStep {
-  // Remove component state
-  state = {
-    ...this.getInitialStepState(),
-    itemsOptions: [
-      {
-        label: 'signUpProfilePatientOption',
-        value: 'PATIENT'
-      },
-      {
-        label: 'signUpProfileCarePersonOption',
-        value: 'CARE_PROVIDER'
-      }
-    ],
-    profileValue: null
-  };
-
   setProfileStatus = value => {
-    this.setState({
-      profileValue: value
+    store.dispatch({
+      type: SIGN_UP_STEP_SET_PROFILE_INFO,
+      payload: {
+        profileField: 'profileRole',
+        profileData: value
+      }
     });
     this.validateStep();
-    this.props.onChangeProfileValue(value);
   }
 
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpProfileTitle}</Text>
         <RadioButton.Group onValueChange={profileValue => this.setProfileStatus(profileValue)}
-                           value={this.state.profileValue}>
+                           value={this.props.profileValue}>
           {
-            this.state.itemsOptions.map((item, index) => {
+            itemsOptions.map((item, index) => {
               return (
                 <View key={index} style={styles.radioBtnContainer}>
                   <Text style={styles.radioText}>{langProvider.views.signUp[item.label]}</Text>
@@ -80,7 +78,8 @@ class SignUpProfile extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language
+    language: state.language,
+    profileValue: state.profile.profileRole
   };
 }
 export default connect(mapStateToProps, null)(SignUpProfile);

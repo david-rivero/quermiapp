@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, Image } from 'react-native';
-import store from '../../../../Store/store';
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { Colors } from '../../../../Theme/Colors';
@@ -38,21 +37,16 @@ const styles = StyleSheet.create({
 });
 
 class SignUpIDPhoto extends SignUpBaseStep {
-  // Remove component state
-  state = {
-    ...this.getInitialStepState()
-  };
-
   setCamera = () => {
     this.props.navigation.navigate('Camera');
   };
 
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
     const imagePhoto = require('../../../../Assets/picture.png');
 
     // FIXME: Validate automatically step
-    if (!this.state.checkedStep) {
+    if (!this.props.checkedStep) {
       this.validateStep();
     }
 
@@ -70,7 +64,8 @@ class SignUpIDPhoto extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language
+    language: state.language,
+    checkedStep: state.registerStatus.nextStep // Remove this state
   };
 }
 export default connect(mapStateToProps, null)(SignUpIDPhoto);
