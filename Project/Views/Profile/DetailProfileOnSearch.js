@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { View, Image, Text, ScrollView, StyleSheet } from 'react-native';
 import store from '../../Store/store';
-import LanguageProvider from '../Providers/LanguageProvider';
+import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Actions from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
@@ -74,7 +74,7 @@ class DetailProfileOnSearch extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={[Layout.container, styles.container]}>
         <View style={styles.gallery}>

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Colors } from '../../Theme/Colors';
-import store from '../../Store/store';
-import LanguageProvider from '../Providers/LanguageProvider';
+import LanguageProvider from '../../Providers/LanguageProvider';
+import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
 
 
 const styles = StyleSheet.create({
@@ -37,6 +37,27 @@ const styles = StyleSheet.create({
 class LoginActions extends React.Component {
   constructor(props) {
     super(props);
+    ServiceEndpointProvider.registerEndpoint('login', 'POST');
+  }
+
+  performLogin() {
+    const data = {
+      username: this.props.username,
+      password: this.props.password
+    };
+    this.props.onLoginErrorStatus(false, '');
+    ServiceEndpointProvider.endpoints.login(data)
+      .then(r => {
+        if (r.status === 200) {
+          this.redirectToHomeSigned();
+        } else {
+          this.props.onLoginErrorStatus(true, 'Username or password are not valid');
+        }
+      })
+      .catch(e => {
+        this.props.onLoginErrorStatus(true, 'There was an unexpected error');
+        console.error(e);
+      });
   }
 
   redirectToSignIn() {
@@ -53,7 +74,7 @@ class LoginActions extends React.Component {
 
   render() {
     let view = null;
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
 
     if (this.props.home) {
       view = (
@@ -70,7 +91,7 @@ class LoginActions extends React.Component {
     } else {
       view = (
         <View style={styles.container}>
-          <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={() => this.redirectToHomeSigned()}>
+          <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={() => this.performLogin()}>
             <Text style={styles.buttonText}>{langProvider.components.loginActions.signIn}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => this.redirectToSignUp()}>

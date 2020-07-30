@@ -4,7 +4,7 @@ import { View, Image, Text, Button, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TextInput } from 'react-native-paper';
 import store from '../../Store/store';
-import LanguageProvider from '../Providers/LanguageProvider';
+import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
 
@@ -91,7 +91,7 @@ class RateProfile extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
     const caretLogo = require('../../Assets/caret-right.png');
     const profile = {
       imgProfile: require('../../Assets/felicia-varzari-8ZLLpY9r1cM-unsplash.jpg'),

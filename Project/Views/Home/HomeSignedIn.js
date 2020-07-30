@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Layout } from '../../Theme/Layout';
 import { Colors } from '../../Theme/Colors';
 import store from '../../Store/store';
-import LanguageProvider from '../Providers/LanguageProvider';
+import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
 
@@ -58,7 +58,7 @@ class HomeSignedIn extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
     const caretLogoWhite = require('../../Assets/caret-right-white.png');
     const caretLogo = require('../../Assets/caret-right.png');
 

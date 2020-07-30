@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import store from '../../Store/store';
-import LanguageProvider from '../Providers/LanguageProvider';
+import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
 import { ImageImports } from '../../ImageImports';
@@ -82,7 +82,7 @@ class ChatList extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(store.getState().language);
+    const langProvider = LanguageProvider(this.props.language);
     const caretLogo = require('../../Assets/caret-right.png');
 
     return (

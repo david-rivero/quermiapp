@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import store from '../../Store/store';
-import LanguageProvider from '../Providers/LanguageProvider';
+import LanguageProvider from '../../Providers/LanguageProvider';
 
 
 const styles = StyleSheet.create({
@@ -38,29 +37,31 @@ const styles = StyleSheet.create({
 });
 
 
-function FullLogo(props) {
-  const langProvider = LanguageProvider(store.getState().language);
-  const mode = props.mode || 'medium';
-  const imgStyles = [
-    styles.image,
-    mode === 'little' && styles.figureLittle,
-    mode === 'medium' && styles.figureMedium,
-    mode === 'big'    && styles.figureBig
-  ];
-  const uriLogo = require('../../Assets/images/quermi-full-logo.png');
+class FullLogo extends React.Component {
+  render() {
+    const langProvider = LanguageProvider(this.props.language);
+    const mode = this.props.mode || 'medium';
+    const imgStyles = [
+      styles.image,
+      mode === 'little' && styles.figureLittle,
+      mode === 'medium' && styles.figureMedium,
+      mode === 'big'    && styles.figureBig
+    ];
+    const uriLogo = require('../../Assets/images/quermi-full-logo.png');
 
-  return (
-    <View style={[styles.logo, props.stylesContainer]}>
-      <View style={styles.figure}>
-        <Image source={uriLogo} resizeMode='contain' style={imgStyles}></Image>
+    return (
+      <View style={[styles.logo, this.props.stylesContainer]}>
+        <View style={styles.figure}>
+          <Image source={uriLogo} resizeMode='contain' style={imgStyles}></Image>
+        </View>
+        {
+          this.props.displayLabel && <Text style={styles.text}>
+            {langProvider.components.fullLogo.logoTitle}
+          </Text>
+        }
       </View>
-      {
-        props.displayLabel && <Text style={styles.text}>
-          {langProvider.components.fullLogo.logoTitle}
-        </Text>
-      }
-    </View>
-  );
+    );
+  }
 }
 
 function mapStateToProps (state) {
