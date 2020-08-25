@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, Image } from 'react-native';
+import FilePickerManager from 'react-native-file-picker';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
+import * as RNFS from 'react-native-fs';
+import { getFormatFromImage } from '../../../../Providers/FileUtilsProvider';
+import { SIGN_UP_STEP_SET_PROFILE_INFO, SIGN_UP_STEP } from '../../../../Store/Actions/UserAuth';
+import store from '../../../../Store/store';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { Colors } from '../../../../Theme/Colors';
@@ -11,7 +16,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    paddingTop: '25%'
+    paddingTop: 10
   },
   textProfileTitle: {
     fontWeight: 'bold',
@@ -19,43 +24,100 @@ const styles = StyleSheet.create({
   },
   inputContent: {
     flex: 1,
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginTop: 25
   },
   photoInput: {
-    borderWidth: 1,
-    borderColor: Colors.black,
-    borderStyle: 'solid',
     width: 135,
-    height: 120,
     alignItems: 'center',
     justifyContent: 'center'
   },
   img: {
     width: 50
+  },
+  inputEnabled: {
+    borderWidth: 3,
+    borderColor: '#F28998',
+    padding: 5
   }
 });
 
 class SignUpIDPhoto extends SignUpBaseStep {
-  setCamera = () => {
-    this.props.navigation.navigate('Camera');
+  state = {
+    file: null
   };
+
+  _setLatestAction = actionFrom => {
+    store.dispatch({
+      type: SIGN_UP_STEP,
+      payload: {lastActionFromIDPhoto: actionFrom}
+    });
+  }
+
+  setCamera = () => {
+    this._setLatestAction('camera');
+    this.props.navigation.navigate('Camera', { from: 'idPhoto' });
+  };
+
+  showFilePicker = () => {
+    this._setLatestAction('file');
+    FilePickerManager.showFilePicker(null, (response) => {     
+      if (response.didCancel) {
+        console.log('User cancelled file picker');
+      }
+      else if (response.error) {
+        console.log('FilePickerManager Error: ', response.error);
+      }
+      else {
+        RNFS.readFile(response.uri, 'base64')
+          .then(data => {
+            store.dispatch({
+              type: SIGN_UP_STEP_SET_PROFILE_INFO,
+              payload: {
+                profileField: 'pictsOnRegister',
+                profileData: {
+                  documentID: {
+                    data: data,
+                    name: response.fileName,
+                    type: getFormatFromImage(response.type)
+                  },
+                  profilePhoto: this.props.profilePhoto 
+                }
+              }
+            });
+          })
+          .catch(err => console.log(err.message, err.code));
+      }
+    });
+  };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.idDocPhoto !==  this.props.idDocPhoto && this.props.idDocPhoto) {
+      this.validateStep();
+    } else if (!this.props.idDocPhoto) {
+      this.uncheckStep();
+    }
+  }
 
   render() {
     const langProvider = LanguageProvider(this.props.language);
+    const imageCamera = require('../../../../Assets/images/photo-camera.png');
     const imagePhoto = require('../../../../Assets/picture.png');
-
-    // FIXME: Validate automatically step
-    if (!this.props.checkedStep) {
-      this.validateStep();
-    }
 
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpIDPhotoTitle}</Text>
         <View style={styles.inputContent}>
-          <TouchableOpacity style={styles.photoInput} onPress={() => this.setCamera()}>
+          <TouchableOpacity style={[styles.photoInput, this.props.actionFrom === 'camera' && this.props.nextStep ? styles.inputEnabled: null]}
+                            onPress={() => this.setCamera()}>
+            <Image source={imageCamera} style={styles.img} resizeMode='contain' />
+            <Text>{langProvider.views.signUp.signUpPhotoCameraLabel}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.photoInput, this.props.actionFrom === 'file' && this.props.nextStep ? styles.inputEnabled: null]}
+                            onPress={() => this.showFilePicker()}>
             <Image source={imagePhoto} style={styles.img} resizeMode='contain' />
+            <Text>{langProvider.views.signUp.signUpPhotoFileLabel}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -65,7 +127,10 @@ class SignUpIDPhoto extends SignUpBaseStep {
 function mapStateToProps (state) {
   return {
     language: state.language,
-    checkedStep: state.registerStatus.nextStep // Remove this state
+    profilePhoto: state.profile.pictsOnRegister.profilePhoto,
+    idDocPhoto: state.profile.pictsOnRegister.documentID,
+    actionFrom: state.registerStatus.lastActionFromIDPhoto,
+    nextStep: state.registerStatus.nextStep
   };
 }
 export default connect(mapStateToProps, null)(SignUpIDPhoto);

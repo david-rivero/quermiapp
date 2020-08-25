@@ -42,6 +42,8 @@ let initialState = {
   registerStatus: {
     nextStep: false,
     indexActive: 0,
+    lastActionFromIDPhoto: '',
+    lastActionFromProfilePhoto: '',
     termsAndConditions: {
       termsNCondsChecked: 'unchecked',
       termsNCondsBool: false

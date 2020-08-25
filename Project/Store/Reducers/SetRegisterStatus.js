@@ -45,6 +45,8 @@ export function setRegisterStatus(state, action) {
       return state || {
         nextStep: false,
         indexActive: 0,
+        lastActionFromIDPhoto: '',
+        lastActionFromProfilePhoto: '',
         termsAndConditions: {
           termsNCondsChecked: 'unchecked',
           termsNCondsBool: false
