@@ -1,4 +1,4 @@
-import { UPDATE_MY_PROFILE } from '../Actions/DetailProfile';
+import { UPDATE_MY_PROFILE, TOGGLE_MENU_OPEN } from '../Actions/DetailProfile';
 import {
   SIGN_UP,
   SIGN_UP_STEP_SET_PROFILE_INFO,
@@ -7,29 +7,29 @@ import {
 } from '../Actions/UserAuth';
 
 export const defaultProfile = {
-    registerMode: false,
-    profileRole: '',
-    name: '',
-    birthDate: new Date(),
-    pictsOnRegister: {
-      documentID: null,
-      profilePhoto: null
-    },
-    account: {
-      email: '',
-      password: ''
-    },
-    services: [],
-    time: {
-      start: new Date(),
-      end: new Date()
+  registerMode: false,
+  profileRole: '',
+  name: '',
+  birthDate: new Date(),
+  pictsOnRegister: {
+    documentID: null,
+    profilePhoto: null
+  },
+  account: {
+    email: '',
+    password: ''
+  },
+  services: [],
+  time: {
+    start: new Date(),
+    end: new Date()
   },
   profileStatus: {
     covidTestCheck: false,
     autonomousProfessionalCheck: false,
     otherCareServiceDescription: ''
-    }
-  };
+  }
+};
 
 export function setDetailProfile(state, action) {
   switch(action.type) {
@@ -56,4 +56,16 @@ export function setDetailProfile(state, action) {
     default:
       return state || defaultProfile;
   }
+}
+
+export function setHomeStatus(state, action) {
+  if (action.type === TOGGLE_MENU_OPEN) {
+    return {
+      ...state,
+      menuOpened: action.payload
+    };
+  }
+  return state || {
+    menuOpened: false
+  };
 }

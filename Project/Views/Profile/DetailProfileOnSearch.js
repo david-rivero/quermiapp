@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { View, Image, Text, ScrollView, StyleSheet } from 'react-native';
-import store from '../../Store/store';
+import { getAgeFromDate } from '../../Providers/TimeUtilsProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Actions from '../Components/Actions';
@@ -64,41 +64,25 @@ const styles = StyleSheet.create({
 });
 
 class DetailProfileOnSearch extends React.Component {
-  constructor(props) {
-    super(props);
-    // Remove component state
-    this.state = {
-      profile: this.props.route.params.profile,
-      galleryEnabledIndex: 0
-    };
-  }
-
   render() {
-    const langProvider = LanguageProvider(this.props.language);
+    const profile = this.props.route.params.profile;
+
     return (
       <View style={[Layout.container, styles.container]}>
         <View style={styles.gallery}>
-          {
-            this.state.profile.gallery.map((image, index) => {
-              if (this.state.galleryEnabledIndex === index) {
-                return <Image style={styles.imageGallery}
-                              source={ImageImports[image.key]}
-                              resizeMode='cover'
-                              key={`profile-img-${index}`} />;
-              }
-              return null;
-            })
-          }
+          <Image style={styles.imageGallery}
+                source={ImageImports[profile.user]}
+                resizeMode='cover' />
         </View>
         <ScrollView style={styles.scrollView}>
           <View style={styles.initSection}>
-          <Text style={styles.profileName}>{this.state.profile.name}</Text>
-            <Text style={styles.profileAge}>{this.state.profile.age} {langProvider.views.detailProfileOnSearch.yearLabel}</Text>
+          <Text style={styles.profileName}>{profile.name.split(' ').shift()}</Text>
+            <Text style={styles.profileAge}>{getAgeFromDate(profile.birth_date)} {this.props.langProvider.views.detailProfileOnSearch.yearLabel}</Text>
             <View style={styles.starQContainer}>
               {
                 Array.from(Array(5), (_, index) => {
                   let imageStar;
-                  if (index + 1 <= this.state.profile.rateQ) {
+                  if (index + 1 <= profile.rate) {
                     imageStar = require('../../Assets/images/star-selected.png')
                   } else {
                     imageStar = require('../../Assets/images/star.png')
@@ -110,34 +94,44 @@ class DetailProfileOnSearch extends React.Component {
                 })
               }
             </View>
-            <Text>{this.state.profile.description}</Text>
+            <Text>{profile.profile_description}</Text>
           </View>
           <View style={styles.descriptionSection}>
             <View style={styles.profileSectionInfo}>
-            <Text style={styles.profileSectionTitle}>{langProvider.views.detailProfileOnSearch.servicesLabel}</Text>
+            <Text style={styles.profileSectionTitle}>{this.props.langProvider.views.detailProfileOnSearch.servicesLabel}</Text>
               {
-                this.state.profile.services.map((service, index) => {
-                  return <Text key={`profile-service-${index}`}>{langProvider.components.services[service]}</Text>;
+                profile.services.map((serviceId, index) => {
+                  const label = this.props.careServices[serviceId].label;
+                  const textLabel = this.props.langProvider.components.services[label];
+
+                  return <Text key={`profile-service-${index}`}>{textLabel}</Text>;
                 })
               }
             </View>
             <View style={styles.profileSectionInfo}>
-              <Text style={styles.profileSectionTitle}>{langProvider.views.detailProfileOnSearch.experienceLabel}</Text>
+              <Text style={styles.profileSectionTitle}>{this.props.langProvider.views.detailProfileOnSearch.experienceLabel}</Text>
               {
-                this.state.profile.experience.map((experience, index) => {
+                profile.experience.split(",").map((experience, index) => {
                   return <Text key={`profile-experience-${index}`}>{experience}</Text>;
                 })
               }
             </View>
             <View style={styles.profileSectionInfo}>
-              <Text style={styles.profileSectionTitle}>{langProvider.views.detailProfileOnSearch.langLabel}</Text>
+              <Text style={styles.profileSectionTitle}>{this.props.langProvider.views.detailProfileOnSearch.langLabel}</Text>
               {
-                this.state.profile.languages.map((lang, index) => {
-                  return <Text key={`profile-lang-${index}`}>{langProvider.components.lang[lang]}</Text>;
+                profile.languages.map((lang, index) => {
+                  const languageObj = this.props.listLanguages.find(language => language.id === lang);
+                  const textLabel = this.props.langProvider.components.lang[languageObj.name.toLowerCase()];
+                  return <Text key={`profile-lang-${index}`}>{textLabel}</Text>;
                 })
               }
             </View>
-            <View><Text style={styles.profileSectionTitle}>{langProvider.views.detailProfileOnSearch.timeAvailabilityLabel}:</Text><Text>{this.state.profile.timeAvailability}</Text></View>
+            <View>
+              <Text style={styles.profileSectionTitle}>
+                {this.props.langProvider.views.detailProfileOnSearch.timeAvailabilityLabel}:
+              </Text>
+              <Text>{profile.available_time}</Text>
+            </View>
           </View>
         </ScrollView>
         <Actions actionsStyles={styles.actionsStyles} navigation={this.props.navigation} isDetail={true}></Actions>
@@ -146,8 +140,21 @@ class DetailProfileOnSearch extends React.Component {
   }
 }
 function mapStateToProps (state) {
+  function _mapPKToServices(_state) {
+    let services = {};
+    Object.keys(_state.registerStatus.careListServicesAPIMap).forEach(careServiceKey => {
+      const careServiceId = _state.registerStatus.careListServicesAPIMap[careServiceKey].id;
+      const careServiceObj = _state.registerStatus.careListServices.find(
+        careService => careService.name === careServiceKey);
+      services[careServiceId] = careServiceObj;
+    });
+    return services;
+  }
+
   return {
-    language: state.language
+    langProvider: LanguageProvider(state.language),
+    careServices: _mapPKToServices(state),
+    listLanguages: state.availableLangs
   };
 }
 export default connect(mapStateToProps, null)(DetailProfileOnSearch);
