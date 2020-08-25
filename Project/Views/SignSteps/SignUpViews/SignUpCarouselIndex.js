@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
 });
 
 export default function SignUpCarouselIndex(props) {
-  const PATIENT_INDEX = 8;
-  const CARE_PERSON_INDEX = 9;
+  const PATIENT_INDEX = 9;
+  const CARE_PERSON_INDEX = 10;
 
   return (
     <View style={styles.carouselContainer}>

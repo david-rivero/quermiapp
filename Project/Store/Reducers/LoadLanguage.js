@@ -1,4 +1,4 @@
-import { LOAD_LANGUAGE } from '../Actions/DetailProfile';
+import { LOAD_LANGUAGE, LOAD_LIST_LANGUAGES } from '../Actions/DetailProfile';
 
 export const SPANISH_LANG = 'ES';
 export const ENGLISH_LANG = 'EN';
@@ -10,4 +10,11 @@ export function loadLanguage (state, action) {
     return action.payload
   }
   return state || SPANISH_LANG;
+}
+
+export function loadListLanguages (state, action) {
+  if (action.type === LOAD_LIST_LANGUAGES) {
+    return action.payload
+  }
+  return state || [];
 }

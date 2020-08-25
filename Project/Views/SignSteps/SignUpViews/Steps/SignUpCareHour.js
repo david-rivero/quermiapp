@@ -5,10 +5,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInput } from 'react-native-paper';
 import { SIGN_UP_STEP_DATETIMEPICKER, SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
+import { formatTime } from '../../../../Providers/TimeUtilsProvider'; 
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
-import { Layout } from '../../../../Theme/Layout';
 
 const styles = StyleSheet.create({
   inputTimeRow: {
@@ -28,15 +28,6 @@ const styles = StyleSheet.create({
 });
 
 class SignUpCareHour extends SignUpBaseStep {
-  _formatTime = time => {
-    if (time) {
-      const hour = time.getHours();
-      const minutes = time.getMinutes();
-      return `${hour}:${minutes}`;
-    }
-    return '';
-  }
-
   setTimePicker = (event, time, location, type) => {
     store.dispatch({
       type: SIGN_UP_STEP_DATETIMEPICKER,
@@ -91,12 +82,12 @@ class SignUpCareHour extends SignUpBaseStep {
         <View style={styles.inputTimeRow}>
           <Text>De</Text>
           <TextInput placeholder="Hora"
-                     value={this._formatTime(this.props.timeStart)}
+                     value={formatTime(this.props.timeStart)}
                      style={styles.timeInput}
                      onFocus={() => this.showTimePicker('timePickerStartStatus', 'timeStart')} />
           <Text>a</Text>
           <TextInput placeholder="Hora"
-                     value={this._formatTime(this.props.timeEnd)}
+                     value={formatTime(this.props.timeEnd)}
                      style={styles.timeInput}
                      onFocus={() => this.showTimePicker('timePickerEndStatus', 'timeEnd')} />
         </View>

@@ -6,8 +6,7 @@ import {
   LOGIN
 } from '../Actions/UserAuth';
 
-export function setDetailProfile(state, action) {
-  const defaultProfile = {
+export const defaultProfile = {
     registerMode: false,
     profileRole: '',
     name: '',
@@ -24,8 +23,15 @@ export function setDetailProfile(state, action) {
     time: {
       start: new Date(),
       end: new Date()
+  },
+  profileStatus: {
+    covidTestCheck: false,
+    autonomousProfessionalCheck: false,
+    otherCareServiceDescription: ''
     }
   };
+
+export function setDetailProfile(state, action) {
   switch(action.type) {
     case SIGN_UP:
     case UPDATE_MY_PROFILE:

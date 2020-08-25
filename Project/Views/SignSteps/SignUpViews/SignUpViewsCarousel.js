@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
 import SignUpCarouselIndex from './SignUpCarouselIndex';
-import { SIGN_UP_STEP, LOAD_SERVICES_API } from '../../../Store/Actions/UserAuth';
+import { SIGN_UP_STEP } from '../../../Store/Actions/UserAuth';
+import { UPDATE_MY_PROFILE } from '../../../Store/Actions/DetailProfile';
 import { SPANISH_LANG } from '../../../Store/Reducers/LoadLanguage';
 import store from '../../../Store/store';
+import { ProfileSerializer } from '../../../Providers/SerializerProvider';
+import { formatTime, formatDate } from '../../../Providers/TimeUtilsProvider';
 import LanguageProvider from '../../../Providers/LanguageProvider';
 import ServiceEndpointProvider from '../../../Providers/EndpointServiceProvider';
 
@@ -17,6 +20,7 @@ import SignUpProfilePhoto from './Steps/SignUpProfilePhoto';
 import SignUpIDPhoto from './Steps/SignUpIDPhoto';
 import SignUpCareList from './Steps/SignUpCareList';
 import SignUpCareHour from './Steps/SignUpCareHour';
+import SignUpAdditionalInfo from './Steps/SignUpAdditionalInfo';
 import SignUpUserPass from './Steps/SignUpUserPass';
 import SignUpCareReferences from './Steps/SignUpCareReferences';
 import SignUpDisclaimer from './Steps/SignUpDisclaimer';
@@ -28,19 +32,19 @@ const styles = StyleSheet.create({
     margin: 5
   },
   subContainer: {
-    justifyContent: 'flex-start',
+    flex: 1,
+    margin: 5
   },
   signUpView: {
     flex: 1,
     justifyContent: 'center'
   },
-  buttonContainer: {
-    alignItems: 'flex-end',
-    marginLeft: 'auto',
-    width: '50%'
-  },
   nextDisabledArea: {
     opacity: 0.5
+  },
+  footerSignUp: {
+    backgroundColor: 'white',
+    paddingTop: 5
   },
   buttonNext: {
     flexDirection: 'row',
@@ -48,12 +52,26 @@ const styles = StyleSheet.create({
     color: 'black',
     marginRight: 10
   },
+  actionSection: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   nextCaretLogo: {
     width: 7,
     height: 10,
     marginLeft: 8
+  },
+  prevCaretLogo: {
+    marginLeft: 0,
+    marginRight: 8,
+    transform: [{rotate: '180deg'}]
+  },
+  carouselCaretText: {
+    fontSize: 16
   }
 });
+const DEFAULT_PROFILE_RATE = 5;
 
 class SignUpCarousel extends React.Component {
   DEFAULT_LANG = null;
@@ -62,39 +80,40 @@ class SignUpCarousel extends React.Component {
     super(props);
     ServiceEndpointProvider.registerEndpoint('user', 'POST');
     ServiceEndpointProvider.registerEndpoint('profile', 'POST');
-    ServiceEndpointProvider.registerEndpoint('nameLang', 'GET');
-    ServiceEndpointProvider.registerEndpoint('nameServices', 'GET');
   }
 
   componentDidMount() {
-    ServiceEndpointProvider.endpoints.nameLang()
-      .then(r => r.json())
-      .then(data => {
-        this.DEFAULT_LANG = data.find(row => row.name === SPANISH_LANG);
-      });
-    ServiceEndpointProvider.endpoints.nameServices()
-      .then(r => r.json())
-      .then(data => {
-        store.dispatch({
-          type: LOAD_SERVICES_API,
-          payload: data
-        });
-      });
+    this.DEFAULT_LANG = this.props.listLanguages.find(
+      row => row.name === SPANISH_LANG);
+  }
+
+  setLoadStatus (status) {
+    if(this.props.displayLoadState) {
+      this.props.displayLoadState(status);
+    }
   }
 
   checkIfLatestPage = () => {
-    return (this.props.indexActive === 9 && !this.props.isPatient) || (this.props.indexActive === 8 && this.props.isPatient);
+    return (this.props.indexActive === 10 && !this.props.isPatient) || (this.props.indexActive === 9 && this.props.isPatient);
   }
 
-  updateCarouselIndex = () => {
-    if (!this.checkIfLatestPage()) {
+  checkIfFirstPage = () => {
+    return this.props.indexActive === 0;
+  }
+
+  updateCarouselIndex = status => {
+    const increaseVal = status === 'increase' ? + 1 : - 1;
+    if (!this.checkIfLatestPage() && !this.checkIfFirstPage() ||
+        (this.checkIfFirstPage() && status === 'increase')) {
       store.dispatch({
         type: SIGN_UP_STEP,
         payload: {
-          indexActive: this.props.indexActive + 1,
-          nextStep: false
+          indexActive: this.props.indexActive + increaseVal,
+          nextStep: increaseVal > 0 ? false : true
         }
       });
+    } else if (this.checkIfFirstPage() && status === 'decrease') {
+      this.props.navigation.navigate('HomeGuest');
     }
   };
 
@@ -114,40 +133,64 @@ class SignUpCarousel extends React.Component {
   }
 
   signUpProcess = () => {
-    ServiceEndpointProvider.endpoints.user({...this.props.profile.account})
+    const [ first_name, last_name ] = this.props.profile.name.split(' ');
+    const userData = {
+      ...this.props.profile.account,
+      first_name, last_name
+    };
+
+    this.setLoadStatus(true);
+    ServiceEndpointProvider.endpoints.user.post(userData)
       .then(r => {
         if (r.status === 201) {
           return r.json();
         }
+        this.setLoadStatus(false);
         return;
       })
       .then(data => {
         if (data) {
-          const birth = this.props.profile.birthDate;
-          const day = birth.getDate();
-          const month = `${birth.getMonth() < 9 && '0'}${birth.getMonth() + 1}`;
-          const year = birth.getFullYear();
-          const hourFrom = this.props.profile.time.start;
-          const hourTo = this.props.profile.time.end;
-
-          const profileData = {
-            "role": this.props.profile.profileRole,
-            "rate": 5,
-            "profile_description": "Default description",
-            "birth_date": `${year}-${month}-${day}T00:00:00Z`,
-            "available_hour_from": `${hourFrom.getHours()}:${hourFrom.getMinutes()}`,
-            "available_hour_to": `${hourTo.getHours()}:${hourTo.getMinutes()}`,
-            "languages": [this.DEFAULT_LANG.id],
-            "services": [
+          const docID = this.props.profile.pictsOnRegister.documentID;
+          const profilePhoto = this.props.profile.pictsOnRegister.profilePhoto;
+          let profileData = {
+            role: this.props.profile.profileRole,
+            rate: DEFAULT_PROFILE_RATE,
+            profile_description: 'Default description',
+            birth_date: formatDate(this.props.profile.birthDate, 'api'),
+            available_hour_from: formatTime(this.props.profile.time.start),
+            available_hour_to: formatTime(this.props.profile.time.end),
+            languages: [this.DEFAULT_LANG.id],
+            services: [
               ...this.props.profile.services.map(service => {
                 return this.props.careServicesAPI[service.name].id;
               })
             ],
-            "experience": "Default experience",
-            "user": data.id
-          };
-          ServiceEndpointProvider.endpoints.profile(profileData)
-            .then(_ => this.props.navigation.navigate('HomeSignedIn'));
+            experience: 'Default experience',
+            user: data.id,
+            id_doc_photo: docID.data,
+            profile_photo: profilePhoto.data,
+            profile_status: {
+              ...this.props.profile.profileStatus
+            }
+          }
+
+          ServiceEndpointProvider.endpoints.profile.post(profileData)
+            .then(_ => {
+              const email = this.props.profile.account.email;
+              const username = email.split('@').shift();
+
+              // Refactor in rxjs for several calls
+              ServiceEndpointProvider.endpoints.profile.get(undefined, username, `username=${username}`)
+                .then(res => res.json())
+                .then(ppData => {
+                  store.dispatch({
+                    type: UPDATE_MY_PROFILE,
+                    payload: ProfileSerializer.fromAPIToView(ppData.pop())
+                  });
+                  this.setLoadStatus(false);
+                  this.props.navigation.navigate('HomeSignedIn');
+                });
+            });
         }
       });
   }
@@ -158,7 +201,7 @@ class SignUpCarousel extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={[styles.container, styles.subContainer]}>
+        <ScrollView style={styles.subContainer}>
           {
             this.props.indexActive === 0 &&
             <SignUpProfile onChangeCheckedStep={this.setCheckedStep}
@@ -205,38 +248,58 @@ class SignUpCarousel extends React.Component {
           }
           {
             ((this.props.indexActive === 8 && !this.props.isPatient) ||
-             (this.props.indexActive === 7 && this.props.isPatient)) &&
-             <SignUpUserPass onChangeCheckedStep={this.setCheckedStep}
-                             style={styles.signUpView} />
+            (this.props.indexActive === 7 && this.props.isPatient)) &&
+            <SignUpAdditionalInfo onChangeCheckedStep={this.setCheckedStep}
+                                  style={styles.signUpView}/>
           }
           {
             ((this.props.indexActive === 9 && !this.props.isPatient) ||
              (this.props.indexActive === 8 && this.props.isPatient)) &&
+             <SignUpUserPass onChangeCheckedStep={this.setCheckedStep}
+                             style={styles.signUpView} />
+          }
+          {
+            ((this.props.indexActive === 10 && !this.props.isPatient) ||
+             (this.props.indexActive === 9 && this.props.isPatient)) &&
              <SignUpDisclaimer checkFinalStep={this.signUpToHome}
                                onChangeCheckedStep={this.setCheckedStep}
                                style={styles.signUpView} />
           }
-        </View>
-        {
-          this.props.indexActive > 0 &&
-          ((this.props.indexActive < 9 && !this.props.isPatient) ||
-             (this.props.indexActive < 8 && this.props.isPatient)) &&
-          <SignUpCarouselIndex style={styles.carousel} isPatient={this.props.isPatient}
-            indexActive={this.props.indexActive} />
-        }
-        {
-          ((this.props.indexActive < 9 && !this.props.isPatient) ||
-          (this.props.indexActive < 8 && this.props.isPatient)) && 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity disabled={!this.props.nextStep}
-                              style={[styles.buttonNext, !this.props.nextStep ? styles.nextDisabledArea : null]}
-                              onPress={() => this.updateCarouselIndex()}>
-              <Text>{langProvider.views.signUp.nextLabel}</Text>
-              <Image style={styles.nextCaretLogo}
-                     source={nextCaretLogo} />
-            </TouchableOpacity>
+        </ScrollView>
+        <View style={styles.footerSignUp}>
+          {
+            this.props.indexActive > 0 &&
+            ((this.props.indexActive < 10 && !this.props.isPatient) ||
+              (this.props.indexActive < 9 && this.props.isPatient)) &&
+            <SignUpCarouselIndex style={styles.carousel} isPatient={this.props.isPatient}
+              indexActive={this.props.indexActive} />
+          }
+          <View style={styles.actionSection}>
+            {
+              ((this.props.indexActive < 10 && !this.props.isPatient) ||
+              (this.props.indexActive < 9 && this.props.isPatient)) && 
+              <TouchableOpacity style={styles.buttonNext}
+                                onPress={() => this.updateCarouselIndex('decrease')}>
+                <Image style={[styles.nextCaretLogo, styles.prevCaretLogo]}
+                    source={nextCaretLogo} />
+                <Text style={styles.carouselCaretText}>{langProvider.components.backButton.backLabel}</Text>
+              </TouchableOpacity>
+            }
+            {
+              ((this.props.indexActive < 10 && !this.props.isPatient) ||
+              (this.props.indexActive < 9 && this.props.isPatient)) && 
+              <View>
+                <TouchableOpacity disabled={!this.props.nextStep}
+                                  style={[styles.buttonNext, !this.props.nextStep ? styles.nextDisabledArea : null]}
+                                  onPress={() => this.updateCarouselIndex('increase')}>
+                  <Text style={styles.carouselCaretText}>{langProvider.views.signUp.nextLabel}</Text>
+                  <Image style={styles.nextCaretLogo}
+                        source={nextCaretLogo} />
+                </TouchableOpacity>
+              </View>
+            }
           </View>
-        }
+          </View>
       </View>
     );
   }
@@ -248,7 +311,8 @@ function mapStateToProps (state) {
     isPatient: state.profile.profileRole === 'PATIENT',
     nextStep: state.registerStatus.nextStep,
     indexActive: state.registerStatus.indexActive,
-    careServicesAPI: state.registerStatus.careListServicesAPIMap
+    careServicesAPI: state.registerStatus.careListServicesAPIMap,
+    listLanguages: state.availableLangs
   };
 }
 export default connect(mapStateToProps, null)(SignUpCarousel);

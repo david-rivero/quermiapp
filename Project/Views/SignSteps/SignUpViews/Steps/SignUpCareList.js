@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TextInput } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import { SIGN_UP_STEP_SET_PROFILE_INFO, SIGN_UP_STEP_PROFILE_SERVICES } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
@@ -19,11 +19,21 @@ const styles = StyleSheet.create({
   },
   checkItem: {
     color: 'black'
+  },
+  otherOptInput: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1
   }
 });
 
 
 class SignUpCareList extends SignUpBaseStep {
+  _isOtherOptSelected = () => {
+    const othOpt = this.props.itemsOptions.find(item => item.name === 'OTH');
+    console.log(othOpt.checked);
+    return othOpt.checked;
+  }
+
   toggleCheck = (item, index) => {
     let newCareListState = [...this.props.itemsOptions];
     newCareListState[index].checked = !item.checked;
@@ -33,6 +43,20 @@ class SignUpCareList extends SignUpBaseStep {
       payload: [...newCareListState]
     })
     this.saveCareServices(newCareListState);
+  }
+
+  setOtherOptionCareService = text => {
+    const state = store.getState();
+    store.dispatch({
+      type: SIGN_UP_STEP_SET_PROFILE_INFO,
+      payload: {
+        profileField: 'profileStatus',
+        profileData: {
+          ...state.profile.profileStatus,
+          otherCareServiceDescription: text
+        }
+      }
+    });
   }
 
   saveCareServices = careListServices => {
@@ -73,6 +97,11 @@ class SignUpCareList extends SignUpBaseStep {
                                key={index} />
               );
             })
+          }
+          {
+            this._isOtherOptSelected() &&
+            <TextInput style={styles.otherOptInput}
+                       onChangeText={text => this.setOtherOptionCareService(text)}/>
           }
         </ScrollView>
       </View>

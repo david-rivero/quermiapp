@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    paddingTop: '25%'
+    paddingTop: 10
   },
   textProfileTitle: {
     fontWeight: 'bold',

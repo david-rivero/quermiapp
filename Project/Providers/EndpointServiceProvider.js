@@ -2,8 +2,8 @@ import ConfigProvider from './ConfigProvider';
 
 const endpointsNames = {
   login: 'api/login',
-  user: 'api/user',
-  profile: 'api/profile',
+  user: 'api/users',
+  profile: 'api/profiles',
   nameLang: 'api/name/languages/',
   nameServices: 'api/name/services/',
   apiTokenRefresh: 'api/token/refresh/'
@@ -18,14 +18,20 @@ export default class ServiceEndpointProvider {
   }
 
   static registerEndpoint (name, method='GET') {
-    ServiceEndpointProvider.endpoints[name] = function (data, headers=ServiceEndpointProvider.defaultHeaders) {
-      const url = `${baseUrl}/${endpointsNames[name]}`;
+    if (!ServiceEndpointProvider.endpoints[name]) {
+      ServiceEndpointProvider.endpoints[name] = {};
+    }
+    ServiceEndpointProvider.endpoints[name][method.toLowerCase()] = function (data, queryParams='', headers=ServiceEndpointProvider.defaultHeaders) {
+      let bodyData = data;
+      if (headers['Content-Type'] === 'application/json') {
+        bodyData = JSON.stringify(data);
+      }
+      const queryParamsUrl = queryParams ? `?${queryParams}`: '';
+      const url = `${baseUrl}/${endpointsNames[name]}${queryParamsUrl}`;
       return fetch(url, {
         method: method,
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        body: bodyData,
+        headers: {...headers}
       });
     };
   }

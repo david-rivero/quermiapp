@@ -5,6 +5,7 @@ import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SIGN_UP_STEP_SET_PROFILE_INFO, SIGN_UP_STEP_DATETIMEPICKER } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
+import { formatDate, getAgeFromDate } from '../../../../Providers/TimeUtilsProvider'; 
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
@@ -14,23 +15,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    paddingTop: '25%'
+    paddingTop: 10
   },
   textProfileTitle: {
     fontWeight: 'bold',
     textTransform: 'uppercase'
+  },
+  legalAgeWarning: {
+    color: '#891101',
+    fontSize: 12
   }
 });
 
 class SignUpBirthDate extends SignUpBaseStep {
-  _formatDate = date => {
+  _isLegalAge = (date) => {
+    const MIN_AGE = 18;
     if (date) {
-      const day = date.getDate();
-      const month = `${date.getMonth() < 9 && '0'}${date.getMonth() + 1}`;
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
+      return getAgeFromDate(date) >= MIN_AGE;
     }
-    return '';
+    return false;
   }
 
   setDate = (e, selectedDate) => {
@@ -53,7 +56,11 @@ class SignUpBirthDate extends SignUpBaseStep {
           profileData: selectedDate
         }
       });
-      this.validateStep();
+      if (this._isLegalAge(selectedDate)) {
+        this.validateStep();
+      } else {
+        this.uncheckStep();
+      }
     }
   }
 
@@ -76,7 +83,11 @@ class SignUpBirthDate extends SignUpBaseStep {
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpBirthDateTitle}</Text>
-        <TextInput placeholder="Tu fecha" value={this._formatDate(this.props.date)} onFocus={this.showDatepicker} style={Layout.textInput}></TextInput>
+        <TextInput placeholder="Tu fecha" value={formatDate(this.props.date)} onFocus={this.showDatepicker} style={Layout.textInput}></TextInput>
+        {
+          !this._isLegalAge(this.props.date) && 
+          <Text style={styles.legalAgeWarning}>{langProvider.views.signUp.signUpBirthNotLegalAge}</Text>
+        }
         {
           this.props.datePickerStatus.show &&
           <DateTimePicker value={this.props.date}

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, BackHandler } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { resetProfileDataFromLogin } from '../../Providers/StoreUtilProvider';
 import store from '../../Store/store';
 import { LOGIN, LOGIN_STATUS } from '../../Store/Actions/UserAuth';
 import LanguageProvider from '../../Providers/LanguageProvider';
@@ -25,6 +26,14 @@ const styles = StyleSheet.create({
 });
 
 class SignIn extends React.Component {
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', resetProfileDataFromLogin);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', resetProfileDataFromLogin);
+  }
+
   setLoginErrorStatus = (status, message) => {
     store.dispatch({
       type: LOGIN_STATUS,
@@ -59,7 +68,7 @@ class SignIn extends React.Component {
           <Text>{this.props.loginMessage}</Text>
         }
         <View style={styles.loginActions}>
-          <LoginActions username={this.props.email}
+          <LoginActions email={this.props.email}
                         password={this.props.password}
                         onLoginErrorStatus={this.setLoginErrorStatus}
                         navigation={this.props.navigation} />

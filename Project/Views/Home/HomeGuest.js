@@ -1,5 +1,10 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { LOAD_LIST_LANGUAGES } from '../../Store/Actions/DetailProfile';
+import { LOAD_SERVICES_API } from '../../Store/Actions/UserAuth';
+import store from '../../Store/store';
+import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
+
 
 import FullLogo from '../Components/FullLogo';
 import LoginActions from '../Components/LoginActions';
@@ -27,19 +32,46 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function HomeGuest({ navigation }) {
-  const isHome = true;
-  const image = require('../../Assets/fikri-rasyid-LeHEDlWT8zM-unsplash.jpg');
+export default class HomeGuest extends React.Component {
+  constructor(props) {
+    super(props);
+    ServiceEndpointProvider.registerEndpoint('nameLang', 'GET');
+    ServiceEndpointProvider.registerEndpoint('nameServices', 'GET');
+    ServiceEndpointProvider.registerEndpoint('profile', 'GET');
+  }
+  
+  componentDidMount() {
+    ServiceEndpointProvider.endpoints.nameLang.get()
+      .then(r => r.json())
+      .then(data => {
+        store.dispatch({
+          type: LOAD_LIST_LANGUAGES,
+          payload: data
+        });
+      });
+    ServiceEndpointProvider.endpoints.nameServices.get()
+      .then(r => r.json())
+      .then(data => {
+        store.dispatch({
+          type: LOAD_SERVICES_API,
+          payload: data
+        });
+      });
+  }
 
-  return (
-    <View style={[Layout.container, styles.container]}>
-      <LanguageSelector />
-      <View style={[{flex: 1}, styles.contentTop]}>
-        <FullLogo stylesContainer={styles.fullLogo} mode='medium' displayLabel={true}></FullLogo>
+  render() {
+    const isHome = true;
+  
+    return (
+      <View style={[Layout.container, styles.container]}>
+        <LanguageSelector />
+        <View style={[{flex: 1}, styles.contentTop]}>
+          <FullLogo stylesContainer={styles.fullLogo} mode='medium' displayLabel={true}></FullLogo>
+        </View>
+        <View style={styles.contentTop}>
+          <LoginActions home={isHome} navigation={this.props.navigation} style={styles.loginActions}></LoginActions>
+        </View>
       </View>
-      <View style={styles.contentTop}>
-        <LoginActions home={isHome} navigation={navigation} style={styles.loginActions}></LoginActions>
-      </View>
-    </View>
-  );
+    );
+  }
 }

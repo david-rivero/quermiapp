@@ -4,8 +4,7 @@ import reducers from './Reducers/index';
 import { SPANISH_LANG } from './Reducers/LoadLanguage';
 
 /**
-  Add to initialState -->
-  profilesLoaded: [],
+  Add to initialState -->s
   messagesCurrentProfile: []
 
  */
@@ -13,6 +12,8 @@ import { SPANISH_LANG } from './Reducers/LoadLanguage';
 let initialState = {
   // Current app language
   language: SPANISH_LANG,
+  // Available languages,
+  availableLangs: [],
   // Profile loaded on app
   profile: {
     registerMode: false,
@@ -31,6 +32,11 @@ let initialState = {
     time: {
       start: new Date(),
       end: new Date()
+    },
+    profileStatus: {
+      covidTestCheck: false,
+      autonomousProfessionalCheck: false,
+      otherCareServiceDescription: ''
     }
   },
   // Login status
@@ -111,6 +117,14 @@ let initialState = {
       }
     ],
     careListServicesAPIMap: {}
+  },
+  profilesLoaded: [],
+  profileSearchStatus: {
+    currentProfileIndex: 0,
+    galleryEnabledIndex: 0
+  },
+  homeStatus: {
+    menuOpened: false
   }
 };
 

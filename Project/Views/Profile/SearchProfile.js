@@ -1,11 +1,16 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import { 
+  SWIPE_NEXT_PROFILE,
+  SWIPE_PREV_PROFILE
+} from '../../Store/Actions/ProfilesToSearch';
 
 import Actions from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
 import { ImageImports } from '../../ImageImports';
-import profiles from '../../Assets/json/profiles.json';
+import store from '../../Store/store';
 
 
 const styles = StyleSheet.create({
@@ -71,14 +76,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SearchProfile extends React.Component {
-  state = {
-    profiles: [...profiles],
-    currentProfileIndex: 0,
-    galleryEnabledIndex: 0
-  };
-
-
+class SearchProfile extends React.Component {
   saveProfile = () => {
 
   }
@@ -88,16 +86,21 @@ export default class SearchProfile extends React.Component {
   }
 
   swipeProfile = (gestureName, _) => {
-    let indexUpdate = 0;
-    if (gestureName === 'SWIPE_RIGHT' && this.state.currentProfileIndex > 0) {
-      indexUpdate = -1;
-    } else if (gestureName === 'SWIPE_LEFT' && this.state.currentProfileIndex < this.state.profiles.length -1) {
-      indexUpdate = +1;
+    if (gestureName === 'SWIPE_RIGHT') {
+      store.dispatch({
+        type: SWIPE_PREV_PROFILE,
+        payload: {
+          isNotFirst: this.props.currentProfileIndex > 0
+        }
+      });
+    } else if (gestureName === 'SWIPE_LEFT') {
+      store.dispatch({
+        type: SWIPE_NEXT_PROFILE,
+        payload: {
+          isNotLatest: this.props.currentProfileIndex < this.props.profiles.length -1
+        }
+      });
     }
-
-    this.setState({
-      currentProfileIndex: this.state.currentProfileIndex + indexUpdate
-    });
   }
 
   loadDetailProfile = profile => {
@@ -105,32 +108,24 @@ export default class SearchProfile extends React.Component {
   };
 
   render() {
-    const profile = this.state.profiles[this.state.currentProfileIndex];
+    const profile = this.props.profiles[this.props.currentProfileIndex];
     return (
       <View style={[Layout.container, styles.container]}>
         <GestureRecognizer style={styles.cardProfile}
                            onSwipe={(gestureName, gestureState) => this.swipeProfile(gestureName, gestureState)}>
           <TouchableOpacity style={styles.touchSection} onPress={() => this.loadDetailProfile(profile)}>
             <View style={styles.gallery}>
-              {
-                profile.gallery.map((image, index) => {
-                  if (this.state.galleryEnabledIndex === index) {
-                    return <Image style={styles.imageGallery}
-                                  source={ImageImports[image.key]}
-                                  resizeMode='cover'
-                                  key={`profile-img-${index}`} />;
-                  }
-                  return null;
-                })
-              }
+              <Image style={styles.imageGallery}
+                     source={ImageImports[profile.user]}
+                     resizeMode='cover' />
             </View>
               <View style={styles.initSection}>
-                <Text style={styles.profileName}>{profile.name}</Text>
+                <Text style={styles.profileName}>{profile.name.split(' ').shift()}</Text>
                 <View style={styles.starQContainer}>
                   {
                     Array.from(Array(5), (_, index) => {
                       let imageStar;
-                      if (index + 1 <= profile.rateQ) {
+                      if (index + 1 <= profile.rate) {
                         imageStar = require('../../Assets/images/star-selected.png')
                       } else {
                         imageStar = require('../../Assets/images/star.png')
@@ -150,3 +145,13 @@ export default class SearchProfile extends React.Component {
     );
   }  
 }
+
+function mapStateToProps(state) {
+  return {
+    currentProfileIndex: state.profileSearchStatus.currentProfileIndex,
+    galleryEnabledIndex: state.profileSearchStatus.galleryEnabledIndex,
+    profiles: state.profilesLoaded
+  };
+}
+
+export default connect(mapStateToProps, null)(SearchProfile);

@@ -2,8 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Colors } from '../../Theme/Colors';
+import { isValidEmail } from '../../Providers/FormatStringProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
+import { ProfileSerializer } from '../../Providers/SerializerProvider';
+import store from '../../Store/store';
+import { UPDATE_MY_PROFILE } from '../../Store/Actions/DetailProfile';
 
 
 const styles = StyleSheet.create({
@@ -17,7 +21,11 @@ const styles = StyleSheet.create({
   buttonLink: {
     color: '#7370FA',
     textAlign: 'center',
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
+    fontSize: 15
+  },
+  buttonLinkContainer: {
+    marginTop: 15
   },
   buttonText: {
     fontWeight: 'bold',
@@ -41,23 +49,36 @@ class LoginActions extends React.Component {
   }
 
   performLogin() {
-    const data = {
-      username: this.props.username,
-      password: this.props.password
-    };
-    this.props.onLoginErrorStatus(false, '');
-    ServiceEndpointProvider.endpoints.login(data)
-      .then(r => {
-        if (r.status === 200) {
-          this.redirectToHomeSigned();
-        } else {
-          this.props.onLoginErrorStatus(true, 'Username or password are not valid');
-        }
-      })
-      .catch(e => {
-        this.props.onLoginErrorStatus(true, 'There was an unexpected error');
-        console.error(e);
-      });
+    if (isValidEmail(this.props.email)) {
+      const data = {
+        email: this.props.email,
+        password: this.props.password
+      };
+      this.props.onLoginErrorStatus(false, '');
+      ServiceEndpointProvider.endpoints.login.post(data)
+        .then(r => {
+          if (r.status === 200) {
+            const username = `username=${this.props.username}`;
+            ServiceEndpointProvider.endpoints.profile.get(undefined, this.props.username, username)
+              .then(res => res.json())
+              .then(profileData => {
+                store.dispatch({
+                  type: UPDATE_MY_PROFILE,
+                  payload: ProfileSerializer.fromAPIToView(profileData.pop())
+                });
+                this.redirectToHomeSigned();
+              });
+          } else {
+            this.props.onLoginErrorStatus(true, 'Username or password are not valid');
+          }
+        })
+        .catch(e => {
+          this.props.onLoginErrorStatus(true, 'There was an unexpected error');
+          console.error(e);
+        });
+    } else {
+      this.props.onLoginErrorStatus(true, 'You must to provide a valid email');
+    }
   }
 
   redirectToSignIn() {
@@ -94,7 +115,7 @@ class LoginActions extends React.Component {
           <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={() => this.performLogin()}>
             <Text style={styles.buttonText}>{langProvider.components.loginActions.signIn}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.redirectToSignUp()}>
+          <TouchableOpacity style={styles.buttonLinkContainer} onPress={() => this.redirectToSignUp()}>
             <Text style={styles.buttonLink}>{langProvider.components.loginActions.registerFirstTime}</Text>
           </TouchableOpacity>
         </View>

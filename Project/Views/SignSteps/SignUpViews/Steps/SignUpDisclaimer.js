@@ -6,7 +6,6 @@ import { SIGN_UP_STEP_TERMS_CONDS } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
-
 import { Checkbox } from 'react-native-paper';
 
 import SignUpBaseStep from './SignUpBaseStep';
