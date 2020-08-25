@@ -69,6 +69,7 @@
     "signUp": {
       "nextLabel": "Siguiente",
       "signUpBirthDateTitle": "¿Cuándo naciste?",
+      "signUpBirthNotLegalAge": "Debes ser mayor de edad para continuar",
       "signUpCareHourFromLabel": "De",
       "signUpCareHourToLabel": "a",
       "signUpCareHourCarePersonTitle": "¿Qué horarios dispones?",
@@ -85,13 +86,18 @@
       "signUpDisclaimerCheckLabel": "He leído y aceptado los Términos y Condiciones declarados previamente.",
       "signUpDisclaimerContinue": "Continuar",
       "signUpIDPhotoTitle": "Te pedimos la foto de tu DNI para comprobar tu identidad",
+      "signUpPhotoCameraLabel": "Foto",
+      "signUpPhotoFileLabel": "Subir imagen",
       "signUpNameTitle": "¿Cómo te llamas?",
       "signUpNamePlaceholder": "Tu nombre",
       "signUpProfileTitle": "Cuéntanos quién eres",
       "signUpProfilePatientOption": "Persona a cuidar",
-      "signUpProfileCarePersonOption": "Prestador de cuidados",
+      "signUpProfileCarePersonOption": "Soy un acompañante",
       "signUpProfilePhotoTitle": "Te pedimos una foto para tu perfil",
-      "signUpUserPassTitle": "Por último te pedimos"
+      "signUpUserPassTitle": "Por último te pedimos",
+      "signUpAdditionalInfoTitle": "Para continuar, precisamos confirmar la siguiente información",
+      "autonomousProfessionalLabel": "Soy un/a autónoma/o profesional registrada/o",
+      "covidCheckLabel": "Me realicé un test de COVID-19 en las últimas 2 semanas con resultado negativo"
     }
   }
 }

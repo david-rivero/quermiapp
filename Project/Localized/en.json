@@ -68,6 +68,7 @@
     },
     "signUp": {
       "nextLabel": "Next",
+      "signUpBirthNotLegalAge": "You must be at least 18 years old to continue",
       "signUpBirthDateTitle": "When did you born?",
       "signUpCareHourFromLabel": "From",
       "signUpCareHourToLabel": "to",
@@ -85,13 +86,18 @@
       "signUpDisclaimerCheckLabel": "I read and accept the Terms and Conditions declared previously.",
       "signUpDisclaimerContinue": "Continue",
       "signUpIDPhotoTitle": "Please take a photo of your ID card to check your identity",
+      "signUpPhotoCameraLabel": "Photo",
+      "signUpPhotoFileLabel": "Upload image",
       "signUpNameTitle": "What's your name?",
       "signUpNamePlaceholder": "Your name",
       "signUpProfileTitle": "Tells us who you are",
       "signUpProfilePatientOption": "Person to care",
       "signUpProfileCarePersonOption": "Care person provider",
       "signUpProfilePhotoTitle": "Please take a photo of yourself for your profile photo",
-      "signUpUserPassTitle": "Finally, we need from you"
+      "signUpUserPassTitle": "Finally, we need from you",
+      "signUpAdditionalInfoTitle": "To continue, we need to confirm this information",
+      "autonomousProfessionalLabel": "I am a registered autonomous professional",
+      "covidCheckLabel": "I did COVID-19 test last two weeks with negative results"
     }
   }
 }
