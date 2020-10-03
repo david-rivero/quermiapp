@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase'
   },
   buttonPrimary: {
-    backgroundColor: Colors.pink,
+    backgroundColor: Colors.blue,
     color: Colors.white
   },
   buttonSecoundary: {
@@ -51,15 +51,15 @@ class LoginActions extends React.Component {
   performLogin() {
     if (isValidEmail(this.props.email)) {
       const data = {
-        email: this.props.email,
+        email: this.props.email.trim(),
         password: this.props.password
       };
       this.props.onLoginErrorStatus(false, '');
       ServiceEndpointProvider.endpoints.login.post(data)
         .then(r => {
           if (r.status === 200) {
-            const username = `username=${this.props.username}`;
-            ServiceEndpointProvider.endpoints.profile.get(undefined, this.props.username, username)
+            const useremail = `user__email=${this.props.email}`;
+            ServiceEndpointProvider.endpoints.profile.get(undefined, useremail)
               .then(res => res.json())
               .then(profileData => {
                 store.dispatch({

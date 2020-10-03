@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity, BackHandler, StyleSheet } from 'react-native';
 import { Layout } from '../../Theme/Layout';
 import { Colors } from '../../Theme/Colors';
-import { LOAD_PROFILES_TO_SEARCH } from '../../Store/Actions/ProfilesToSearch';
+import { LOAD_PROFILES_TO_SEARCH, SET_ENABLED_CONTRACTS } from '../../Store/Actions/ProfilesToSearch';
 import { TOGGLE_MENU_OPEN } from '../../Store/Actions/DetailProfile';
 import LanguageProvider from '../../Providers/LanguageProvider';
 import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
@@ -17,19 +17,21 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    //transform: [{translateX: 0}]
   },
   container: {
     width: '100%',
   },
   containerMenuOpen: {
-    //transform: [{translateX: -200}]
+    transform: [{translateX: -200}]
   },
   mainActionContent: {
-    backgroundColor: Colors.pink,
+    backgroundColor: Colors.blue,
     height: '30%',
     width: '100%',
     padding: 18
+  },
+  mainActionCareProvider: {
+    backgroundColor: Colors.pink
   },
   mainActionText: {
     color: Colors.white
@@ -64,6 +66,9 @@ class HomeSignedIn extends React.Component {
   constructor(props) {
     super(props);
     ServiceEndpointProvider.registerEndpoint('profile', 'GET');
+    ServiceEndpointProvider.registerEndpoint('profileDetail', 'PATCH');
+    ServiceEndpointProvider.registerEndpoint('contracts', 'GET');
+    ServiceEndpointProvider.registerEndpoint('reports', 'POST');
   }
 
   fakeBackPress = () => {
@@ -71,20 +76,50 @@ class HomeSignedIn extends React.Component {
   }
 
   componentDidMount() {
-    // this.backHandler = BackHandler.addEventListener(
-    //   'hardwareBackPress', this.fakeBackPress);
-    ServiceEndpointProvider.endpoints.profile.get()
+    this.props.navigation.addListener('focus', () => {
+      this.backHandler = BackHandler.addEventListener(
+        'hardwareBackPress', this.fakeBackPress);
+    });
+    this.props.navigation.addListener('blur', () => {
+      BackHandler.removeEventListener(
+        'hardwareBackPress', this.fakeBackPress);
+    });
+
+    let profileRoleToSearch;
+    let queryFieldToContract;
+    if (this.props.profile.profileRole === 'PATIENT') {
+      profileRoleToSearch = 'CARE_PROVIDER';
+      queryFieldToContract = 'patient__user__username';
+    } else {
+      profileRoleToSearch = 'PATIENT';
+      queryFieldToContract = 'care_person__user__username';
+    }
+    const contractsPromise = ServiceEndpointProvider.endpoints.contracts.get(undefined, `${queryFieldToContract}=${this.props.profile.username}`)
+    ServiceEndpointProvider.endpoints.profile.get(undefined, `role=${profileRoleToSearch}`)
       .then(r => r.json())
       .then(data => {
         store.dispatch({
           type: LOAD_PROFILES_TO_SEARCH,
           payload: data
         });
+
+        // Match profiles available with contacted profiles
+        contractsPromise.then(r => r.json())
+          .then(contractsData => {
+            store.dispatch({
+              type: SET_ENABLED_CONTRACTS,
+              payload: {
+                contracts: contractsData,
+                profileFromId: this.props.profile.id,
+                profileRole: this.props.profile.profileRole
+              }
+            });
+          });
       });
   }
 
   componentWillUnmount() {
-    //BackHandler.removeEventListener('hardwareBackPress', this.fakeBackPress);
+    BackHandler.removeEventListener('hardwareBackPress', this.fakeBackPress);
   }
 
   redirectToSearchProfile = () => {
@@ -96,7 +131,7 @@ class HomeSignedIn extends React.Component {
   }
 
   redirectToRateProfile = () => {
-    this.props.navigation.navigate('RateProfile');
+    this.props.navigation.navigate('RateProfileList');
   }
 
   openMenu = () => {
@@ -110,12 +145,14 @@ class HomeSignedIn extends React.Component {
     const langProvider = LanguageProvider(this.props.language);
     const caretLogoWhite = require('../../Assets/caret-right-white.png');
     const caretLogo = require('../../Assets/caret-right.png');
+    const profilesLoadedWithContract = this.props.profilesLoaded.filter(
+      profile => profile.contractWithCurrentProfile);
 
     return (
-      <View style={[styles.superContainer, this.props.menuOpened ? styles.containerMenuOpen : null]}>
-        <View style={[Layout.container, styles.container]}>
-          <Header onOpenMenu={this.openMenu} />
-          <View style={styles.mainActionContent}>
+      <View style={[styles.superContainer]}>
+        <View style={[Layout.container, styles.container, this.props.menuOpened ? styles.containerMenuOpen : null]}>
+          <Header onOpenMenu={this.openMenu} isCarePerson={this.props.profile.profileRole === 'CARE_PROVIDER'} />
+          <View style={[styles.mainActionContent, this.props.profile.profileRole === 'CARE_PROVIDER' ? styles.mainActionCareProvider: null]}>
             <View style={styles.homeTitle}>
               <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/nurse-white.png')} />
               <Text style={[styles.mainActionText, Layout.title]}>{langProvider.views.homeSignedIn.findPartnerTitle}</Text>
@@ -126,36 +163,39 @@ class HomeSignedIn extends React.Component {
               <Image style={styles.homeRedirectionIcon} source={caretLogoWhite} resizeMode='contain' />
             </TouchableOpacity>
           </View>
-          <View style={styles.homeViewContent}>
-            <View style={styles.homeSubView}>
-              <View style={styles.homeTitle}>
-                <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/speech-bubble.png')} />
-                <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.scheduleActivitiesTitle}</Text>
+          {
+            profilesLoadedWithContract.length > 0 && 
+            <View style={styles.homeViewContent}>
+              <View style={styles.homeSubView}>
+                <View style={styles.homeTitle}>
+                  <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/speech-bubble.png')} />
+                  <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.scheduleActivitiesTitle}</Text>
+                </View>
+                <Text>{langProvider.views.homeSignedIn.scheduleActivitiesDesc}</Text>
+                <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToChatGroup()}>
+                  <Text>{langProvider.views.homeSignedIn.scheduleActivitiesAction}</Text>
+                  <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
+                </TouchableOpacity>
               </View>
-              <Text>{langProvider.views.homeSignedIn.scheduleActivitiesDesc}</Text>
-              <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToChatGroup()}>
-                <Text>{langProvider.views.homeSignedIn.scheduleActivitiesAction}</Text>
-                <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.homeSubView}>
-              <View style={styles.homeTitle}>
-                <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/heart.png')} />
-                <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.rateProfileTitle}</Text>
+              <View style={styles.homeSubView}>
+                <View style={styles.homeTitle}>
+                  <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/heart.png')} />
+                  <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.rateProfileTitle}</Text>
+                </View>
+                <Text>{langProvider.views.homeSignedIn.rateProfileDesc}</Text>
+                <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToRateProfile()}>
+                  <Text>{langProvider.views.homeSignedIn.rateProfileAction}</Text>
+                  <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
+                </TouchableOpacity>
               </View>
-              <Text>{langProvider.views.homeSignedIn.rateProfileDesc}</Text>
-              <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToRateProfile()}>
-                <Text>{langProvider.views.homeSignedIn.rateProfileAction}</Text>
-                <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
-              </TouchableOpacity>
             </View>
-          </View>
+          }
         </View>
         {
-          false && 
+          this.props.menuOpened && 
           <Sidebar navigation={this.props.navigation}
-                 profileName={this.props.profile.name}
-                 profilePhotoURI={this.props.profile.pictsOnRegister.profilePhoto} />
+                   profileName={this.props.profile.name}
+                   profilePhotoURI={this.props.profile.pictsOnRegister.profilePhoto} />
         }
       </View>
     );
@@ -165,7 +205,8 @@ function mapStateToProps (state) {
   return {
     language: state.language,
     menuOpened: state.homeStatus.menuOpened,
-    profile: state.profile
+    profile: state.profile,
+    profilesLoaded: state.profilesLoaded
   };
 }
 export default connect(mapStateToProps, null)(HomeSignedIn);

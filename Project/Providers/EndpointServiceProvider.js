@@ -6,8 +6,11 @@ const endpointsNames = {
   profile: 'api/profiles/',
   profileDetail: 'api/profiles/profile/$profile_id/',
   contracts: 'api/contracts',
+  contractsCreate: 'api/contracts/create',
   nameLang: 'api/name/languages/',
   nameServices: 'api/name/services/',
+  apiTokenRefresh: 'api/token/refresh/',
+  chatRoom: 'api/chatroom/$from_profile/$to_profile/',
   reports: 'api/reports'
 };
 
@@ -23,7 +26,7 @@ export default class ServiceEndpointProvider {
     if (!ServiceEndpointProvider.endpoints[name]) {
       ServiceEndpointProvider.endpoints[name] = {};
     }
-    ServiceEndpointProvider.endpoints[name][method.toLowerCase()] = function (data, queryParams='', headers=ServiceEndpointProvider.defaultHeaders) {
+    ServiceEndpointProvider.endpoints[name][method.toLowerCase()] = function (data, queryParams='', formatUrl=[], headers=ServiceEndpointProvider.defaultHeaders) {
       let bodyData = data;
       if (headers['Content-Type'] === 'application/json') {
         bodyData = JSON.stringify(data);

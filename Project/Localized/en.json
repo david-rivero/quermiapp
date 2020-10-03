@@ -27,6 +27,16 @@
       "hygieneServiceLabel": "Self hygiene",
       "gamesLabel": "Games",
       "otherOptLabel": "Other"
+    },
+    "sidebar": {
+      "greeting": "Hi",
+      "logoutLabel": "Logout"
+    },
+    "actions": {
+      "actionLikeNotifTitle": "Profile liked",
+      "actionLikeNotifMessage": "You're liked this profile",
+      "actionSendReqNotifTitle": "Request sent",
+      "actionSendReqNotifMessage": "You sent a request to this profile"
     }
   },
   "views": {
@@ -60,7 +70,12 @@
       "rateProfileLabel": "Gives a rate score",
       "rateProfileCommentDesc": "Detail more about your experience with",
       "rateProfileCommentPlaceholder": "Write your experience",
-      "rateProfileCommentAction": "Rate"
+      "rateProfileCommentAction": "Rate",
+      "rateProfileNotifTitle": "Profile rated",
+      "rateProfileNotifMessage": "Thanks for your rate qualification!"
+    },
+    "rateProfileList": {
+      "title": "Profiles to rate"
     },
     "signIn": {
       "emailPlaceholder": "Your email",

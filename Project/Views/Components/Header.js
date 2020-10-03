@@ -7,10 +7,13 @@ const styles = StyleSheet.create({
   header: {
     height: 60,
     width: '100%',
-    backgroundColor: Colors.pink,
+    backgroundColor: Colors.blue,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative'
+  },
+  headerCareProvider: {
+    backgroundColor: Colors.pink
   },
   imgContainer: {
     width: 32
@@ -43,7 +46,7 @@ export default class Header extends React.Component {
     const logoSrc = require('../../Assets/nurse-white.png');
     const menuIcon = require('../../Assets/images/burger-menu.png');
     return (
-      <View style={styles.header}>
+      <View style={[styles.header, this.props.isCarePerson ? styles.headerCareProvider : null]}>
         <View style={styles.imgContainer}>
           <Image style={styles.img} source={logoSrc} resizeMode='contain' />
         </View>

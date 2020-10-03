@@ -1,14 +1,13 @@
 import { createStore } from 'redux';
 import reducers from './Reducers/index';
 
+import { ENGLISH_LANG } from './Reducers/LoadLanguage';
 import { formatDate, formatTime } from '../Providers/TimeUtilsProvider';
 
 
- */
-
 let initialState = {
   // Current app language
-  language: SPANISH_LANG,
+  language: ENGLISH_LANG,
   // Available languages,
   availableLangs: [],
   // Profile loaded on app
@@ -16,6 +15,7 @@ let initialState = {
     registerMode: false,
     profileRole: '',
     name: '',
+    username: '',
     birthDate: formatDate(new Date()),
     pictsOnRegister: {
       documentID: null,
@@ -27,13 +27,14 @@ let initialState = {
     },
     services: [],
     time: {
-      start: new Date(),
-      end: new Date()
+      start: formatTime(new Date()),
+      end: formatTime(new Date())
     },
     profileStatus: {
       covidTestCheck: false,
       autonomousProfessionalCheck: false,
-      otherCareServiceDescription: ''
+      otherCareServiceDescription: '',
+      profileLoveStatus: 0
     }
   },
   // Login status
@@ -122,6 +123,10 @@ let initialState = {
   },
   homeStatus: {
     menuOpened: false
+  },
+  rateProfileInfo: {
+    description: '',
+    rate: 0
   }
 };
 

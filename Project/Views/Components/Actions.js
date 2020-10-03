@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { withInAppNotification } from 'react-native-in-app-notification';
 import { formatDate } from '../../Providers/TimeUtilsProvider';
+import EndpointServiceProvider from '../../Providers/EndpointServiceProvider';
+import LanguageProvider from '../../Providers/LanguageProvider';
 
 const styles = StyleSheet.create({
   actionsContainer: {
@@ -12,8 +16,6 @@ const styles = StyleSheet.create({
     borderRadius: 1000,
     height: 60,
     width: 60,
-    // borderColor: '#424242',
-    // borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
     shadowOffset: {
@@ -23,11 +25,15 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 1.0
   },
-  actionItemCenter: {
-    marginLeft: 25,
-    marginRight: 25,
-    height: 80,
-    width: 80,
+  actionItemLeft: {
+    marginRight: 12.5
+  },
+  actionItemCenter:{
+    marginRight: 12.5,
+    marginLeft: 12.5
+  },
+  actionItemRight: {
+    marginLeft: 12.5
   },
   actionIcon: {
     height: 40,
@@ -42,22 +48,95 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function Actions(props) {
-  const loveIcon = require('../../Assets/images/heart-pink.png');
-  const contactIcon = require('../../Assets/images/social-orange.png');
-  const rateIcon = require('../../Assets/images/star-border.png');
+class Actions extends React.Component {
+  sendContactRequest = () => {
+    const langProvider = LanguageProvider(this.props.language);
 
-  return (
-    <View style={[styles.actionsContainer, props.actionsStyles]}>
-      <TouchableOpacity style={[styles.actionItem, props.isDetail && styles.actionDetail]} onPress={() => {}}>
-        <Image resizeMode='cover' source={loveIcon} style={styles.actionIcon} />
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.actionItem, styles.actionItemCenter, props.isDetail && styles.actionDetail]} onPress={() => {}}>
-        <Image resizeMode='cover' source={contactIcon} style={styles.actionIconCenter} />
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.actionItem, props.isDetail && styles.actionDetail]} onPress={() => {props.navigation.navigate('RateProfile')}}>
-        <Image resizeMode='cover' source={rateIcon} style={styles.actionIcon} />
-      </TouchableOpacity>
-    </View>
-  );
+    const patientId = this.props.profile.profileRole === 'PATIENT' ? 
+      this.props.profile.id : this.props.myProfile.id;
+    const carePersonId = this.props.profile.profileRole === 'CARE_PROVIDER' ? 
+      this.props.profile.id : this.props.myProfile.id;
+
+    const formattedDate = formatDate(new Date(), 'api');
+    const data = {
+      start_date: formattedDate,
+      end_date: formattedDate,
+      status: 'CPEN',
+      patient: patientId,
+      care_person: carePersonId
+    };
+    
+    EndpointServiceProvider.endpoints.contractsCreate.post(data)
+      .then(response => response.json())
+      .then(data => {
+        this.props.navigation.navigate('HomeSignedIn');
+        this.props.showNotification({
+          title: langProvider.components.actions.actionSendReqNotifTitle,
+          message: langProvider.components.actions.actionSendReqNotifMessage,
+          vibrate: false
+        });
+      });
+  }
+
+  loveProfile = () => {
+    const langProvider = LanguageProvider(this.props.language);
+    const currentLoveStatus = this.props.profile.profileStatus.loveProfile || 0;
+    const data = {
+      profile_status: {
+        ...this.props.profile.profileStatus,
+        love_profile: currentLoveStatus + 1
+      }
+    }
+    const params = [
+      { key: '$profile_id', value: this.props.profile.id }
+    ];
+    EndpointServiceProvider.endpoints.profileDetail.patch(data, '', params)
+      .then(_ => {
+        this.props.showNotification({
+          title: langProvider.components.actions.actionLikeNotifTitle,
+          message: langProvider.components.actions.actionLikeNotifMessage,
+          vibrate: false
+        });
+      });
+  }
+
+  goRateProfile = () => {
+    this.props.navigation.navigate('RateProfile', { profile: this.props.profile });
+  }
+
+  render() {
+    const loveIcon = require('../../Assets/images/heart-pink.png');
+    const contactIcon = require('../../Assets/images/social-orange.png');
+    const rateIcon = require('../../Assets/images/star-border.png');
+
+    return (
+      <View style={[styles.actionsContainer, this.props.actionsStyles]}>
+        <TouchableOpacity style={[styles.actionItem, styles.actionItemLeft, this.props.isDetail && styles.actionDetail]}
+                          onPress={this.loveProfile}>
+          <Image resizeMode='cover' source={loveIcon} style={styles.actionIcon} />
+        </TouchableOpacity>
+        {
+          !this.props.profile.contractWithCurrentProfile &&
+          <TouchableOpacity style={[styles.actionItem, styles.actionItemCenter, this.props.isDetail && styles.actionDetail]}
+                            onPress={this.sendContactRequest}>
+            <Image resizeMode='cover' source={contactIcon} style={styles.actionIconCenter} />
+          </TouchableOpacity>
+        }
+        {
+          this.props.profile.contractWithCurrentProfile &&
+          <TouchableOpacity style={[styles.actionItem, styles.actionItemRight, this.props.isDetail && styles.actionDetail]}
+                            onPress={this.goRateProfile}>
+            <Image resizeMode='cover' source={rateIcon} style={styles.actionIcon} />
+          </TouchableOpacity>
+        }
+      </View>
+    );
+  }
 }
+function mapStateToProps(state) {
+  return {
+    language: state.language,
+    myProfile: state.profile
+  };
+}
+export default connect(mapStateToProps, null)(withInAppNotification(Actions));

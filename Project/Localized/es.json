@@ -27,6 +27,16 @@
       "hygieneServiceLabel": "Higiene",
       "gamesLabel": "Juegos",
       "otherOptLabel": "Otros"
+    },
+    "sidebar": {
+      "greeting": "Hola",
+      "logoutLabel": "Cerrar sesión"
+    },
+    "actions": {
+      "actionLikeNotifTitle": "Perfil favorito",
+      "actionLikeNotifMessage": "Le diste like a este perfil",
+      "actionSendReqNotifTitle": "Solicitud enviada",
+      "actionSendReqNotifMessage": "La solicitud de contacto quedó enviada"
     }
   },
   "views": {
@@ -60,7 +70,12 @@
       "rateProfileLabel": "¿Qué calificación le das?",
       "rateProfileCommentDesc": "Escríbenos acerca de tu experiencia con",
       "rateProfileCommentPlaceholder": "Cuenta tu experiencia",
-      "rateProfileCommentAction": "Calificar"
+      "rateProfileCommentAction": "Calificar",
+      "rateProfileNotifTitle": "Perfil calificado",
+      "rateProfileNotifMessage": "Gracias por su calificación"
+    },
+    "rateProfileList": {
+      "title": "Perfiles disponibles para calificar"
     },
     "signIn": {
       "emailPlaceholder": "Tu email",

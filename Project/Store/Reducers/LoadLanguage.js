@@ -9,7 +9,7 @@ export function loadLanguage (state, action) {
       ALLOWED_LANGS.includes(action.payload)) {
     return action.payload
   }
-  return state || SPANISH_LANG;
+  return state || ENGLISH_LANG;
 }
 
 export function loadListLanguages (state, action) {

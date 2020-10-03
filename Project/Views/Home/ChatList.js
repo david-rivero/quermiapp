@@ -2,12 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import store from '../../Store/store';
+import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
-import { ImageImports } from '../../ImageImports';
-import profiles from '../../Assets/json/profiles.json';
 
 const styles = StyleSheet.create({
   container: {
@@ -66,15 +64,11 @@ const styles = StyleSheet.create({
 class ChatList extends React.Component {
   constructor(props) {
     super(props);
-    // Remove component state
-    this.state = {
-      chatGroups: [...profiles],
-      unreadProfiles: 1
-    };
+    ServiceEndpointProvider.registerEndpoint('chatRoom', 'GET');
   }
 
-  redirectToChatDetail = () => {
-    this.props.navigation.navigate('ChatDetail');
+  redirectToChatDetail = chatProfile => {
+    this.props.navigation.navigate('ChatDetail', {'chatProfile': chatProfile});
   }
 
   redirectToHome = () => {
@@ -87,27 +81,38 @@ class ChatList extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Header></Header>
+        <Header isCarePerson={this.props.myProfile.profileRole === 'CARE_PROVIDER'} />
         <View style={styles.subView}>
           <View style={styles.notifSection}>
             <Text style={styles.titleText}>{langProvider.views.chatList.chatLabel}</Text>
-            { this.state.unreadProfiles > 0 && <Text style={styles.unreadNotif}>1</Text>}
+            {/* { this.state.unreadProfiles > 0 && <Text style={styles.unreadNotif}>1</Text>} */}
           </View>
           <ScrollView style={styles.scrollSection}>
             {
-              this.state.chatGroups.map((chatItem, index) => {
-                return (
-                  <View key={`chat-item-${index}`}>
-                    <TouchableOpacity style={styles.chatItem} onPress={this.redirectToChatDetail}>
-                      <Image source={ImageImports[chatItem.gallery[0].key]}
-                             style={styles.profileImg}
-                             resizeMode='cover' />
-                      <View>
-                        <Text style={[styles.textName, chatItem.latestMessages[0].unread && styles.textUnread]}>{chatItem.name}</Text>
-                        <Text style={chatItem.latestMessages[0].unread && styles.textUnread}>{chatItem.latestMessages[0].message}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>);
+              this.props.profiles.map((profile, index) => {
+                if (profile.contractWithCurrentProfile) {
+                  const fromProfile = this.props.myProfile;
+                  const toProfile = profile;
+                  const chatProfile = {
+                    fromProfile: fromProfile,
+                    toProfile: toProfile
+                  };
+
+                  return (
+                    <View key={`chat-item-${index}`}>
+                      <TouchableOpacity style={styles.chatItem} onPress={() => this.redirectToChatDetail(chatProfile)}>
+                        <Image source={{uri: profile.pictsOnRegister.profilePhoto}}
+                               style={styles.profileImg}
+                               resizeMode='cover' />
+                        <View>
+                          {/* chatItem.latestMessages[0].unread && styles.textUnread */}
+                          <Text style={[styles.textName]}>{profile.name}</Text>
+                          <Text>Mensaje</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                }
               })
             }
           </ScrollView>
@@ -122,7 +127,9 @@ class ChatList extends React.Component {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language
+    language: state.language,
+    myProfile: state.profile,
+    profiles: state.profilesLoaded
   };
 }
 export default connect(mapStateToProps, null)(ChatList);
