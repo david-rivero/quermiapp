@@ -3,8 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { LOAD_LIST_LANGUAGES } from '../../Store/Actions/DetailProfile';
 import { LOAD_SERVICES_API } from '../../Store/Actions/UserAuth';
 import store from '../../Store/store';
-import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
-
+import { requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
 
 import FullLogo from '../Components/FullLogo';
 import LoginActions from '../Components/LoginActions';
@@ -33,24 +32,15 @@ const styles = StyleSheet.create({
 });
 
 export default class HomeGuest extends React.Component {
-  constructor(props) {
-    super(props);
-    ServiceEndpointProvider.registerEndpoint('nameLang', 'GET');
-    ServiceEndpointProvider.registerEndpoint('nameServices', 'GET');
-    ServiceEndpointProvider.registerEndpoint('profile', 'GET');
-  }
-  
   componentDidMount() {
-    ServiceEndpointProvider.endpoints.nameLang.get()
-      .then(r => r.json())
+    requestDataEndpoint('nameLang', undefined, 'GET')
       .then(data => {
         store.dispatch({
           type: LOAD_LIST_LANGUAGES,
           payload: data
         });
       });
-    ServiceEndpointProvider.endpoints.nameServices.get()
-      .then(r => r.json())
+    requestDataEndpoint('nameServices', undefined, 'GET')
       .then(data => {
         store.dispatch({
           type: LOAD_SERVICES_API,

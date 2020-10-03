@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { withInAppNotification } from 'react-native-in-app-notification';
 import { formatDate } from '../../Providers/TimeUtilsProvider';
-import EndpointServiceProvider from '../../Providers/EndpointServiceProvider';
+import { requestEndpoint, requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 const styles = StyleSheet.create({
@@ -65,10 +65,9 @@ class Actions extends React.Component {
       patient: patientId,
       care_person: carePersonId
     };
-    
-    EndpointServiceProvider.endpoints.contractsCreate.post(data)
-      .then(response => response.json())
-      .then(data => {
+
+    requestEndpoint('contractsCreate', data, 'POST')
+      .then(_ => {
         this.props.navigation.navigate('HomeSignedIn');
         this.props.showNotification({
           title: langProvider.components.actions.actionSendReqNotifTitle,
@@ -90,7 +89,7 @@ class Actions extends React.Component {
     const params = [
       { key: '$profile_id', value: this.props.profile.id }
     ];
-    EndpointServiceProvider.endpoints.profileDetail.patch(data, '', params)
+    requestDataEndpoint('profileDetail', data, 'PATCH', params)
       .then(_ => {
         this.props.showNotification({
           title: langProvider.components.actions.actionLikeNotifTitle,

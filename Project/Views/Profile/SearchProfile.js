@@ -7,7 +7,6 @@ import { SWIPE_PROFILE } from '../../Store/Actions/ProfilesToSearch';
 import Actions from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
 import store from '../../Store/store';
-import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
 
 // Disable warnings!
 // console.disableYellowBox = true;
@@ -73,11 +72,6 @@ const styles = StyleSheet.create({
 });
 const DISABLE_VERTICAL_SWIPE = true;
 class SearchProfile extends React.Component {
-  constructor(props) {
-    super(props);
-    ServiceEndpointProvider.registerEndpoint('contractsCreate', 'POST');
-  }
-
   saveProfile = () => {
 
   }

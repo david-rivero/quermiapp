@@ -6,7 +6,7 @@ import { withInAppNotification } from 'react-native-in-app-notification';
 import { TextInput } from 'react-native-paper';
 import { SET_RATE_INFO_PROFILE, RESET_RATE_INFO_PROFILE } from '../../Store/Actions/DetailProfile';
 import store from '../../Store/store';
-import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
+import { requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
@@ -90,8 +90,7 @@ class RateProfile extends React.Component {
       origin_profile: this.props.myProfile.id,
       profile_rated: this.props.route.params.profile.id
     };
-    ServiceEndpointProvider.endpoints.reports.post(data)
-      .then(resp => resp.json())
+    requestDataEndpoint('reports', data, 'POST')
       .then(_ => {
         this.props.showNotification({
           title: langProvider.views.rateProfile.rateProfileNotifTitle,

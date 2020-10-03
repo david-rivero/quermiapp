@@ -9,8 +9,7 @@ import store from '../../../Store/store';
 import { ProfileSerializer } from '../../../Providers/SerializerProvider';
 import { getDateTimeFromStr, formatDate } from '../../../Providers/TimeUtilsProvider';
 import LanguageProvider from '../../../Providers/LanguageProvider';
-import ServiceEndpointProvider from '../../../Providers/EndpointServiceProvider';
-
+import { requestEndpoint, requestDataEndpoint } from '../../../Providers/EndpointServiceProvider';
 
 /** Views */
 import SignUpProfile from './Steps/SignUpProfile';
@@ -76,12 +75,6 @@ const DEFAULT_PROFILE_RATE = 5;
 class SignUpCarousel extends React.Component {
   DEFAULT_LANG = null;
 
-  constructor(props) {
-    super(props);
-    ServiceEndpointProvider.registerEndpoint('user', 'POST');
-    ServiceEndpointProvider.registerEndpoint('profile', 'POST');
-  }
-
   componentDidMount() {
     this.DEFAULT_LANG = this.props.listLanguages.find(
       row => row.name === SPANISH_LANG);
@@ -140,7 +133,7 @@ class SignUpCarousel extends React.Component {
     };
 
     this.setLoadStatus(true);
-    ServiceEndpointProvider.endpoints.user.post(userData)
+    requestEndpoint('user', userData, 'POST')
       .then(r => {
         if (r.status === 201) {
           return r.json();
@@ -177,14 +170,13 @@ class SignUpCarousel extends React.Component {
             }
           };
 
-          ServiceEndpointProvider.endpoints.profile.post(profileData)
+          requestEndpoint('profile', profileData, 'POST')
             .then(_ => {
               const email = this.props.profile.account.email;
               const username = email.split('@').shift();
 
               // Refactor in rxjs for several calls
-              ServiceEndpointProvider.endpoints.profile.get(undefined, `user__email=${username}`)
-                .then(res => res.json())
+              requestDataEndpoint('profile',  undefined, 'GET', `user__email=${username}`)
                 .then(ppData => {
                   store.dispatch({
                     type: UPDATE_MY_PROFILE,

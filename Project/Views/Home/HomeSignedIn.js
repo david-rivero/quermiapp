@@ -6,7 +6,7 @@ import { Colors } from '../../Theme/Colors';
 import { LOAD_PROFILES_TO_SEARCH, SET_ENABLED_CONTRACTS } from '../../Store/Actions/ProfilesToSearch';
 import { TOGGLE_MENU_OPEN } from '../../Store/Actions/DetailProfile';
 import LanguageProvider from '../../Providers/LanguageProvider';
-import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
+import { requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
 import store from '../../Store/store';
 
 import Sidebar from '../Components/Sidebar';
@@ -63,14 +63,6 @@ const styles = StyleSheet.create({
 });
 
 class HomeSignedIn extends React.Component {
-  constructor(props) {
-    super(props);
-    ServiceEndpointProvider.registerEndpoint('profile', 'GET');
-    ServiceEndpointProvider.registerEndpoint('profileDetail', 'PATCH');
-    ServiceEndpointProvider.registerEndpoint('contracts', 'GET');
-    ServiceEndpointProvider.registerEndpoint('reports', 'POST');
-  }
-
   fakeBackPress = () => {
     return true;
   }
@@ -94,9 +86,11 @@ class HomeSignedIn extends React.Component {
       profileRoleToSearch = 'PATIENT';
       queryFieldToContract = 'care_person__user__username';
     }
-    const contractsPromise = ServiceEndpointProvider.endpoints.contracts.get(undefined, `${queryFieldToContract}=${this.props.profile.username}`)
-    ServiceEndpointProvider.endpoints.profile.get(undefined, `role=${profileRoleToSearch}`)
-      .then(r => r.json())
+
+    const contractsPromise = requestDataEndpoint(
+      'contracts', undefined, 'GET', `${queryFieldToContract}=${this.props.profile.username}`);
+    
+    requestDataEndpoint('profile', undefined, 'GET', `role=${profileRoleToSearch}`)
       .then(data => {
         store.dispatch({
           type: LOAD_PROFILES_TO_SEARCH,
@@ -104,17 +98,16 @@ class HomeSignedIn extends React.Component {
         });
 
         // Match profiles available with contacted profiles
-        contractsPromise.then(r => r.json())
-          .then(contractsData => {
-            store.dispatch({
-              type: SET_ENABLED_CONTRACTS,
-              payload: {
-                contracts: contractsData,
-                profileFromId: this.props.profile.id,
-                profileRole: this.props.profile.profileRole
-              }
-            });
+        contractsPromise.then(contractsData => {
+          store.dispatch({
+            type: SET_ENABLED_CONTRACTS,
+            payload: {
+              contracts: contractsData,
+              profileFromId: this.props.profile.id,
+              profileRole: this.props.profile.profileRole
+            }
           });
+        });
       });
   }
 

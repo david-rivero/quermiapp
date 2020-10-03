@@ -4,7 +4,7 @@ import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Colors } from '../../Theme/Colors';
 import { isValidEmail } from '../../Providers/FormatStringProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
-import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
+import { requestEndpoint, requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
 import { ProfileSerializer } from '../../Providers/SerializerProvider';
 import store from '../../Store/store';
 import { UPDATE_MY_PROFILE } from '../../Store/Actions/DetailProfile';
@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
 class LoginActions extends React.Component {
   constructor(props) {
     super(props);
-    ServiceEndpointProvider.registerEndpoint('login', 'POST');
   }
 
   performLogin() {
@@ -55,12 +54,11 @@ class LoginActions extends React.Component {
         password: this.props.password
       };
       this.props.onLoginErrorStatus(false, '');
-      ServiceEndpointProvider.endpoints.login.post(data)
+      requestEndpoint('login', data, 'POST')
         .then(r => {
           if (r.status === 200) {
             const useremail = `user__email=${this.props.email}`;
-            ServiceEndpointProvider.endpoints.profile.get(undefined, useremail)
-              .then(res => res.json())
+            requestDataEndpoint('profile', undefined, 'GET', useremail)
               .then(profileData => {
                 store.dispatch({
                   type: UPDATE_MY_PROFILE,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
+
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
@@ -62,11 +62,6 @@ const styles = StyleSheet.create({
 });
 
 class ChatList extends React.Component {
-  constructor(props) {
-    super(props);
-    ServiceEndpointProvider.registerEndpoint('chatRoom', 'GET');
-  }
-
   redirectToChatDetail = chatProfile => {
     this.props.navigation.navigate('ChatDetail', {'chatProfile': chatProfile});
   }

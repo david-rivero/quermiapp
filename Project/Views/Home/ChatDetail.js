@@ -7,7 +7,7 @@ import { TextInput } from 'react-native-paper';
 import Header from '../Components/Header';
 import ConfigProvider from '../../Providers/ConfigProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
-import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
+import { requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
 
 const serverURI = ConfigProvider().serverUrl;
 const styles = StyleSheet.create({
@@ -89,8 +89,7 @@ class ChatDetail extends React.Component {
       {key: '$from_profile', value: chatProfile.fromProfile.username},
       {key: '$to_profile', value: chatProfile.toProfile.username}
     ];
-    ServiceEndpointProvider.endpoints.chatRoom.get(undefined, '', params)
-      .then(response => response.json())
+    requestDataEndpoint('chatRoom', undefined, 'GET', params)
       .then(data => {
         const chatUrl = `${serverURI}/ws/chat/${data.chat_room_id}/${chatProfile.fromProfile.username}/${chatProfile.toProfile.username}/`.replace(/http[s]?/g, 'ws');
         this.socket = new WebSocket(chatUrl);
