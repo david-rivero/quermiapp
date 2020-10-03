@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { View, Image, Text, ScrollView, StyleSheet } from 'react-native';
 import { getAgeFromDate } from '../../Providers/TimeUtilsProvider';
+import { mapPKToItems } from '../../Providers/StoreUtilProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Actions from '../Components/Actions';
@@ -64,20 +65,25 @@ const styles = StyleSheet.create({
 });
 
 class DetailProfileOnSearch extends React.Component {
+  _getLangsFromProfile = profile => {
+    return mapPKToItems(profile.languages, );
+  }
+
   render() {
     const profile = this.props.route.params.profile;
+    console.log(profile)
 
     return (
       <View style={[Layout.container, styles.container]}>
         <View style={styles.gallery}>
           <Image style={styles.imageGallery}
-                source={ImageImports[profile.user]}
+                source={{uri: profile.pictsOnRegister.profilePhoto}}
                 resizeMode='cover' />
         </View>
         <ScrollView style={styles.scrollView}>
           <View style={styles.initSection}>
           <Text style={styles.profileName}>{profile.name.split(' ').shift()}</Text>
-            <Text style={styles.profileAge}>{getAgeFromDate(profile.birth_date)} {this.props.langProvider.views.detailProfileOnSearch.yearLabel}</Text>
+            <Text style={styles.profileAge}>{getAgeFromDate(profile.birthDate)} {this.props.langProvider.views.detailProfileOnSearch.yearLabel}</Text>
             <View style={styles.starQContainer}>
               {
                 Array.from(Array(5), (_, index) => {
@@ -94,7 +100,7 @@ class DetailProfileOnSearch extends React.Component {
                 })
               }
             </View>
-            <Text>{profile.profile_description}</Text>
+            <Text>{profile.description}</Text>
           </View>
           <View style={styles.descriptionSection}>
             <View style={styles.profileSectionInfo}>
@@ -134,7 +140,10 @@ class DetailProfileOnSearch extends React.Component {
             </View>
           </View>
         </ScrollView>
-        <Actions actionsStyles={styles.actionsStyles} navigation={this.props.navigation} isDetail={true}></Actions>
+        <Actions profile={profile}
+                 actionsStyles={styles.actionsStyles}
+                 navigation={this.props.navigation}
+                 isDetail={true}></Actions>
       </View>
     );
   }

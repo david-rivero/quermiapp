@@ -1,18 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-import { 
-  SWIPE_NEXT_PROFILE,
-  SWIPE_PREV_PROFILE
-} from '../../Store/Actions/ProfilesToSearch';
+import Swiper from 'react-native-deck-swiper';
+import { SWIPE_PROFILE } from '../../Store/Actions/ProfilesToSearch';
 
 import Actions from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
-import { ImageImports } from '../../ImageImports';
 import store from '../../Store/store';
+import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
 
-
+// Disable warnings!
+// console.disableYellowBox = true;
 const styles = StyleSheet.create({
   container: {
     position:  'relative',
@@ -20,16 +18,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0'
   },
   cardProfile: {
-    height: '75%',
-    width: '75%',
-    marginTop: 50,
     marginLeft: 'auto',
     marginRight: 'auto',
     backgroundColor: 'white',
     borderRadius: 6
   },
   touchSection: {
-    flex: 1
+    flex: 1,
+    marginBottom: 30
   },
   gallery: {
     flex: 1,
@@ -75,8 +71,13 @@ const styles = StyleSheet.create({
     width: '100%'
   }
 });
-
+const DISABLE_VERTICAL_SWIPE = true;
 class SearchProfile extends React.Component {
+  constructor(props) {
+    super(props);
+    ServiceEndpointProvider.registerEndpoint('contractsCreate', 'POST');
+  }
+
   saveProfile = () => {
 
   }
@@ -85,22 +86,11 @@ class SearchProfile extends React.Component {
 
   }
 
-  swipeProfile = (gestureName, _) => {
-    if (gestureName === 'SWIPE_RIGHT') {
-      store.dispatch({
-        type: SWIPE_PREV_PROFILE,
-        payload: {
-          isNotFirst: this.props.currentProfileIndex > 0
-        }
-      });
-    } else if (gestureName === 'SWIPE_LEFT') {
-      store.dispatch({
-        type: SWIPE_NEXT_PROFILE,
-        payload: {
-          isNotLatest: this.props.currentProfileIndex < this.props.profiles.length -1
-        }
-      });
-    }
+  swipeProfile = currentIndex => {
+    store.dispatch({
+      type: SWIPE_PROFILE,
+      payload: currentIndex
+    });
   }
 
   loadDetailProfile = profile => {
@@ -109,38 +99,55 @@ class SearchProfile extends React.Component {
 
   render() {
     const profile = this.props.profiles[this.props.currentProfileIndex];
+    const isLastProfile = this.props.currentProfileIndex +1 === this.props.profiles.length;
+    const isFirstProfile = this.props.currentProfileIndex === 0;
+
     return (
       <View style={[Layout.container, styles.container]}>
-        <GestureRecognizer style={styles.cardProfile}
-                           onSwipe={(gestureName, gestureState) => this.swipeProfile(gestureName, gestureState)}>
-          <TouchableOpacity style={styles.touchSection} onPress={() => this.loadDetailProfile(profile)}>
-            <View style={styles.gallery}>
-              <Image style={styles.imageGallery}
-                     source={ImageImports[profile.user]}
-                     resizeMode='cover' />
-            </View>
-              <View style={styles.initSection}>
-                <Text style={styles.profileName}>{profile.name.split(' ').shift()}</Text>
-                <View style={styles.starQContainer}>
-                  {
-                    Array.from(Array(5), (_, index) => {
-                      let imageStar;
-                      if (index + 1 <= profile.rate) {
-                        imageStar = require('../../Assets/images/star-selected.png')
-                      } else {
-                        imageStar = require('../../Assets/images/star.png')
-                      }
-                      return <Image source={imageStar}
-                                    style={styles.imageStar}
-                                    resizeMode='contain'
-                                    key={`star-profile-${index}`} />;
-                    })
-                  }
-                </View>
-            </View>
-          </TouchableOpacity>
-        </GestureRecognizer>
-        <Actions actionsStyles={styles.actionsStyles} navigation={this.props.navigation}></Actions>
+        <Swiper cards={this.props.profiles}
+                goBackToPreviousCardOnSwipeRight={true}
+                containerStyle={styles.cardProfile}
+                onSwipedRight={cardIndex => this.swipeProfile(cardIndex -1)}
+                onSwipedLeft={cardIndex => this.swipeProfile(cardIndex +1)}
+                disableTopSwipe={DISABLE_VERTICAL_SWIPE}
+                disableBottomSwipe={DISABLE_VERTICAL_SWIPE}
+                disableLeftSwipe={isLastProfile}
+                disableRightSwipe={isFirstProfile}
+                useNativeDriver={false}
+                renderCard={profile => {
+                  return (
+                    <TouchableOpacity style={styles.touchSection} onPress={() => this.loadDetailProfile(profile)}>
+                      <View style={styles.gallery}>
+                        <Image style={styles.imageGallery}
+                              source={{uri: profile.pictsOnRegister.profilePhoto}}
+                              resizeMode='cover' />
+                      </View>
+                      <View style={styles.initSection}>
+                        <Text style={styles.profileName}>{profile.name.split(' ').shift()}</Text>
+                        <View style={styles.starQContainer}>
+                            {
+                              Array.from(Array(5), (_, index) => {
+                                let imageStar;
+                                if (index + 1 <= profile.rate) {
+                                  imageStar = require('../../Assets/images/star-selected.png')
+                                } else {
+                                  imageStar = require('../../Assets/images/star.png')
+                                }
+                                return <Image source={imageStar}
+                                              style={styles.imageStar}
+                                              resizeMode='contain'
+                                              key={`star-profile-${index}`} />;
+                              })
+                            }
+                          </View>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                }}>
+          <Actions actionsStyles={styles.actionsStyles}
+                   navigation={this.props.navigation}
+                   profile={profile}></Actions>
+        </Swiper>
       </View>
     );
   }  

@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { View, Image, Text, Button, StyleSheet } from 'react-native';
+import { View, Image, Text, Button, StyleSheet, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { withInAppNotification } from 'react-native-in-app-notification';
 import { TextInput } from 'react-native-paper';
+import { SET_RATE_INFO_PROFILE, RESET_RATE_INFO_PROFILE } from '../../Store/Actions/DetailProfile';
 import store from '../../Store/store';
+import ServiceEndpointProvider from '../../Providers/EndpointServiceProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 import Header from '../Components/Header';
@@ -75,36 +78,64 @@ const styles = StyleSheet.create({
 });
 
 class RateProfile extends React.Component {
-  // Remove component state
-  state = {
-    currentRateSelected: 0
-  };
-  
   redirectToHome = () => {
-    this.props.navigation.navigate('HomeSignedIn');
+    this.props.navigation.navigate('RateProfileList');
+  }
+
+  sendRateInformation = () => {
+    const langProvider = LanguageProvider(this.props.language);
+    const data = {
+      description: this.props.rateProfileInfo.description,
+      rate: this.props.rateProfileInfo.rate,
+      origin_profile: this.props.myProfile.id,
+      profile_rated: this.props.route.params.profile.id
+    };
+    ServiceEndpointProvider.endpoints.reports.post(data)
+      .then(resp => resp.json())
+      .then(_ => {
+        this.props.showNotification({
+          title: langProvider.views.rateProfile.rateProfileNotifTitle,
+          message: langProvider.views.rateProfile.rateProfileNotifMessage,
+          vibrate: false
+        });
+        store.dispatch({
+          type: RESET_RATE_INFO_PROFILE
+        });
+        this.props.navigation.navigate('HomeSignedIn');
+      });
   }
 
   selectRate = index => {
-    this.setState({
-      currentRateSelected: index + 1
+    store.dispatch({
+      type: SET_RATE_INFO_PROFILE,
+      payload: {
+        ...this.props.rateProfileInfo,
+        rate: index + 1
+      }
+    });
+  }
+
+  setDescriptionInfo = description => {
+    store.dispatch({
+      type: SET_RATE_INFO_PROFILE,
+      payload: {
+        ...this.props.rateProfileInfo,
+        description: description
+      }
     });
   }
 
   render() {
     const langProvider = LanguageProvider(this.props.language);
     const caretLogo = require('../../Assets/caret-right.png');
-    const profile = {
-      imgProfile: require('../../Assets/felicia-varzari-8ZLLpY9r1cM-unsplash.jpg'),
-      name: 'Fernando',
-      rateQ: 4
-    };
+    const profile = this.props.route.params.profile;
 
     return (
       <View style={styles.container}>
-        <Header></Header>
-        <View style={styles.contentSection}>
+        <Header isCarePerson={this.props.myProfile.profileRole === 'CARE_PROVIDER'} />
+        <ScrollView style={styles.contentSection}>
           <View style={styles.headerRateProfile}>
-            <Image source={profile.imgProfile} resizeMode='contain' style={styles.image} />
+            <Image source={{uri: profile.pictsOnRegister.profilePhoto}} resizeMode='contain' style={styles.image} />
             <View>
               <Text style={styles.profileName}>{profile.name}</Text>
               <View style={styles.reportActionsContainer}>
@@ -119,7 +150,7 @@ class RateProfile extends React.Component {
                 {
                   Array.from(Array(5), (_, index) => {
                     let imageStar;
-                    if (index + 1 <= profile.rateQ) {
+                    if (index + 1 <= profile.rate) {
                       imageStar = require('../../Assets/images/star-selected.png')
                     } else {
                       imageStar = require('../../Assets/images/star.png')
@@ -140,7 +171,7 @@ class RateProfile extends React.Component {
                 {
                   Array.from(Array(5), (_, index) => {
                     let imageStar;
-                    if (index + 1 <= this.state.currentRateSelected) {
+                    if (index + 1 <= this.props.rateProfileInfo.rate) {
                       imageStar = require('../../Assets/images/star-selected.png')
                     } else {
                       imageStar = require('../../Assets/images/star.png')
@@ -159,11 +190,11 @@ class RateProfile extends React.Component {
             </View>
             <View style={styles.rateSection}>
               <Text>{langProvider.views.rateProfile.rateProfileCommentDesc} {profile.name}</Text>
-              <TextInput style={styles.textAreaComment} placeholder={langProvider.views.rateProfile.rateProfileCommentPlaceholder} />
+              <TextInput onChangeText={this.setDescriptionInfo} style={styles.textAreaComment} placeholder={langProvider.views.rateProfile.rateProfileCommentPlaceholder} />
             </View>
-            <Button title={langProvider.views.rateProfile.rateProfileCommentAction} />
+            <Button title={langProvider.views.rateProfile.rateProfileCommentAction} onPress={this.sendRateInformation} />
           </View>
-        </View>
+        </ScrollView>
         <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToHome()}>
           <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
           <Text>{langProvider.components.backButton.backLabel}</Text>
@@ -174,7 +205,9 @@ class RateProfile extends React.Component {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language
+    language: state.language,
+    rateProfileInfo: state.rateProfileInfo,
+    myProfile: state.profile
   };
 }
-export default connect(mapStateToProps, null)(RateProfile);
+export default connect(mapStateToProps, null)(withInAppNotification(RateProfile));

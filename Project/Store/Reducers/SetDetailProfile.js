@@ -1,4 +1,4 @@
-import { UPDATE_MY_PROFILE, TOGGLE_MENU_OPEN } from '../Actions/DetailProfile';
+import { UPDATE_MY_PROFILE, TOGGLE_MENU_OPEN, SET_RATE_INFO_PROFILE, RESET_RATE_INFO_PROFILE } from '../Actions/DetailProfile';
 import {
   SIGN_UP,
   SIGN_UP_STEP_SET_PROFILE_INFO,
@@ -29,7 +29,8 @@ export const defaultProfile = {
   profileStatus: {
     covidTestCheck: false,
     autonomousProfessionalCheck: false,
-    otherCareServiceDescription: ''
+    otherCareServiceDescription: '',
+    profileLoveStatus: 0
   }
 };
 
@@ -70,4 +71,20 @@ export function setHomeStatus(state, action) {
   return state || {
     menuOpened: false
   };
+}
+
+export function setRateProfile(state, action) {
+  const defaultState = {
+    description: '',
+    rate: 0
+  };
+
+  switch(action.type) {
+    case SET_RATE_INFO_PROFILE:
+      return {...action.payload};
+    case RESET_RATE_INFO_PROFILE:
+      return {...defaultState};
+    default:
+      return state || {...defaultState};
+  }
 }

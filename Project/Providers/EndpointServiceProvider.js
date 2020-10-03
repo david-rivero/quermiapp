@@ -4,9 +4,11 @@ const endpointsNames = {
   login: 'api/login',
   user: 'api/users',
   profile: 'api/profiles/',
+  profileDetail: 'api/profiles/profile/$profile_id/',
+  contracts: 'api/contracts',
   nameLang: 'api/name/languages/',
   nameServices: 'api/name/services/',
-  apiTokenRefresh: 'api/token/refresh/'
+  reports: 'api/reports'
 };
 
 const baseUrl = ConfigProvider().serverUrl;
@@ -27,7 +29,15 @@ export default class ServiceEndpointProvider {
         bodyData = JSON.stringify(data);
       }
       const queryParamsUrl = queryParams ? `?${queryParams}`: '';
-      const url = `${baseUrl}/${endpointsNames[name]}${queryParamsUrl}`;
+      let url = `${baseUrl}/${endpointsNames[name]}${queryParamsUrl}`;
+      if (formatUrl.length) {
+        formatUrl.forEach(format => {
+          url = url.replace(format.key, format.value);
+        });
+      } else if (url.indexOf('$') !== -1) {
+        url = url.substr(0, url.indexOf('$'))
+      }
+
       return fetch(url, {
         method: method,
         body: bodyData,

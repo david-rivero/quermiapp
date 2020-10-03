@@ -1,28 +1,18 @@
 import {
   LOAD_PROFILES_TO_SEARCH,
-  SWIPE_NEXT_PROFILE,
-  SWIPE_PREV_PROFILE,
-  UPDATE_GALLERY_INDEX_PROFILE_SEARCH
+  SWIPE_PROFILE,
+  UPDATE_GALLERY_INDEX_PROFILE_SEARCH,
+  SET_ENABLED_CONTRACTS
 } from '../Actions/ProfilesToSearch';
+import { ProfileSerializer } from '../../Providers/SerializerProvider';
 
 export function updateProfileSearchStatus(state, action) {
   switch (action.type) {
-    case SWIPE_NEXT_PROFILE:
-      if (action.payload.isNotLatest) {
-        return {
-          ...state,
-          currentProfileIndex: state.currentProfileIndex + 1
-        };
-      }
-      return state;
-    case SWIPE_PREV_PROFILE:
-      if (action.payload.isNotFirst) {
-        return {
-          ...state,
-          currentProfileIndex: state.currentProfileIndex - 1
-        };
-      }
-      return state;
+    case SWIPE_PROFILE:
+      return {
+        ...state,
+        currentProfileIndex: action.payload
+      };
     case UPDATE_GALLERY_INDEX_PROFILE_SEARCH:
       return {
         ...state,
@@ -37,8 +27,22 @@ export function updateProfileSearchStatus(state, action) {
 }
 
 export function loadProfiles(state, action) {
-  if (action.type === LOAD_PROFILES_TO_SEARCH) {
-    return [...action.payload];
-  }    
-  return state || [];
+  switch(action.type) {
+    case SET_ENABLED_CONTRACTS:
+      // FIXME: Replace logic, with a lot of profiles it could crash.
+      const roleDestination = action.payload.profileRole === 'PATIENT' ? 'care_person' : 'patient';
+      
+      const profiles = action.payload.contracts.map(contract => contract[roleDestination].id);
+      const newProfiles = state.map(profile => {
+        if (profiles.find(p => p === profile.id)) {
+          profile.contractWithCurrentProfile = true;
+        }
+        return ProfileSerializer.fromAPIToView(profile);
+      });
+      return [...newProfiles];
+    case LOAD_PROFILES_TO_SEARCH:
+      return [...action.payload];
+    default:
+      return state || [];
+  }
 }
