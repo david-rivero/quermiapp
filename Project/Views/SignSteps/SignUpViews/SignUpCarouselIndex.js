@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     margin: 3
   },
   activeCarouselIndexItem: {
-    backgroundColor: Colors.pink,
+    backgroundColor: Colors.blue,
     borderWidth: 0
   }
 });

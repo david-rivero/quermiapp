@@ -2,7 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, BackHandler } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { resetProfileDataFromLogin } from '../../Providers/StoreUtilProvider';
 import store from '../../Store/store';
 import { LOGIN, LOGIN_STATUS } from '../../Store/Actions/UserAuth';
 import LanguageProvider from '../../Providers/LanguageProvider';
@@ -27,11 +26,22 @@ const styles = StyleSheet.create({
 
 class SignIn extends React.Component {
   componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', resetProfileDataFromLogin);
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', resetProfileDataFromLogin);
+    this.props.navigation.addListener('blur', () => {
+      store.dispatch({
+        type: LOGIN,
+        payload: {
+          email: '',
+          password: ''
+        }
+      });
+      store.dispatch({
+        type: LOGIN_STATUS,
+        payload: {
+          loginError: false,
+          loginMessage: ''
+        }
+      });
+    });
   }
 
   setLoginErrorStatus = (status, message) => {
@@ -48,8 +58,8 @@ class SignIn extends React.Component {
     store.dispatch({
       type: LOGIN,
       payload: {
-        email: email ? email : this.props.email,
-        password: password ? password : this.props.password
+        email: email,
+        password: password
       }
     });
   }
@@ -60,8 +70,15 @@ class SignIn extends React.Component {
       <View style={styles.container}>
         <FullLogo mode='medium' stylesContainer={styles.fullLogo} displayLabel={true}></FullLogo>
         <View>
-          <TextInput onChangeText={text => this.setLoginInputCredentials({email: text})} placeholder={langProvider.views.signIn.emailPlaceholder} style={Layout.textInput}></TextInput>
-          <TextInput onChangeText={text => this.setLoginInputCredentials({password: text})} placeholder={langProvider.views.signIn.passwordPlaceholder} secureTextEntry={true} style={Layout.textInput}></TextInput>
+          <TextInput value={this.props.email}
+                     onChangeText={text => this.setLoginInputCredentials({email: text, password: this.props.password})}
+                     placeholder={langProvider.views.signIn.emailPlaceholder}
+                     style={Layout.textInput}></TextInput>
+          <TextInput value={this.props.password}
+                     onChangeText={text => this.setLoginInputCredentials({email: this.props.email, password: text})}
+                     placeholder={langProvider.views.signIn.passwordPlaceholder}
+                     secureTextEntry={true}
+                     style={Layout.textInput}></TextInput>
         </View>
         {
           this.props.loginError &&

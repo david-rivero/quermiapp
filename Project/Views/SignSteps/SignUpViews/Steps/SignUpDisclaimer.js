@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   textContainer: {
-    flex: 1
+    flex: 1,
+    marginBottom: '100%'
   },
   title: {
     textTransform: 'uppercase',

@@ -1,9 +1,17 @@
+import formatDate from './TimeUtilsProvider';
+
 export class ProfileSerializer {
   static fromAPIToView = (data={}) => {
     return {
+      id: data.id,
       profileRole: data.role,
       name: data.name,
-      birthDate: new Date(data.birth_date),
+      username: data.username,
+      rate: data.rate,
+      birthDate: data.birth_date,
+      description: data.profile_description,
+      contractWithCurrentProfile: data.contractWithCurrentProfile,
+      experience: data.experience,
       pictsOnRegister: {
         documentID: data.doc_id_photo_url,
         profilePhoto: data.profile_photo_url
@@ -12,11 +20,14 @@ export class ProfileSerializer {
         email: '',
         password: ''
       },
-      services: [],
+      available_time: data.available_time,
+      services: data.services,
+      languages: data.languages,
       time: {
         start: data.available_hour_from,
         end: data.available_hour_to
-      }
+      },
+      profileStatus: {...data.profile_status}
     }
   }
 

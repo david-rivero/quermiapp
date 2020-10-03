@@ -3,7 +3,7 @@ import ConfigProvider from './ConfigProvider';
 const endpointsNames = {
   login: 'api/login',
   user: 'api/users',
-  profile: 'api/profiles',
+  profile: 'api/profiles/',
   nameLang: 'api/name/languages/',
   nameServices: 'api/name/services/',
   apiTokenRefresh: 'api/token/refresh/'

@@ -152,13 +152,16 @@ class SignUpCarousel extends React.Component {
         if (data) {
           const docID = this.props.profile.pictsOnRegister.documentID;
           const profilePhoto = this.props.profile.pictsOnRegister.profilePhoto;
+          const objBirthDate = getDateTimeFromStr(
+            this.props.profile.birthDate, 'dd/MM/yyyy');
+
           let profileData = {
             role: this.props.profile.profileRole,
             rate: DEFAULT_PROFILE_RATE,
             profile_description: 'Default description',
-            birth_date: formatDate(this.props.profile.birthDate, 'api'),
-            available_hour_from: formatTime(this.props.profile.time.start),
-            available_hour_to: formatTime(this.props.profile.time.end),
+            birth_date: `${formatDate(objBirthDate, 'api')}Z`,
+            available_hour_from: this.props.profile.time.start,
+            available_hour_to: this.props.profile.time.end,
             languages: [this.DEFAULT_LANG.id],
             services: [
               ...this.props.profile.services.map(service => {
@@ -172,7 +175,7 @@ class SignUpCarousel extends React.Component {
             profile_status: {
               ...this.props.profile.profileStatus
             }
-          }
+          };
 
           ServiceEndpointProvider.endpoints.profile.post(profileData)
             .then(_ => {
@@ -180,7 +183,7 @@ class SignUpCarousel extends React.Component {
               const username = email.split('@').shift();
 
               // Refactor in rxjs for several calls
-              ServiceEndpointProvider.endpoints.profile.get(undefined, username, `username=${username}`)
+              ServiceEndpointProvider.endpoints.profile.get(undefined, `user__email=${username}`)
                 .then(res => res.json())
                 .then(ppData => {
                   store.dispatch({

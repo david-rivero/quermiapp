@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, BackHandler } from 'react-native';
 
-import { resetProfileDataFromRegister } from '../../Providers/StoreUtilProvider';
-import store from '../../Store/store';
-
 import { Spinner } from '../Components/Spinner';
 import SignUpViewsCarousel from './SignUpViews/SignUpViewsCarousel';
 import FullLogo from '../Components/FullLogo';
@@ -30,14 +27,6 @@ export default class SignUp extends React.Component {
   state = {
     showSpinner: false
   };
-
-  componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', resetProfileDataFromRegister);
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', resetProfileDataFromRegister);
-  }
 
   setSpinnerShow = show => {
     this.setState({

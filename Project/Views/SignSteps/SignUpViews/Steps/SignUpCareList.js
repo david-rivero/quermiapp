@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
 class SignUpCareList extends SignUpBaseStep {
   _isOtherOptSelected = () => {
     const othOpt = this.props.itemsOptions.find(item => item.name === 'OTH');
-    console.log(othOpt.checked);
     return othOpt.checked;
   }
 
