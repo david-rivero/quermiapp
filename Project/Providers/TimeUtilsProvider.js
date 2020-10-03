@@ -1,36 +1,27 @@
-import moment from 'moment';
+import { format, differenceInYears, parse } from 'date-fns';
 
-export function getFormatForDate(day, month, year, format) {
-  const formatForHuman = `${day}/${month}/${year}`;
-  const formatForAPI = `${year}-${month}-${day}T00:00:00Z`;
-  switch(format) {
-    case 'api':
-      return formatForAPI;
-    case 'human':
-    default:
-      return formatForHuman;
-  }
-}
-
-export function formatDate (date, format='human') {
+export function formatDate (date, formatMode='human') {
   if (date) {
-    const day = `${date.getDate() < 10 ? '0' : ''}${date.getDate()}`;
-    const month = `${date.getMonth() < 10 ? '0' : ''}${date.getMonth() + 1}`;
-    const year = date.getFullYear();
-    return getFormatForDate(day, month, year, format);
+    const formatPatn = formatMode === 'human' ? 'dd/MM/yyyy' : 'yyyy-MM-ddTHH:mm:ss';
+    return format(date, formatPatn);
   }
   return '';
 }
 
 export function formatTime (time) {
   if (time) {
-    const hour = time.getHours();
-    const minutes = time.getMinutes();
-    return `${hour < 10 ? '0' : ''}${hour}:${minutes < 10 ? '0' : ''}${minutes}`;
+    return format(time, 'HH:mm');
   }
   return '';
 }
 
-export function getAgeFromDate(date) {
-  return moment().diff(moment(date), 'years');
+export function getDateTimeFromStr (dateStr, format) {
+  if (dateStr) {
+    return parse(dateStr, format, new Date());
+  }
+  return new Date();
+}
+
+export function getAgeFromDate(date = new Date()) {
+  return differenceInYears(new Date(), date);
 }

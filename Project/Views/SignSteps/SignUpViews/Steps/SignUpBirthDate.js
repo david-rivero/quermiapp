@@ -5,7 +5,7 @@ import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SIGN_UP_STEP_SET_PROFILE_INFO, SIGN_UP_STEP_DATETIMEPICKER } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import { formatDate, getAgeFromDate } from '../../../../Providers/TimeUtilsProvider'; 
+import { getDateTimeFromStr, getAgeFromDate, formatDate } from '../../../../Providers/TimeUtilsProvider'; 
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 });
 
 class SignUpBirthDate extends SignUpBaseStep {
-  _isLegalAge = (date) => {
+  _isLegalAge = date => {
     const MIN_AGE = 18;
     if (date) {
       return getAgeFromDate(date) >= MIN_AGE;
@@ -48,12 +48,12 @@ class SignUpBirthDate extends SignUpBaseStep {
       }
     });
 
-    if (e.type === 'set') {
+    if (e.type === 'set' && selectedDate) {
       store.dispatch({
         type: SIGN_UP_STEP_SET_PROFILE_INFO,
         payload: {
           profileField: 'birthDate',
-          profileData: selectedDate
+          profileData: formatDate(selectedDate)
         }
       });
       if (this._isLegalAge(selectedDate)) {
@@ -83,14 +83,14 @@ class SignUpBirthDate extends SignUpBaseStep {
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpBirthDateTitle}</Text>
-        <TextInput placeholder="Tu fecha" value={formatDate(this.props.date)} onFocus={this.showDatepicker} style={Layout.textInput}></TextInput>
+        <TextInput placeholder="Tu fecha" value={this.props.date} onFocus={this.showDatepicker} style={Layout.textInput}></TextInput>
         {
-          !this._isLegalAge(this.props.date) && 
+          !this._isLegalAge(getDateTimeFromStr(this.props.date, 'dd/MM/yyyy')) && 
           <Text style={styles.legalAgeWarning}>{langProvider.views.signUp.signUpBirthNotLegalAge}</Text>
         }
         {
           this.props.datePickerStatus.show &&
-          <DateTimePicker value={this.props.date}
+          <DateTimePicker value={getDateTimeFromStr(this.props.date, 'dd/MM/yyyy')}
                           mode={this.props.datePickerStatus.mode}
                           onChange={this.setDate} />
         }

@@ -5,12 +5,14 @@ import {
   LOG_OUT_PROFILE,
   LOGIN
 } from '../Actions/UserAuth';
+import { formatDate, formatTime } from '../../Providers/TimeUtilsProvider';
 
 export const defaultProfile = {
   registerMode: false,
   profileRole: '',
   name: '',
-  birthDate: new Date(),
+  birthDate: formatDate(new Date()),
+  username: '',
   pictsOnRegister: {
     documentID: null,
     profilePhoto: null
@@ -21,8 +23,8 @@ export const defaultProfile = {
   },
   services: [],
   time: {
-    start: new Date(),
-    end: new Date()
+    start: formatTime(new Date()),
+    end: formatTime(new Date())
   },
   profileStatus: {
     covidTestCheck: false,

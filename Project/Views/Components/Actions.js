@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { formatDate } from '../../Providers/TimeUtilsProvider';
 
 const styles = StyleSheet.create({
   actionsContainer: {

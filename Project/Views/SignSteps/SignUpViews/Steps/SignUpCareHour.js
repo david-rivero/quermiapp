@@ -5,7 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInput } from 'react-native-paper';
 import { SIGN_UP_STEP_DATETIMEPICKER, SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import { formatTime } from '../../../../Providers/TimeUtilsProvider'; 
+import { formatTime, getDateTimeFromStr } from '../../../../Providers/TimeUtilsProvider'; 
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
@@ -50,7 +50,7 @@ class SignUpCareHour extends SignUpBaseStep {
         payload: {
           profileField: 'time',
           profileData: {
-            [mainField]: time,
+            [mainField]: formatTime(time),
             [oppositeField]: this.props[oppositeType]
           }
         }
@@ -82,25 +82,25 @@ class SignUpCareHour extends SignUpBaseStep {
         <View style={styles.inputTimeRow}>
           <Text>De</Text>
           <TextInput placeholder="Hora"
-                     value={formatTime(this.props.timeStart)}
+                     value={this.props.timeStart}
                      style={styles.timeInput}
                      onFocus={() => this.showTimePicker('timePickerStartStatus', 'timeStart')} />
           <Text>a</Text>
           <TextInput placeholder="Hora"
-                     value={formatTime(this.props.timeEnd)}
+                     value={this.props.timeEnd}
                      style={styles.timeInput}
                      onFocus={() => this.showTimePicker('timePickerEndStatus', 'timeEnd')} />
         </View>
         {
           this.props.timeStartShow && 
-          <DateTimePicker value={this.props.timeStart}
+          <DateTimePicker value={getDateTimeFromStr(this.props.timeStart, 'HH:mm')}
                           mode={this.props.timeStartMode}
                           is24Hour={true}
                           onChange={(event, time) => this.setTimePicker(event, time, 'timePickerStartStatus', 'timeStart')} />
         }
         {
           this.props.timeEndShow && 
-          <DateTimePicker value={this.props.timeEnd}
+          <DateTimePicker value={getDateTimeFromStr(this.props.timeEnd, 'HH:mm')}
                           mode={this.props.timeEndMode}
                           is24Hour={true}
                           onChange={(event, time) => this.setTimePicker(event, time, 'timePickerEndStatus', 'timeEnd')} />

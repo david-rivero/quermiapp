@@ -7,7 +7,7 @@ import { UPDATE_MY_PROFILE } from '../../../Store/Actions/DetailProfile';
 import { SPANISH_LANG } from '../../../Store/Reducers/LoadLanguage';
 import store from '../../../Store/store';
 import { ProfileSerializer } from '../../../Providers/SerializerProvider';
-import { formatTime, formatDate } from '../../../Providers/TimeUtilsProvider';
+import { getDateTimeFromStr, formatDate } from '../../../Providers/TimeUtilsProvider';
 import LanguageProvider from '../../../Providers/LanguageProvider';
 import ServiceEndpointProvider from '../../../Providers/EndpointServiceProvider';
 

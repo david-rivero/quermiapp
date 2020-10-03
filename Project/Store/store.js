@@ -1,11 +1,8 @@
 import { createStore } from 'redux';
 import reducers from './Reducers/index';
 
-import { SPANISH_LANG } from './Reducers/LoadLanguage';
+import { formatDate, formatTime } from '../Providers/TimeUtilsProvider';
 
-/**
-  Add to initialState -->s
-  messagesCurrentProfile: []
 
  */
 
@@ -19,7 +16,7 @@ let initialState = {
     registerMode: false,
     profileRole: '',
     name: '',
-    birthDate: new Date(),
+    birthDate: formatDate(new Date()),
     pictsOnRegister: {
       documentID: null,
       profilePhoto: null

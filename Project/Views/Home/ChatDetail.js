@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { getUnixTime } from 'date-fns';
 import { TextInput } from 'react-native-paper';
 
 import Header from '../Components/Header';
