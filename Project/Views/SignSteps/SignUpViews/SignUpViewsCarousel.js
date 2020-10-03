@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { switchMap, catchError } from 'rxjs/operators';
+
 import { StyleSheet, View, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
 import SignUpCarouselIndex from './SignUpCarouselIndex';
 import { SIGN_UP_STEP } from '../../../Store/Actions/UserAuth';
@@ -133,61 +135,52 @@ class SignUpCarousel extends React.Component {
     };
 
     this.setLoadStatus(true);
-    requestEndpoint('user', userData, 'POST')
-      .then(r => {
-        if (r.status === 201) {
-          return r.json();
-        }
+    requestDataEndpoint('user', userData, 'POST').pipe(
+      switchMap(data => {
+        const docID = this.props.profile.pictsOnRegister.documentID;
+        const profilePhoto = this.props.profile.pictsOnRegister.profilePhoto;
+        const objBirthDate = getDateTimeFromStr(this.props.profile.birthDate, 'dd/MM/yyyy');
+
+        let profileData = {
+          role: this.props.profile.profileRole,
+          rate: DEFAULT_PROFILE_RATE,
+          profile_description: 'Default description',
+          birth_date: `${formatDate(objBirthDate, 'api')}Z`,
+          available_hour_from: this.props.profile.time.start,
+          available_hour_to: this.props.profile.time.end,
+          languages: [this.DEFAULT_LANG.id],
+          services: [
+            ...this.props.profile.services.map(service => {
+              return this.props.careServicesAPI[service.name].id;
+            })
+          ],
+          experience: 'Default experience',
+          user: data.id,
+          id_doc_photo: docID.data,
+          profile_photo: profilePhoto.data,
+          profile_status: {
+            ...this.props.profile.profileStatus
+          }
+        };
+
+        return requestEndpoint('profile', profileData, 'POST')
+      }),
+      switchMap(_ => {
+        const email = this.props.profile.account.email;
+        const username = email.split('@').shift();
+        return requestDataEndpoint('profile',  undefined, 'GET', `user__email=${username}`)
+      }),
+      catchError(_ => {
         this.setLoadStatus(false);
-        return;
       })
-      .then(data => {
-        if (data) {
-          const docID = this.props.profile.pictsOnRegister.documentID;
-          const profilePhoto = this.props.profile.pictsOnRegister.profilePhoto;
-          const objBirthDate = getDateTimeFromStr(
-            this.props.profile.birthDate, 'dd/MM/yyyy');
-
-          let profileData = {
-            role: this.props.profile.profileRole,
-            rate: DEFAULT_PROFILE_RATE,
-            profile_description: 'Default description',
-            birth_date: `${formatDate(objBirthDate, 'api')}Z`,
-            available_hour_from: this.props.profile.time.start,
-            available_hour_to: this.props.profile.time.end,
-            languages: [this.DEFAULT_LANG.id],
-            services: [
-              ...this.props.profile.services.map(service => {
-                return this.props.careServicesAPI[service.name].id;
-              })
-            ],
-            experience: 'Default experience',
-            user: data.id,
-            id_doc_photo: docID.data,
-            profile_photo: profilePhoto.data,
-            profile_status: {
-              ...this.props.profile.profileStatus
-            }
-          };
-
-          requestEndpoint('profile', profileData, 'POST')
-            .then(_ => {
-              const email = this.props.profile.account.email;
-              const username = email.split('@').shift();
-
-              // Refactor in rxjs for several calls
-              requestDataEndpoint('profile',  undefined, 'GET', `user__email=${username}`)
-                .then(ppData => {
-                  store.dispatch({
-                    type: UPDATE_MY_PROFILE,
-                    payload: ProfileSerializer.fromAPIToView(ppData.pop())
-                  });
-                  this.setLoadStatus(false);
-                  this.props.navigation.navigate('HomeSignedIn');
-                });
-            });
-        }
+    ).subscribe(ppData => {
+      store.dispatch({
+        type: UPDATE_MY_PROFILE,
+        payload: ProfileSerializer.fromAPIToView(ppData.pop())
       });
+      this.setLoadStatus(false);
+      this.props.navigation.navigate('HomeSignedIn');
+    });
   }
 
   render() {

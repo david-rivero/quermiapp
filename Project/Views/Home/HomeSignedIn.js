@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { concatMap } from 'rxjs/operators';
+
 import { View, Text, Image, TouchableOpacity, BackHandler, StyleSheet } from 'react-native';
 import { Layout } from '../../Theme/Layout';
 import { Colors } from '../../Theme/Colors';
@@ -87,28 +89,26 @@ class HomeSignedIn extends React.Component {
       queryFieldToContract = 'care_person__user__username';
     }
 
-    const contractsPromise = requestDataEndpoint(
+    const contractsObservable = requestDataEndpoint(
       'contracts', undefined, 'GET', `${queryFieldToContract}=${this.props.profile.username}`);
-    
-    requestDataEndpoint('profile', undefined, 'GET', `role=${profileRoleToSearch}`)
-      .then(data => {
+    requestDataEndpoint('profile', undefined, 'GET', `role=${profileRoleToSearch}`).pipe(
+      concatMap(data => {
         store.dispatch({
           type: LOAD_PROFILES_TO_SEARCH,
           payload: data
         });
-
-        // Match profiles available with contacted profiles
-        contractsPromise.then(contractsData => {
-          store.dispatch({
-            type: SET_ENABLED_CONTRACTS,
-            payload: {
-              contracts: contractsData,
-              profileFromId: this.props.profile.id,
-              profileRole: this.props.profile.profileRole
-            }
-          });
-        });
+        return contractsObservable;
+      })
+    ).subscribe(contractsData => {
+      store.dispatch({
+        type: SET_ENABLED_CONTRACTS,
+        payload: {
+          contracts: contractsData,
+          profileFromId: this.props.profile.id,
+          profileRole: this.props.profile.profileRole
+        }
       });
+    });
   }
 
   componentWillUnmount() {

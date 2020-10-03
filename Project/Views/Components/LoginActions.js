@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { concatMap, catchError } from 'rxjs/operators';
+
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Colors } from '../../Theme/Colors';
 import { isValidEmail } from '../../Providers/FormatStringProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
-import { requestEndpoint, requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
+import { requestEndpoint, requestDataEndpoint, AUTHENTICATION_ERROR_STATUS_CODE } from '../../Providers/EndpointServiceProvider';
 import { ProfileSerializer } from '../../Providers/SerializerProvider';
 import store from '../../Store/store';
 import { UPDATE_MY_PROFILE } from '../../Store/Actions/DetailProfile';
@@ -43,8 +45,20 @@ const styles = StyleSheet.create({
 });
 
 class LoginActions extends React.Component {
-  constructor(props) {
-    super(props);
+  _getRequestObservable = requestInstance => {
+    return requestInstance.pipe(
+      concatMap(_ => {
+        const useremail = `user__email=${this.props.email}`;
+        return requestDataEndpoint('profile', undefined, 'GET', useremail);
+      }),
+      catchError(e => {
+        if (e.status === AUTHENTICATION_ERROR_STATUS_CODE) {
+          this.props.onLoginErrorStatus(true, 'Username or password are not valid');
+        } else {
+          this.props.onLoginErrorStatus(true, 'There was an unexpected error');
+        }
+      })
+    );
   }
 
   performLogin() {
@@ -54,25 +68,14 @@ class LoginActions extends React.Component {
         password: this.props.password
       };
       this.props.onLoginErrorStatus(false, '');
-      requestEndpoint('login', data, 'POST')
-        .then(r => {
-          if (r.status === 200) {
-            const useremail = `user__email=${this.props.email}`;
-            requestDataEndpoint('profile', undefined, 'GET', useremail)
-              .then(profileData => {
-                store.dispatch({
-                  type: UPDATE_MY_PROFILE,
-                  payload: ProfileSerializer.fromAPIToView(profileData.pop())
-                });
-                this.redirectToHomeSigned();
-              });
-          } else {
-            this.props.onLoginErrorStatus(true, 'Username or password are not valid');
-          }
-        })
-        .catch(e => {
-          this.props.onLoginErrorStatus(true, 'There was an unexpected error');
-          console.error(e);
+      // TODO: Perform to single operation
+      this._getRequestObservable(requestEndpoint('login', data, 'POST'))
+        .subscribe(profileData => {
+          store.dispatch({
+            type: UPDATE_MY_PROFILE,
+            payload: ProfileSerializer.fromAPIToView(profileData.pop())
+          });
+          this.redirectToHomeSigned();
         });
     } else {
       this.props.onLoginErrorStatus(true, 'You must to provide a valid email');

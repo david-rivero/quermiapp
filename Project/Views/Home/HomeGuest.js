@@ -34,14 +34,14 @@ const styles = StyleSheet.create({
 export default class HomeGuest extends React.Component {
   componentDidMount() {
     requestDataEndpoint('nameLang', undefined, 'GET')
-      .then(data => {
+      .subscribe(data => {
         store.dispatch({
           type: LOAD_LIST_LANGUAGES,
           payload: data
         });
       });
     requestDataEndpoint('nameServices', undefined, 'GET')
-      .then(data => {
+      .subscribe(data => {
         store.dispatch({
           type: LOAD_SERVICES_API,
           payload: data

@@ -66,8 +66,9 @@ class Actions extends React.Component {
       care_person: carePersonId
     };
 
+    // FIXME: Contracts creation is not working properly
     requestEndpoint('contractsCreate', data, 'POST')
-      .then(_ => {
+      .subscribe(_ => {
         this.props.navigation.navigate('HomeSignedIn');
         this.props.showNotification({
           title: langProvider.components.actions.actionSendReqNotifTitle,
@@ -86,11 +87,11 @@ class Actions extends React.Component {
         love_profile: currentLoveStatus + 1
       }
     }
-    const params = [
+    const rules = [
       { key: '$profile_id', value: this.props.profile.id }
     ];
-    requestDataEndpoint('profileDetail', data, 'PATCH', params)
-      .then(_ => {
+    requestDataEndpoint('profileDetail', data, 'PATCH', '', rules)
+      .subscribe(_ => {
         this.props.showNotification({
           title: langProvider.components.actions.actionLikeNotifTitle,
           message: langProvider.components.actions.actionLikeNotifMessage,

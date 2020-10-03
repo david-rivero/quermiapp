@@ -91,7 +91,7 @@ class RateProfile extends React.Component {
       profile_rated: this.props.route.params.profile.id
     };
     requestDataEndpoint('reports', data, 'POST')
-      .then(_ => {
+      .subscribe(_ => {
         this.props.showNotification({
           title: langProvider.views.rateProfile.rateProfileNotifTitle,
           message: langProvider.views.rateProfile.rateProfileNotifMessage,

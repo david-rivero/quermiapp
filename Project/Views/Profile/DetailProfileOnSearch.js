@@ -71,7 +71,6 @@ class DetailProfileOnSearch extends React.Component {
 
   render() {
     const profile = this.props.route.params.profile;
-    console.log(profile)
 
     return (
       <View style={[Layout.container, styles.container]}>

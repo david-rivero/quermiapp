@@ -1,3 +1,7 @@
+import { throwError, pipe, of } from 'rxjs';
+import { fromFetch } from 'rxjs/fetch';
+import { catchError, map, concatMap } from 'rxjs/operators';
+
 import ConfigProvider from './ConfigProvider';
 
 const baseUrl = ConfigProvider().serverUrl;
@@ -17,13 +21,15 @@ const endpointsNames = {
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
 };
+export const ERROR_STATUS_CODE = 400;
+export const AUTHENTICATION_ERROR_STATUS_CODE = 401;
 
 function _formatUrl(name, queryParams='', formatRulesUrl=[]) {
   const queryParamsUrl = queryParams ? `?${queryParams}`: '';
   let url = `${baseUrl}/${endpointsNames[name]}${queryParamsUrl}`;
 
   if (formatRulesUrl.length) {
-    formatRuleUrl.forEach(format => {
+    formatRulesUrl.forEach(format => {
       url = url.replace(format.key, format.value);
     });
   } else if (url.indexOf('$') !== -1) {
@@ -40,14 +46,22 @@ export function requestEndpoint (endpointName, data, method='GET', queryParams='
     bodyData = JSON.stringify(data);
   }
 
-  return fetch(url, {
+  return fromFetch(url, {
     method: method,
     body: bodyData,
     headers: {...headers}
-  });
+  }).pipe(
+    map(r => {
+      if (r.status >= ERROR_STATUS_CODE) {
+        throwError({ status: r.status, message: r.message });
+      }
+      return r;
+    }),
+    catchError(e => of({ error: true, message: e.message }))
+  );
 }
 
 export function requestDataEndpoint (endpointName, data, method='GET', queryParams='', formatRulesUrl=[], headers=DEFAULT_HEADERS) {
   return requestEndpoint(endpointName, data, method, queryParams, formatRulesUrl, headers)
-    .then(response => response.json());
+    .pipe(concatMap(r => r.json()));
 }

@@ -85,12 +85,12 @@ class ChatDetail extends React.Component {
   constructor(props){
     super(props);
     const chatProfile = this.props.route.params.chatProfile;
-    const params = [
+    const rules = [
       {key: '$from_profile', value: chatProfile.fromProfile.username},
       {key: '$to_profile', value: chatProfile.toProfile.username}
     ];
-    requestDataEndpoint('chatRoom', undefined, 'GET', params)
-      .then(data => {
+    requestDataEndpoint('chatRoom', undefined, 'GET', '', rules)
+      .subscribe(data => {
         const chatUrl = `${serverURI}/ws/chat/${data.chat_room_id}/${chatProfile.fromProfile.username}/${chatProfile.toProfile.username}/`.replace(/http[s]?/g, 'ws');
         this.socket = new WebSocket(chatUrl);
         this.socket.onmessage = e => this.getResponse(e);
