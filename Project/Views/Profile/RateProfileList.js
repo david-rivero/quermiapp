@@ -4,6 +4,7 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image } from 'rea
 import LanguageProvider from '../../Providers/LanguageProvider';
 import { connect } from 'react-redux';
 
+import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
 import Header from '../Components/Header';
 
 const styles = StyleSheet.create({
@@ -129,4 +130,4 @@ function mapStateToProps(state) {
     myProfile: state.profile
   }
 }
-export default connect(mapStateToProps, null)(RateProfileList);
+export default connect(mapStateToProps, null)(AuthViewCheckProvider(RateProfileList));

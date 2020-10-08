@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
 
-import { LOG_OUT } from '../../Store/Actions/UserAuth';
+import { LOG_OUT, INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
 import { TOGGLE_MENU_OPEN } from '../../Store/Actions/DetailProfile';
 import store from '../../Store/store';
 import LanguageProvider from '../../Providers/LanguageProvider';
@@ -45,6 +45,9 @@ class Sidebar extends React.Component {
   }
 
   logout = () => {
+    store.dispatch({
+      type: INVALIDATE_TOKEN
+    });
     store.dispatch({
       type: LOG_OUT
     });

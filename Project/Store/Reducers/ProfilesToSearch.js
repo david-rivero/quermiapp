@@ -31,7 +31,6 @@ export function loadProfiles(state, action) {
     case SET_ENABLED_CONTRACTS:
       // FIXME: Replace logic, with a lot of profiles it could crash.
       const roleDestination = action.payload.profileRole === 'PATIENT' ? 'care_person' : 'patient';
-      
       const profiles = action.payload.contracts.map(contract => contract[roleDestination].id);
       const newProfiles = state.map(profile => {
         if (profiles.find(p => p === profile.id)) {

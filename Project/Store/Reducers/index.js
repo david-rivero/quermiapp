@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { loadLanguage, loadListLanguages } from './LoadLanguage';
-import { setLoginStatus } from './SetLoginStatus';
+import { setLoginStatus, setTokenState } from './SetLoginStatus';
 import { setRegisterStatus } from './SetRegisterStatus';
 import { setDetailProfile, setHomeStatus, setRateProfile } from './SetDetailProfile';
 import { loadProfiles, updateProfileSearchStatus } from './ProfilesToSearch';
@@ -14,6 +14,7 @@ const reducers = combineReducers({
   profilesLoaded: loadProfiles,
   profileSearchStatus: updateProfileSearchStatus,
   homeStatus: setHomeStatus,
-  rateProfileInfo: setRateProfile
+  rateProfileInfo: setRateProfile,
+  _userToken: setTokenState
 });
 export default reducers;

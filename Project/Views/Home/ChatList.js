@@ -3,8 +3,11 @@ import { connect } from 'react-redux';
 import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
+import { INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
+import store from '../../Store/store';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
+import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
 import Header from '../Components/Header';
 
 const styles = StyleSheet.create({
@@ -62,6 +65,12 @@ const styles = StyleSheet.create({
 });
 
 class ChatList extends React.Component {
+  componentDidMount() {
+    store.dispatch({
+      type: INVALIDATE_TOKEN
+    });
+  }
+
   redirectToChatDetail = chatProfile => {
     this.props.navigation.navigate('ChatDetail', {'chatProfile': chatProfile});
   }
@@ -80,7 +89,6 @@ class ChatList extends React.Component {
         <View style={styles.subView}>
           <View style={styles.notifSection}>
             <Text style={styles.titleText}>{langProvider.views.chatList.chatLabel}</Text>
-            {/* { this.state.unreadProfiles > 0 && <Text style={styles.unreadNotif}>1</Text>} */}
           </View>
           <ScrollView style={styles.scrollSection}>
             {
@@ -127,4 +135,4 @@ function mapStateToProps (state) {
     profiles: state.profilesLoaded
   };
 }
-export default connect(mapStateToProps, null)(ChatList);
+export default connect(mapStateToProps, null)(AuthViewCheckProvider(ChatList));

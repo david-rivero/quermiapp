@@ -7,6 +7,7 @@ import ConfigProvider from './ConfigProvider';
 const baseUrl = ConfigProvider().serverUrl;
 const endpointsNames = {
   login: 'api/login',
+  verifyToken: 'api/token/verify/',
   user: 'api/users',
   profile: 'api/profiles/',
   profileDetail: 'api/profiles/profile/$profile_id/',
@@ -18,10 +19,10 @@ const endpointsNames = {
   chatRoom: 'api/chatroom/$from_profile/$to_profile/',
   reports: 'api/reports'
 };
-const DEFAULT_HEADERS = {
+export const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
 };
-export const ERROR_STATUS_CODE = 400;
+export const CLIENT_ERROR_STATUS_CODE = 400;
 export const AUTHENTICATION_ERROR_STATUS_CODE = 401;
 
 function _formatUrl(name, queryParams='', formatRulesUrl=[]) {
@@ -52,7 +53,7 @@ export function requestEndpoint (endpointName, data, method='GET', queryParams='
     headers: {...headers}
   }).pipe(
     map(r => {
-      if (r.status >= ERROR_STATUS_CODE) {
+      if (r.status >= CLIENT_ERROR_STATUS_CODE) {
         throwError({ status: r.status, message: r.message });
       }
       return r;

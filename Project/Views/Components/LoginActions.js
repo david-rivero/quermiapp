@@ -6,8 +6,9 @@ import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Colors } from '../../Theme/Colors';
 import { isValidEmail } from '../../Providers/FormatStringProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
-import { requestEndpoint, requestDataEndpoint, AUTHENTICATION_ERROR_STATUS_CODE } from '../../Providers/EndpointServiceProvider';
+import { requestDataEndpoint, AUTHENTICATION_ERROR_STATUS_CODE } from '../../Providers/EndpointServiceProvider';
 import { ProfileSerializer } from '../../Providers/SerializerProvider';
+import { setToken } from '../../Providers/AuthUtilProvider';
 import store from '../../Store/store';
 import { UPDATE_MY_PROFILE } from '../../Store/Actions/DetailProfile';
 
@@ -47,7 +48,8 @@ const styles = StyleSheet.create({
 class LoginActions extends React.Component {
   _getRequestObservable = requestInstance => {
     return requestInstance.pipe(
-      concatMap(_ => {
+      concatMap(data => {
+        setToken(data.access, data.refresh);
         const useremail = `user__email=${this.props.email}`;
         return requestDataEndpoint('profile', undefined, 'GET', useremail);
       }),
@@ -69,7 +71,7 @@ class LoginActions extends React.Component {
       };
       this.props.onLoginErrorStatus(false, '');
       // TODO: Perform to single operation
-      this._getRequestObservable(requestEndpoint('login', data, 'POST'))
+      this._getRequestObservable(requestDataEndpoint('login', data, 'POST'))
         .subscribe(profileData => {
           store.dispatch({
             type: UPDATE_MY_PROFILE,

@@ -5,9 +5,9 @@ import { getAgeFromDate } from '../../Providers/TimeUtilsProvider';
 import { mapPKToItems } from '../../Providers/StoreUtilProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
+import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
 import Actions from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
-import { ImageImports } from '../../ImageImports';
 
 
 const styles = StyleSheet.create({
@@ -165,4 +165,4 @@ function mapStateToProps (state) {
     listLanguages: state.availableLangs
   };
 }
-export default connect(mapStateToProps, null)(DetailProfileOnSearch);
+export default connect(mapStateToProps, null)(AuthViewCheckProvider(DetailProfileOnSearch));

@@ -6,9 +6,10 @@ import { withInAppNotification } from 'react-native-in-app-notification';
 import { TextInput } from 'react-native-paper';
 import { SET_RATE_INFO_PROFILE, RESET_RATE_INFO_PROFILE } from '../../Store/Actions/DetailProfile';
 import store from '../../Store/store';
-import { requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
+import { requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
+import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
 import Header from '../Components/Header';
 
 const styles = StyleSheet.create({
@@ -90,7 +91,11 @@ class RateProfile extends React.Component {
       origin_profile: this.props.myProfile.id,
       profile_rated: this.props.route.params.profile.id
     };
-    requestDataEndpoint('reports', data, 'POST')
+    const headers = {
+      ...DEFAULT_HEADERS,
+      'Authorization': `Bearer ${this.props.token}` 
+    };
+    requestDataEndpoint('reports', data, 'POST', '', [], headers)
       .subscribe(_ => {
         this.props.showNotification({
           title: langProvider.views.rateProfile.rateProfileNotifTitle,
@@ -206,7 +211,9 @@ function mapStateToProps (state) {
   return {
     language: state.language,
     rateProfileInfo: state.rateProfileInfo,
-    myProfile: state.profile
+    myProfile: state.profile,
+    token: state._userToken.token
   };
 }
-export default connect(mapStateToProps, null)(withInAppNotification(RateProfile));
+export default connect(mapStateToProps, null)(
+  withInAppNotification(AuthViewCheckProvider(RateProfile)));

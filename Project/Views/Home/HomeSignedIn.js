@@ -8,9 +8,10 @@ import { Colors } from '../../Theme/Colors';
 import { LOAD_PROFILES_TO_SEARCH, SET_ENABLED_CONTRACTS } from '../../Store/Actions/ProfilesToSearch';
 import { TOGGLE_MENU_OPEN } from '../../Store/Actions/DetailProfile';
 import LanguageProvider from '../../Providers/LanguageProvider';
-import { requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
+import { requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
 import store from '../../Store/store';
 
+import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
 import Sidebar from '../Components/Sidebar';
 import Header from '../Components/Header';
 
@@ -88,9 +89,12 @@ class HomeSignedIn extends React.Component {
       profileRoleToSearch = 'PATIENT';
       queryFieldToContract = 'care_person__user__username';
     }
-
+    const headers = {
+      ...DEFAULT_HEADERS,
+      'Authorization': `Bearer ${this.props.token}`
+    };
     const contractsObservable = requestDataEndpoint(
-      'contracts', undefined, 'GET', `${queryFieldToContract}=${this.props.profile.username}`);
+      'contracts', undefined, 'GET', `${queryFieldToContract}=${this.props.profile.username}`, [], headers);
     requestDataEndpoint('profile', undefined, 'GET', `role=${profileRoleToSearch}`).pipe(
       concatMap(data => {
         store.dispatch({
@@ -199,7 +203,8 @@ function mapStateToProps (state) {
     language: state.language,
     menuOpened: state.homeStatus.menuOpened,
     profile: state.profile,
-    profilesLoaded: state.profilesLoaded
+    profilesLoaded: state.profilesLoaded,
+    token: state._userToken.token
   };
 }
-export default connect(mapStateToProps, null)(HomeSignedIn);
+export default connect(mapStateToProps, null)(AuthViewCheckProvider(HomeSignedIn));

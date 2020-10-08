@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { withInAppNotification } from 'react-native-in-app-notification';
 import { formatDate } from '../../Providers/TimeUtilsProvider';
-import { requestEndpoint, requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
+import { requestEndpoint, requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 const styles = StyleSheet.create({
@@ -66,8 +66,12 @@ class Actions extends React.Component {
       care_person: carePersonId
     };
 
+    const headers = {
+      ...DEFAULT_HEADERS,
+      'Authorization': `Bearer ${this.props.token}`
+    };
     // FIXME: Contracts creation is not working properly
-    requestEndpoint('contractsCreate', data, 'POST')
+    requestEndpoint('contractsCreate', data, 'POST', '', [], headers)
       .subscribe(_ => {
         this.props.navigation.navigate('HomeSignedIn');
         this.props.showNotification({
@@ -90,7 +94,11 @@ class Actions extends React.Component {
     const rules = [
       { key: '$profile_id', value: this.props.profile.id }
     ];
-    requestDataEndpoint('profileDetail', data, 'PATCH', '', rules)
+    const headers = {
+      ...DEFAULT_HEADERS,
+      'Authorization': `Bearer ${this.props.token}`
+    };
+    requestDataEndpoint('profileDetail', data, 'PATCH', '', rules, headers)
       .subscribe(_ => {
         this.props.showNotification({
           title: langProvider.components.actions.actionLikeNotifTitle,
@@ -136,7 +144,8 @@ class Actions extends React.Component {
 function mapStateToProps(state) {
   return {
     language: state.language,
-    myProfile: state.profile
+    myProfile: state.profile,
+    token: state._userToken.token
   };
 }
 export default connect(mapStateToProps, null)(withInAppNotification(Actions));

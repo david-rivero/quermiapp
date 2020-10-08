@@ -127,6 +127,11 @@ let initialState = {
   rateProfileInfo: {
     description: '',
     rate: 0
+  },
+  _userToken: {
+    token: '',
+    refreshToken: '',
+    _isValid: false
   }
 };
 

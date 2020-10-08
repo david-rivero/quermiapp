@@ -4,6 +4,7 @@ import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import { SWIPE_PROFILE } from '../../Store/Actions/ProfilesToSearch';
 
+import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
 import Actions from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
 import store from '../../Store/store';
@@ -155,4 +156,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null)(SearchProfile);
+export default connect(mapStateToProps, null)(AuthViewCheckProvider(SearchProfile));

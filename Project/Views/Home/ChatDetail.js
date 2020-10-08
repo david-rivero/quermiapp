@@ -4,10 +4,11 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { connect } from 'react-redux';
 import { TextInput } from 'react-native-paper';
 
+import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
 import Header from '../Components/Header';
 import ConfigProvider from '../../Providers/ConfigProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
-import { requestDataEndpoint } from '../../Providers/EndpointServiceProvider';
+import { requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
 
 const serverURI = ConfigProvider().serverUrl;
 const styles = StyleSheet.create({
@@ -89,7 +90,11 @@ class ChatDetail extends React.Component {
       {key: '$from_profile', value: chatProfile.fromProfile.username},
       {key: '$to_profile', value: chatProfile.toProfile.username}
     ];
-    requestDataEndpoint('chatRoom', undefined, 'GET', '', rules)
+    const headers = {
+      ...DEFAULT_HEADERS,
+      'Authorization': `Bearer ${this.props.token}`
+    };
+    requestDataEndpoint('chatRoom', undefined, 'GET', '', rules, headers)
       .subscribe(data => {
         const chatUrl = `${serverURI}/ws/chat/${data.chat_room_id}/${chatProfile.fromProfile.username}/${chatProfile.toProfile.username}/`.replace(/http[s]?/g, 'ws');
         this.socket = new WebSocket(chatUrl);
@@ -216,8 +221,9 @@ class ChatDetail extends React.Component {
 function mapStateToProps(state) {
   return {
     myProfile: state.profile,
-    language: state.language
+    language: state.language,
+    token: state._userToken.token
   };
 }
 
-export default connect(mapStateToProps, null)(ChatDetail);
+export default connect(mapStateToProps, null)(AuthViewCheckProvider(ChatDetail));
