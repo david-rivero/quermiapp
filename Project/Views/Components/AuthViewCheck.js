@@ -1,8 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 
 import {
-  AUTHENTICATION_ERROR_STATUS_CODE,
-  CLIENT_ERROR_STATUS_CODE
+  AUTHENTICATION_ERROR_STATUS_CODE, CLIENT_ERROR_STATUS_CODE
 } from '../../Providers/EndpointServiceProvider';
 import { verifyIsValidToken } from '../../Providers/AuthUtilProvider';
 import store from '../../Store/store'

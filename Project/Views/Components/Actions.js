@@ -1,11 +1,15 @@
-import * as React from 'react';
+import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
+
 import { withInAppNotification } from 'react-native-in-app-notification';
+
 import { formatDate } from '../../Providers/TimeUtilsProvider';
 import { requestEndpoint, requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
+const loveIcon = require('../../Assets/images/heart-pink.png');
+const contactIcon = require('../../Assets/images/social-orange.png');
+const rateIcon = require('../../Assets/images/star-border.png');
 const styles = StyleSheet.create({
   actionsContainer: {
     flexDirection: 'row',
@@ -45,107 +49,101 @@ const styles = StyleSheet.create({
   },
   actionDetail: {
     backgroundColor: '#fafafa'
-  }
+  },
 });
 
-class Actions extends React.Component {
-  sendContactRequest = () => {
-    const langProvider = LanguageProvider(this.props.language);
 
-    const patientId = this.props.profile.profileRole === 'PATIENT' ? 
-      this.props.profile.id : this.props.myProfile.id;
-    const carePersonId = this.props.profile.profileRole === 'CARE_PROVIDER' ? 
-      this.props.profile.id : this.props.myProfile.id;
+export function ProfileActionsWrapper (ViewWrapper) {
+  return withInAppNotification(class extends React.Component {
+    _generateNotification = (typeNotification) => {
+      const langProvider = LanguageProvider(this.props.language);
+      const title = `${typeNotification}Title`;
+      const message = `${typeNotification}Message`;
 
-    const formattedDate = formatDate(new Date(), 'api');
-    const data = {
-      start_date: formattedDate,
-      end_date: formattedDate,
-      status: 'CPEN',
-      patient: patientId,
-      care_person: carePersonId
-    };
-
-    const headers = {
-      ...DEFAULT_HEADERS,
-      'Authorization': `Bearer ${this.props.token}`
-    };
-    // FIXME: Contracts creation is not working properly
-    requestEndpoint('contractsCreate', data, 'POST', '', [], headers)
-      .subscribe(_ => {
-        this.props.navigation.navigate('HomeSignedIn');
-        this.props.showNotification({
-          title: langProvider.components.actions.actionSendReqNotifTitle,
-          message: langProvider.components.actions.actionSendReqNotifMessage,
-          vibrate: false
-        });
+      this.props.showNotification({
+        title: langProvider.components.actions[title],
+        message: langProvider.components.actions[message],
+        vibrate: false
       });
-  }
-
-  loveProfile = () => {
-    const langProvider = LanguageProvider(this.props.language);
-    const currentLoveStatus = this.props.profile.profileStatus.loveProfile || 0;
-    const data = {
-      profile_status: {
-        ...this.props.profile.profileStatus,
-        love_profile: currentLoveStatus + 1
-      }
     }
-    const rules = [
-      { key: '$profile_id', value: this.props.profile.id }
-    ];
-    const headers = {
-      ...DEFAULT_HEADERS,
-      'Authorization': `Bearer ${this.props.token}`
-    };
-    requestDataEndpoint('profileDetail', data, 'PATCH', '', rules, headers)
-      .subscribe(_ => {
-        this.props.showNotification({
-          title: langProvider.components.actions.actionLikeNotifTitle,
-          message: langProvider.components.actions.actionLikeNotifMessage,
-          vibrate: false
+
+    loveProfile = profile => {
+      const currentLoveStatus = profile.profileStatus.loveProfile || 0;
+      const data = {
+        profile_status: {
+          ...profile.profileStatus,
+          love_profile: currentLoveStatus + 1
+        }
+      }
+      const rules = [
+        { key: '$profile_id', value: profile.id }
+      ];
+      const headers = {
+        ...DEFAULT_HEADERS,
+        'Authorization': `Bearer ${this.props.token}`
+      };
+      requestDataEndpoint('profileDetail', data, 'PATCH', '', rules, headers)
+        .subscribe(_ => this._generateNotification('actionLikeNotif'));
+    }
+
+    sendContactRequest = (profile, myProfile) => {
+      const [patientId, carePersonId] = profile.profileRole === 'PATIENT' ?
+        [profile.id, myProfile.id] : [myProfile.id, profile.id];
+      const formattedDate = formatDate(new Date(), 'api');
+      const data = {
+        start_date: formattedDate,
+        end_date: formattedDate,
+        status: 'CPEN',
+        patient: patientId,
+        care_person: carePersonId
+      };
+      const headers = {
+        ...DEFAULT_HEADERS,
+        'Authorization': `Bearer ${this.props.token}`
+      };
+
+      // FIXME: Contracts creation is not working properly
+      requestEndpoint('contractsCreate', data, 'POST', '', [], headers)
+        .subscribe(_ => {
+          this.props.navigation.navigate('HomeSignedIn');
+          this._generateNotification('actionSendReqNotif');
         });
-      });
-  }
+    }
 
-  goRateProfile = () => {
-    this.props.navigation.navigate('RateProfile', { profile: this.props.profile });
-  }
+    rateProfile = profile => {
+      this.props.navigation.navigate('RateProfile', { profile: profile });
+    }
 
-  render() {
-    const loveIcon = require('../../Assets/images/heart-pink.png');
-    const contactIcon = require('../../Assets/images/social-orange.png');
-    const rateIcon = require('../../Assets/images/star-border.png');
+    render() {
+      return <ViewWrapper {...this.props}
+                          rateProfile={this.rateProfile}
+                          sendContactRequest={this.sendContactRequest}
+                          loveProfile={this.loveProfile} />
+    }
+  });
+}
 
-    return (
-      <View style={[styles.actionsContainer, this.props.actionsStyles]}>
-        <TouchableOpacity style={[styles.actionItem, styles.actionItemLeft, this.props.isDetail && styles.actionDetail]}
-                          onPress={this.loveProfile}>
-          <Image resizeMode='cover' source={loveIcon} style={styles.actionIcon} />
+export function ProfileActions (props) {
+  return (
+    <View style={[styles.actionsContainer, props.actionsStyles]}>
+      <TouchableOpacity style={[styles.actionItem, styles.actionItemLeft, props.isDetail && styles.actionDetail]}
+                        onPress={_ => props.loveProfile()}>
+        <Image resizeMode='cover' source={loveIcon} style={styles.actionIcon} />
+      </TouchableOpacity>
+      {
+        !props.profile.contractWithCurrentProfile &&
+        <TouchableOpacity style={[styles.actionItem, styles.actionItemCenter, props.isDetail && styles.actionDetail]}
+                          onPress={_ => props.sendContactRequest()}>
+          <Image resizeMode='cover' source={contactIcon} style={styles.actionIconCenter} />
         </TouchableOpacity>
-        {
-          !this.props.profile.contractWithCurrentProfile &&
-          <TouchableOpacity style={[styles.actionItem, styles.actionItemCenter, this.props.isDetail && styles.actionDetail]}
-                            onPress={this.sendContactRequest}>
-            <Image resizeMode='cover' source={contactIcon} style={styles.actionIconCenter} />
-          </TouchableOpacity>
-        }
-        {
-          this.props.profile.contractWithCurrentProfile &&
-          <TouchableOpacity style={[styles.actionItem, styles.actionItemRight, this.props.isDetail && styles.actionDetail]}
-                            onPress={this.goRateProfile}>
-            <Image resizeMode='cover' source={rateIcon} style={styles.actionIcon} />
-          </TouchableOpacity>
-        }
-      </View>
-    );
-  }
+      }
+      {
+        props.profile.contractWithCurrentProfile &&
+        <TouchableOpacity style={[styles.actionItem, styles.actionItemRight, props.isDetail && styles.actionDetail]}
+                          onPress={_ => props.rateProfile()}>
+          <Image resizeMode='cover' source={rateIcon} style={styles.actionIcon} />
+        </TouchableOpacity>
+      }
+    </View>
+  );
 }
-function mapStateToProps(state) {
-  return {
-    language: state.language,
-    myProfile: state.profile,
-    token: state._userToken.token
-  };
-}
-export default connect(mapStateToProps, null)(withInAppNotification(Actions));

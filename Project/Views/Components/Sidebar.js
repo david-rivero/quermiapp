@@ -1,11 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { connect } from 'react-redux';
 
-import { LOG_OUT, INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
-import { TOGGLE_MENU_OPEN } from '../../Store/Actions/DetailProfile';
-import store from '../../Store/store';
-import LanguageProvider from '../../Providers/LanguageProvider';
 
 const styles = StyleSheet.create({
   view: {
@@ -39,45 +34,18 @@ const styles = StyleSheet.create({
   }
 });
 
-class Sidebar extends React.Component {
-  goSettings = () => {
-    this.props.navigation.navigate('Settings');
-  }
 
-  logout = () => {
-    store.dispatch({
-      type: INVALIDATE_TOKEN
-    });
-    store.dispatch({
-      type: LOG_OUT
-    });
-    store.dispatch({
-      type: TOGGLE_MENU_OPEN,
-      payload: false
-    });
-    this.props.navigation.navigate('SignIn');
-  }
-
-  render() {
-    const profilePhoto = this.props.profilePhotoURI;
-    const langProvider = LanguageProvider(this.props.language);
-
-    return (
-      <View style={styles.view}>
-        <View>
-          <Image source={{uri: profilePhoto}} resize='cover' style={styles.profilePhoto} />
-          <Text style={styles.profileText}>{langProvider.components.sidebar.greeting} {this.props.profileName}</Text>
-        </View>
-        <TouchableOpacity onPress={() => this.logout()} style={styles.menuLink}>
-          <Text style={styles.menuLinkText}>{langProvider.components.sidebar.logoutLabel}</Text>
-        </TouchableOpacity>
+export default function Sidebar (props) {
+  return (
+    <View style={styles.view}>
+      <View>
+        <Image source={{uri: props.profilePhotoURI}} resize='cover' style={styles.profilePhoto}></Image>
+        <Text style={styles.profileText}>{props.textConfig.greeting} {props.profileName}</Text>
       </View>
-    );
-  }
+      <TouchableOpacity onPress={() => props.logoutAction && props.logoutAction()}
+                        style={styles.menuLink}>
+        <Text style={styles.menuLinkText}>{props.textConfig.logoutLabel}</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
-function mapStateToProps(state) {
-  return {
-    language: state.language
-  }
-}
-export default connect(mapStateToProps, null)(Sidebar);

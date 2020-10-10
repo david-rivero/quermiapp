@@ -1,9 +1,8 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import LanguageProvider from '../../Providers/LanguageProvider';
 
 
+const uriLogo = require('../../Assets/images/quermi-full-logo.png');
 const styles = StyleSheet.create({
   logo: {
     flex: 1,
@@ -37,36 +36,23 @@ const styles = StyleSheet.create({
 });
 
 
-class FullLogo extends React.Component {
-  render() {
-    const langProvider = LanguageProvider(this.props.language);
-    const mode = this.props.mode || 'medium';
-    const imgStyles = [
-      styles.image,
-      mode === 'little' && styles.figureLittle,
-      mode === 'medium' && styles.figureMedium,
-      mode === 'big'    && styles.figureBig
-    ];
-    const uriLogo = require('../../Assets/images/quermi-full-logo.png');
+export default function FullLogo (props) {
+  const mode = props.mode || 'medium';
+  const imgStyles = [
+    styles.image,
+    mode === 'little' && styles.figureLittle,
+    mode === 'medium' && styles.figureMedium,
+    mode === 'big'    && styles.figureBig
+  ];
 
-    return (
-      <View style={[styles.logo, this.props.stylesContainer]}>
-        <View style={styles.figure}>
-          <Image source={uriLogo} resizeMode='contain' style={imgStyles}></Image>
-        </View>
-        {
-          this.props.displayLabel && <Text style={styles.text}>
-            {langProvider.components.fullLogo.logoTitle}
-          </Text>
-        }
+  return (
+    <View style={[styles.logo, props.stylesContainer]}>
+      <View style={styles.figure}>
+        <Image source={uriLogo} resizeMode='contain' style={imgStyles}></Image>
       </View>
-    );
-  }
+      {
+        props.displayLabel && <Text style={styles.text}>{props.logoTitle}</Text>
+      }
+    </View>
+  );
 }
-
-function mapStateToProps (state) {
-  return {
-    language: state.language
-  };
-}
-export default connect(mapStateToProps, null)(FullLogo);

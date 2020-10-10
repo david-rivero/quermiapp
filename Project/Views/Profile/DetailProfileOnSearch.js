@@ -1,12 +1,12 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { View, Image, Text, ScrollView, StyleSheet } from 'react-native';
+
 import { getAgeFromDate } from '../../Providers/TimeUtilsProvider';
-import { mapPKToItems } from '../../Providers/StoreUtilProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
-import Actions from '../Components/Actions';
+import { ProfileActions, ProfileActionsWrapper } from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
 
 
@@ -65,10 +65,6 @@ const styles = StyleSheet.create({
 });
 
 class DetailProfileOnSearch extends React.Component {
-  _getLangsFromProfile = profile => {
-    return mapPKToItems(profile.languages, );
-  }
-
   render() {
     const profile = this.props.route.params.profile;
 
@@ -139,14 +135,18 @@ class DetailProfileOnSearch extends React.Component {
             </View>
           </View>
         </ScrollView>
-        <Actions profile={profile}
-                 actionsStyles={styles.actionsStyles}
-                 navigation={this.props.navigation}
-                 isDetail={true}></Actions>
+        <ProfileActions profile={profile}
+                        actionsStyles={styles.actionsStyles}
+                        navigation={this.props.navigation}
+                        isDetail={true}
+                        loveProfile={_ => this.props.loveProfile(profile)}
+                        sendContactRequest={_ => this.props.sendContactRequest(profile, this.props.myProfile)}
+                        rateProfile={_ => this.props.rateProfile(profile)} />
       </View>
     );
   }
 }
+
 function mapStateToProps (state) {
   function _mapPKToServices(_state) {
     let services = {};
@@ -162,7 +162,9 @@ function mapStateToProps (state) {
   return {
     langProvider: LanguageProvider(state.language),
     careServices: _mapPKToServices(state),
-    listLanguages: state.availableLangs
+    listLanguages: state.availableLangs,
+    myProfile: state.profile
   };
 }
-export default connect(mapStateToProps, null)(AuthViewCheckProvider(DetailProfileOnSearch));
+export default connect(mapStateToProps, null)(
+  AuthViewCheckProvider(ProfileActionsWrapper(DetailProfileOnSearch)));

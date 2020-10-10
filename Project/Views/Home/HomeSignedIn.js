@@ -1,12 +1,15 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { concatMap } from 'rxjs/operators';
-
 import { View, Text, Image, TouchableOpacity, BackHandler, StyleSheet } from 'react-native';
+
 import { Layout } from '../../Theme/Layout';
 import { Colors } from '../../Theme/Colors';
+
+import { LOG_OUT, INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
 import { LOAD_PROFILES_TO_SEARCH, SET_ENABLED_CONTRACTS } from '../../Store/Actions/ProfilesToSearch';
 import { TOGGLE_MENU_OPEN } from '../../Store/Actions/DetailProfile';
+
 import LanguageProvider from '../../Providers/LanguageProvider';
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
 import store from '../../Store/store';
@@ -15,6 +18,8 @@ import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
 import Sidebar from '../Components/Sidebar';
 import Header from '../Components/Header';
 
+const caretLogoWhite = require('../../Assets/caret-right-white.png');
+const caretLogo = require('../../Assets/caret-right.png');
 const styles = StyleSheet.create({
   superContainer: {
     flex: 1,
@@ -119,16 +124,18 @@ class HomeSignedIn extends React.Component {
     BackHandler.removeEventListener('hardwareBackPress', this.fakeBackPress);
   }
 
-  redirectToSearchProfile = () => {
-    this.props.navigation.navigate('SearchProfile');
-  }
-
-  redirectToChatGroup = () => {
-    this.props.navigation.navigate('ChatList');
-  }
-
-  redirectToRateProfile = () => {
-    this.props.navigation.navigate('RateProfileList');
+  logout = () => {
+    store.dispatch({
+      type: INVALIDATE_TOKEN
+    });
+    store.dispatch({
+      type: LOG_OUT
+    });
+    store.dispatch({
+      type: TOGGLE_MENU_OPEN,
+      payload: false
+    });
+    this.props.navigation.navigate('SignIn');
   }
 
   openMenu = () => {
@@ -140,8 +147,10 @@ class HomeSignedIn extends React.Component {
 
   render() {
     const langProvider = LanguageProvider(this.props.language);
-    const caretLogoWhite = require('../../Assets/caret-right-white.png');
-    const caretLogo = require('../../Assets/caret-right.png');
+    const textConfig = {
+      greeting: langProvider.components.sidebar.greeting,
+      logoutLabel: langProvider.components.sidebar.logoutLabel
+    };
     const profilesLoadedWithContract = this.props.profilesLoaded.filter(
       profile => profile.contractWithCurrentProfile);
 
@@ -155,7 +164,8 @@ class HomeSignedIn extends React.Component {
               <Text style={[styles.mainActionText, Layout.title]}>{langProvider.views.homeSignedIn.findPartnerTitle}</Text>
             </View>
             <Text style={styles.mainActionText}>{langProvider.views.homeSignedIn.findPartnerDesc}</Text>
-            <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToSearchProfile()}>
+            <TouchableOpacity style={styles.homeRedirectAction}
+                              onPress={() => this.props.navigation.navigate('SearchProfile')}>
               <Text style={styles.mainActionText}>{langProvider.views.homeSignedIn.findPartnerAction}</Text>
               <Image style={styles.homeRedirectionIcon} source={caretLogoWhite} resizeMode='contain' />
             </TouchableOpacity>
@@ -169,7 +179,8 @@ class HomeSignedIn extends React.Component {
                   <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.scheduleActivitiesTitle}</Text>
                 </View>
                 <Text>{langProvider.views.homeSignedIn.scheduleActivitiesDesc}</Text>
-                <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToChatGroup()}>
+                <TouchableOpacity style={styles.homeRedirectAction}
+                                  onPress={() => this.props.navigation.navigate('ChatList')}>
                   <Text>{langProvider.views.homeSignedIn.scheduleActivitiesAction}</Text>
                   <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
                 </TouchableOpacity>
@@ -180,7 +191,8 @@ class HomeSignedIn extends React.Component {
                   <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.rateProfileTitle}</Text>
                 </View>
                 <Text>{langProvider.views.homeSignedIn.rateProfileDesc}</Text>
-                <TouchableOpacity style={styles.homeRedirectAction} onPress={() => this.redirectToRateProfile()}>
+                <TouchableOpacity style={styles.homeRedirectAction}
+                                  onPress={() => this.props.navigation.navigate('RateProfileList')}>
                   <Text>{langProvider.views.homeSignedIn.rateProfileAction}</Text>
                   <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
                 </TouchableOpacity>
@@ -190,9 +202,10 @@ class HomeSignedIn extends React.Component {
         </View>
         {
           this.props.menuOpened && 
-          <Sidebar navigation={this.props.navigation}
-                   profileName={this.props.profile.name}
-                   profilePhotoURI={this.props.profile.pictsOnRegister.profilePhoto} />
+          <Sidebar profileName={this.props.profile.name}
+                   profilePhotoURI={this.props.profile.pictsOnRegister.profilePhoto}
+                   logoutAction={this.logout}
+                   textConfig={textConfig} />
         }
       </View>
     );

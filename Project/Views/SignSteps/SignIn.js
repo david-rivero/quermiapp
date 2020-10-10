@@ -1,14 +1,21 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, BackHandler } from 'react-native';
+import { pipe, concatMap, catchError } from 'rxjs/operators';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { UPDATE_MY_PROFILE } from '../../Store/Actions/DetailProfile';
 import store from '../../Store/store';
 import { LOGIN, LOGIN_STATUS } from '../../Store/Actions/UserAuth';
+import { requestDataEndpoint, AUTHENTICATION_ERROR_STATUS_CODE } from '../../Providers/EndpointServiceProvider';
+import { ProfileSerializer } from '../../Providers/SerializerProvider';
+import { isValidEmail } from '../../Providers/FormatStringProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
+import { setToken } from '../../Providers/AuthUtilProvider';
 
+import { Colors } from '../../Theme/Colors';
 import { Layout } from '../../Theme/Layout';
 import FullLogo from '../Components/FullLogo';
-import LoginActions from '../Components/LoginActions';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -21,8 +28,34 @@ const styles = StyleSheet.create({
   },
   loginActions: {
     marginTop: 60
+  },
+  button: {
+    borderRadius: 2,
+    height: 35,
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginTop: 10
+  },
+  buttonLink: {
+    color: '#7370FA',
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+    fontSize: 15
+  },
+  buttonLinkContainer: {
+    marginTop: 15
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    textTransform: 'uppercase'
+  },
+  buttonPrimary: {
+    backgroundColor: Colors.blue,
+    color: Colors.white
   }
 });
+
 
 class SignIn extends React.Component {
   componentDidMount() {
@@ -54,6 +87,24 @@ class SignIn extends React.Component {
     });
   }
 
+  getRequestObservable = requestInstance => {
+    return requestInstance.pipe(
+      concatMap(data => {
+        setToken(data.access, data.refresh);
+        const useremail = `user__email=${this.props.email}`;
+        return requestDataEndpoint('profile', undefined, 'GET', useremail);
+      }),
+      catchError(e => {
+        console.log('Catch error -- ', e)
+        if (e.status === AUTHENTICATION_ERROR_STATUS_CODE) {
+          this.setLoginErrorStatus(true, 'Username or password are not valid');
+        } else {
+          this.setLoginErrorStatus(true, 'There was an unexpected error');
+        }
+      })
+    );
+  }
+
   setLoginInputCredentials = ({email, password}) => {
     store.dispatch({
       type: LOGIN,
@@ -64,11 +115,32 @@ class SignIn extends React.Component {
     });
   }
 
+  performLogin() {
+    if (isValidEmail(this.props.email)) {
+      const data = {
+        email: this.props.email.trim(),
+        password: this.props.password
+      };
+      this.setLoginErrorStatus(false, '');
+      this.getRequestObservable(requestDataEndpoint('login', data, 'POST'))
+        .subscribe(profileData => {
+          store.dispatch({
+            type: UPDATE_MY_PROFILE,
+            payload: ProfileSerializer.fromAPIToView(profileData.pop())
+          });
+          this.props.navigation.navigate('HomeSignedIn');
+        });
+    } else {
+      this.setLoginErrorStatus(true, 'You must to provide a valid email');
+    }
+  }
+
   render() {
     const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
-        <FullLogo mode='medium' stylesContainer={styles.fullLogo} displayLabel={true}></FullLogo>
+        <FullLogo mode='medium' stylesContainer={styles.fullLogo}
+                  displayLabel={true} logoTitle={langProvider.components.fullLogo.logoTitle}></FullLogo>
         <View>
           <TextInput value={this.props.email}
                      onChangeText={text => this.setLoginInputCredentials({email: text, password: this.props.password})}
@@ -85,10 +157,14 @@ class SignIn extends React.Component {
           <Text>{this.props.loginMessage}</Text>
         }
         <View style={styles.loginActions}>
-          <LoginActions email={this.props.email}
-                        password={this.props.password}
-                        onLoginErrorStatus={this.setLoginErrorStatus}
-                        navigation={this.props.navigation} />
+          <TouchableOpacity style={[styles.button, styles.buttonPrimary]}
+                            onPress={() => this.performLogin()}>
+            <Text style={styles.buttonText}>{langProvider.components.loginActions.signIn}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonLinkContainer}
+                            onPress={() => this.props.navigation.navigate('SignUp')}>
+            <Text style={styles.buttonLink}>{langProvider.components.loginActions.registerFirstTime}</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );

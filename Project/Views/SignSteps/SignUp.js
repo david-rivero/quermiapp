@@ -1,5 +1,8 @@
-import * as React from 'react';
-import { StyleSheet, View, BackHandler } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { connect } from 'react-redux';
+
+import LanguageProvider from '../../Providers/LanguageProvider';
 
 import { Spinner } from '../Components/Spinner';
 import SignUpViewsCarousel from './SignUpViews/SignUpViewsCarousel';
@@ -23,7 +26,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class SignUp extends React.Component {
+class SignUp extends React.Component {
   state = {
     showSpinner: false
   };
@@ -35,13 +38,15 @@ export default class SignUp extends React.Component {
   }
 
   render() {
+    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         {
           this.state.showSpinner && <Spinner />
         }
         <View style={styles.subContainer}>
-          <FullLogo mode='little' stylesContainer={styles.logo} />
+          <FullLogo mode='little' stylesContainer={styles.logo}
+                    logoTitle={langProvider.components.fullLogo.logoTitle} />
           <SignUpViewsCarousel displayLoadState={this.setSpinnerShow}
                                navigation={this.props.navigation}
                                style={styles.viewCarousel} />
@@ -50,3 +55,10 @@ export default class SignUp extends React.Component {
     );
   }
 }
+function mapStateToProps (state) {
+  return {
+    language: state.language
+  };
+}
+// FIXME: Remove connect definition on child components
+export default connect(mapStateToProps, null)(SignUp);

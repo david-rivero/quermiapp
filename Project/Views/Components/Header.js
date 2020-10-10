@@ -1,8 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Colors } from '../../Theme/Colors';
 
+const logoSrc = require('../../Assets/nurse-white.png');
+const menuIcon = require('../../Assets/images/burger-menu.png');
 const styles = StyleSheet.create({
   header: {
     height: 60,
@@ -35,25 +37,16 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class Header extends React.Component {
-  openMenu = () => {
-    if(this.props.onOpenMenu) {
-      this.props.onOpenMenu();
-    }
-  }
-
-  render() {
-    const logoSrc = require('../../Assets/nurse-white.png');
-    const menuIcon = require('../../Assets/images/burger-menu.png');
-    return (
-      <View style={[styles.header, this.props.isCarePerson ? styles.headerCareProvider : null]}>
-        <View style={styles.imgContainer}>
-          <Image style={styles.img} source={logoSrc} resizeMode='contain' />
-        </View>
-        <TouchableOpacity style={styles.menuIconLink} onPress={() => this.openMenu()}>
-          <Image style={styles.menuIcon} source={menuIcon} resizeMode='contain' />
-        </TouchableOpacity>
+export default function Header (props) {
+  return (
+    <View style={[styles.header, props.isCarePerson ? styles.headerCareProvider : null]}>
+      <View style={styles.imgContainer}>
+        <Image style={styles.img} source={logoSrc} resizeMode='contain' />
       </View>
-    );
-  }
+      <TouchableOpacity style={styles.menuIconLink}
+                        onPress={() => props.onOpenMenu && props.onOpenMenu()}>
+        <Image style={styles.menuIcon} source={menuIcon} resizeMode='contain' />
+      </TouchableOpacity>
+    </View>
+  );
 }

@@ -6,12 +6,9 @@ import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../Store/Actions/UserAuth';
 import store from '../../Store/store';
 import CameraComponent from '../Components/Camera';
 
-const styles = StyleSheet.create({
-
-});
 
 class Camera extends React.Component {
-  setPhoto = (photo) => {
+  setPhoto = photo => {
     const pageFrom = this.props.route.params.from;
     store.dispatch({
       type: SIGN_UP_STEP_SET_PROFILE_INFO,

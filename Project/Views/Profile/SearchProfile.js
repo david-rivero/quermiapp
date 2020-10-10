@@ -1,11 +1,11 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import { SWIPE_PROFILE } from '../../Store/Actions/ProfilesToSearch';
 
 import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
-import Actions from '../Components/Actions';
+import { ProfileActions, ProfileActionsWrapper } from '../Components/Actions';
 import { Layout } from '../../Theme/Layout';
 import store from '../../Store/store';
 
@@ -72,15 +72,8 @@ const styles = StyleSheet.create({
   }
 });
 const DISABLE_VERTICAL_SWIPE = true;
+
 class SearchProfile extends React.Component {
-  saveProfile = () => {
-
-  }
-
-  sendRequest = () => {
-
-  }
-
   swipeProfile = currentIndex => {
     store.dispatch({
       type: SWIPE_PROFILE,
@@ -139,9 +132,12 @@ class SearchProfile extends React.Component {
                     </TouchableOpacity>
                   );
                 }}>
-          <Actions actionsStyles={styles.actionsStyles}
-                   navigation={this.props.navigation}
-                   profile={profile}></Actions>
+          <ProfileActions actionsStyles={styles.actionsStyles}
+                          navigation={this.props.navigation}
+                          profile={profile}
+                          loveProfile={_ => this.props.loveProfile(profile)}
+                          sendContactRequest={_ => this.props.sendContactRequest(profile, this.props.myProfile)}
+                          rateProfile={_ => this.props.rateProfile(profile)} />
         </Swiper>
       </View>
     );
@@ -152,8 +148,10 @@ function mapStateToProps(state) {
   return {
     currentProfileIndex: state.profileSearchStatus.currentProfileIndex,
     galleryEnabledIndex: state.profileSearchStatus.galleryEnabledIndex,
-    profiles: state.profilesLoaded
+    profiles: state.profilesLoaded,
+    myProfile: state.profile
   };
 }
 
-export default connect(mapStateToProps, null)(AuthViewCheckProvider(SearchProfile));
+export default connect(mapStateToProps, null)(
+  AuthViewCheckProvider(ProfileActionsWrapper(SearchProfile)));

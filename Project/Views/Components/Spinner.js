@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
+const loaderImg = require('../../Assets/images/loader.gif');
 const styles = StyleSheet.create({
   spinnerContainer: {
     backgroundColor: '#b1b1b1',
@@ -17,7 +18,6 @@ const styles = StyleSheet.create({
 });
 
 export function Spinner() {
-  const loaderImg = require('../../Assets/images/loader.gif');
   return (
     <View style={styles.spinnerContainer}>
       <Image style={styles.spinnerImg} source={loaderImg} />
