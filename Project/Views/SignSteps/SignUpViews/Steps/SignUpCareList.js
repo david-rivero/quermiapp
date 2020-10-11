@@ -2,7 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, ScrollView, TextInput } from 'react-native';
 import { Checkbox } from 'react-native-paper';
-import { SIGN_UP_STEP_SET_PROFILE_INFO, SIGN_UP_STEP_PROFILE_SERVICES } from '../../../../Store/Actions/UserAuth';
+import { SIGN_UP_STEP_PROFILE_SERVICES } from '../../../../Store/Actions/Categories';
+import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
@@ -110,7 +111,7 @@ class SignUpCareList extends SignUpBaseStep {
 function mapStateToProps (state) {
   return {
     language: state.language,
-    itemsOptions: state.registerStatus.careListServices
+    itemsOptions: state.categories.careListServices.careListServicesName
   };
 }
 export default connect(mapStateToProps, null)(SignUpCareList);

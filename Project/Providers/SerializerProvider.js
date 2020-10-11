@@ -1,4 +1,4 @@
-import formatDate from './TimeUtilsProvider';
+import { formatDate, formatTime, getDateTimeFromStr } from './TimeUtilsProvider';
 
 export class ProfileSerializer {
   static fromAPIToView = (data={}) => {
@@ -31,24 +31,28 @@ export class ProfileSerializer {
     }
   }
 
-  static fromViewToAPI = (data={}) => {
+  static fromViewToAPI = (data={}, careServices, user, lang) => {
+    const objBirthDate = getDateTimeFromStr(data.birthDate, 'dd/MM/yyyy');
+    const DEFAULT_PROFILE_RATE = 5;
+
     return {
       role: data.profileRole,
-      rate: data.rate || 5,
+      rate: DEFAULT_PROFILE_RATE,
       profile_description: data.description || 'Default description',
-      birth_date: formatDate(data.birthDate, 'api'),
-      available_hour_from: formatTime(data.time.start),
-      available_hour_to: formatTime(data.time.end),
-      languages: [DEFAULT_LANG.id],
+      birth_date: `${formatDate(objBirthDate, 'api')}Z`,
+      available_hour_from: data.time.start,
+      available_hour_to: data.time.end,
+      languages: [lang.id],
       services: [
         ...data.services.map(service => {
-          return this.props.careServicesAPI[service.name].id;
+          return careServices[service.name].id;
         })
       ],
       experience: data.experience || 'Default experience',
-      user: data.id,
-      id_doc_photo: docID.data,
-      profile_photo: profilePhoto.data
+      user: user.id,
+      id_doc_photo: data.pictsOnRegister.documentID.data,
+      profile_photo: data.pictsOnRegister.profilePhoto.data,
+      profile_status: { ...data.profileStatus }
     }
   }
 }

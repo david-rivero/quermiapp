@@ -5,7 +5,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { UPDATE_MY_PROFILE } from '../../Store/Actions/DetailProfile';
 import store from '../../Store/store';
-import { LOGIN, LOGIN_STATUS } from '../../Store/Actions/UserAuth';
+import { LOGIN } from '../../Store/Actions/UserAuth';
 import { requestDataEndpoint, AUTHENTICATION_ERROR_STATUS_CODE } from '../../Providers/EndpointServiceProvider';
 import { ProfileSerializer } from '../../Providers/SerializerProvider';
 import { isValidEmail } from '../../Providers/FormatStringProvider';
@@ -58,6 +58,11 @@ const styles = StyleSheet.create({
 
 
 class SignIn extends React.Component {
+  state = {
+    loginError: false,
+    loginMessage: ''
+  };
+
   componentDidMount() {
     this.props.navigation.addListener('blur', () => {
       store.dispatch({
@@ -67,23 +72,10 @@ class SignIn extends React.Component {
           password: ''
         }
       });
-      store.dispatch({
-        type: LOGIN_STATUS,
-        payload: {
-          loginError: false,
-          loginMessage: ''
-        }
+      this.setState({
+        loginError: false,
+        loginMessage: ''
       });
-    });
-  }
-
-  setLoginErrorStatus = (status, message) => {
-    store.dispatch({
-      type: LOGIN_STATUS,
-      payload: {
-        loginError: status,
-        loginMessage: message
-      }
     });
   }
 
@@ -95,11 +87,14 @@ class SignIn extends React.Component {
         return requestDataEndpoint('profile', undefined, 'GET', useremail);
       }),
       catchError(e => {
-        console.log('Catch error -- ', e)
         if (e.status === AUTHENTICATION_ERROR_STATUS_CODE) {
-          this.setLoginErrorStatus(true, 'Username or password are not valid');
+          this.setState({
+            loginError: true, loginMessage: 'Username or password are not valid'
+          });
         } else {
-          this.setLoginErrorStatus(true, 'There was an unexpected error');
+          this.setState({
+            loginError: true, loginMessage: 'There was an unexpected error'
+          });
         }
       })
     );
@@ -128,10 +123,14 @@ class SignIn extends React.Component {
             type: UPDATE_MY_PROFILE,
             payload: ProfileSerializer.fromAPIToView(profileData.pop())
           });
+          this.setState({ loginError: false, loginMessage: '' });
           this.props.navigation.navigate('HomeSignedIn');
         });
     } else {
-      this.setLoginErrorStatus(true, 'You must to provide a valid email');
+      this.setState({
+        loginError: true,
+        loginMessage: 'You must to provide a valid email'
+      });
     }
   }
 
@@ -173,8 +172,6 @@ class SignIn extends React.Component {
 function mapStateToProps (state) {
   return {
     language: state.language,
-    loginError: state.loginStatus.loginError,
-    loginMessage: state.loginStatus.loginMessage,
     email: state.profile.account.email,
     password: state.profile.account.password
   };

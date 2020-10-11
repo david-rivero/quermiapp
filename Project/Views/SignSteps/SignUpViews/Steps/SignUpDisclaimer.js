@@ -2,8 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Text, Button } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { SIGN_UP_STEP_TERMS_CONDS } from '../../../../Store/Actions/UserAuth';
-import store from '../../../../Store/store';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import { Checkbox } from 'react-native-paper';
@@ -42,19 +40,20 @@ const styles = StyleSheet.create({
 });
 
 class SignUpDisclaimer extends SignUpBaseStep {
+  state = {
+    checked: 'unchecked',
+    bool: false
+  };
+
   toggleCheck = () => {
-    store.dispatch({
-      type: SIGN_UP_STEP_TERMS_CONDS,
-      payload: {
-        termsNCondsChecked: !this.props.termsNCondsBool ? 'checked' : 'unchecked',
-        termsNCondsBool: !this.props.termsNCondsBool
-      }
+    this.setState({
+      checked: !this.state.bool ? 'checked' : 'unchecked',
+      bool: !this.state.bool
     });
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.termsNCondsBool !== this.props.termsNCondsBool &&
-        this.props.termsNCondsBool) {
+  componentDidUpdate(_, prevState) {
+    if (prevState.bool !== this.state.bool && this.state.bool) {
       this.validateStep();
     } else {
       this.uncheckStep();
@@ -75,7 +74,7 @@ class SignUpDisclaimer extends SignUpBaseStep {
         <View style={styles.checkRow}>
           <Checkbox.Item style={styles.checkboxDisclaimer}
                          onPress={() => { this.toggleCheck() }}
-                         status={this.props.termsNCondsChecked} />
+                         status={this.state.checked} />
           <Text style={styles.checkboxDisclaimerText}>{langProvider.views.signUp.signUpDisclaimerCheckLabel}</Text>
         </View>
         <View>
@@ -88,9 +87,7 @@ class SignUpDisclaimer extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
-    termsNCondsChecked: state.registerStatus.termsAndConditions.termsNCondsChecked,
-    termsNCondsBool: state.registerStatus.termsAndConditions.termsNCondsBool
+    language: state.language
   };
 }
 export default connect(mapStateToProps, null)(SignUpDisclaimer);

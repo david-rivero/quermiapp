@@ -5,12 +5,14 @@ import FilePickerManager from 'react-native-file-picker';
 import * as RNFS from 'react-native-fs';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 import { getFormatFromImage } from '../../../../Providers/FileUtilsProvider';
-import { SIGN_UP_STEP_SET_PROFILE_INFO, SIGN_UP_STEP } from '../../../../Store/Actions/UserAuth';
+import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+const imageCamera = require('../../../../Assets/images/photo-camera.png');
+const imagePhoto = require('../../../../Assets/picture.png');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -43,16 +45,17 @@ const styles = StyleSheet.create({
 });
 
 class SignUpProfilePhoto extends SignUpBaseStep {
+  state = {
+    actionFrom: ''
+  };
+
   _setLatestAction = actionFrom => {
-    store.dispatch({
-      type: SIGN_UP_STEP,
-      payload: {lastActionFromProfilePhoto: actionFrom}
-    });
+    this.setState({ actionFrom: actionFrom });
   }
 
   setCamera = () => {
     this._setLatestAction('camera');
-    this.props.navigation.navigate('Camera', { from: 'profilePhoto' });
+    this.props.goToCamera('profilePhoto');
   };
 
   showFilePicker = () => {
@@ -98,19 +101,16 @@ class SignUpProfilePhoto extends SignUpBaseStep {
 
   render() {
     const langProvider = LanguageProvider(this.props.language);
-    const imageCamera = require('../../../../Assets/images/photo-camera.png');
-    const imagePhoto = require('../../../../Assets/picture.png');
-
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpProfilePhotoTitle}</Text>
         <View style={styles.inputContent}>
-          <TouchableOpacity style={[styles.photoInput, this.props.actionFrom === 'camera' && this.props.nextStep ? styles.inputEnabled: null]}
+          <TouchableOpacity style={[styles.photoInput, this.state.actionFrom === 'camera' && this.props.nextStep ? styles.inputEnabled: null]}
                             onPress={() => this.setCamera()}>
             <Image source={imageCamera} style={styles.img} resizeMode='contain' />
             <Text>{langProvider.views.signUp.signUpPhotoCameraLabel}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.photoInput, this.props.actionFrom === 'file' && this.props.nextStep ? styles.inputEnabled: null]}
+          <TouchableOpacity style={[styles.photoInput, this.state.actionFrom === 'file' && this.props.nextStep ? styles.inputEnabled: null]}
                             onPress={() => this.showFilePicker()}>
             <Image source={imagePhoto} style={styles.img} resizeMode='contain' />
             <Text>{langProvider.views.signUp.signUpPhotoFileLabel}</Text>
@@ -124,9 +124,7 @@ function mapStateToProps (state) {
   return {
     language: state.language,
     profilePhoto: state.profile.pictsOnRegister.profilePhoto,
-    documentID: state.profile.pictsOnRegister.documentID,
-    actionFrom: state.registerStatus.lastActionFromProfilePhoto,
-    nextStep: state.registerStatus.nextStep
+    documentID: state.profile.pictsOnRegister.documentID
   };
 }
 export default connect(mapStateToProps, null)(SignUpProfilePhoto);

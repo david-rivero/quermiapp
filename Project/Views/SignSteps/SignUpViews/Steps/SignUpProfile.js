@@ -51,6 +51,7 @@ class SignUpProfile extends SignUpBaseStep {
         profileData: value
       }
     });
+    this.props.updateParentRoleState(value);
     this.validateStep();
   }
 

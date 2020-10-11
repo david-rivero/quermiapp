@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInput } from 'react-native-paper';
-import { SIGN_UP_STEP_DATETIMEPICKER, SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
+import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import { formatTime, getDateTimeFromStr } from '../../../../Providers/TimeUtilsProvider'; 
 import LanguageProvider from '../../../../Providers/LanguageProvider';
@@ -28,15 +28,19 @@ const styles = StyleSheet.create({
 });
 
 class SignUpCareHour extends SignUpBaseStep {
+  state = {
+    tStart: {
+      show: false
+    },
+    tEnd: {
+      show: false
+    }
+  };
+
   setTimePicker = (event, time, location, type) => {
-    store.dispatch({
-      type: SIGN_UP_STEP_DATETIMEPICKER,
-      payload: {
-        pickerType: location,
-        data: {
-          show: false,
-          mode: 'time'
-        }
+    this.setState({
+      [location]: {
+        show: false
       }
     });
 
@@ -60,14 +64,10 @@ class SignUpCareHour extends SignUpBaseStep {
   }
 
   showTimePicker = location => {
-    store.dispatch({
-      type: SIGN_UP_STEP_DATETIMEPICKER,
-      payload: {
-        pickerType: location,
-        data: {
-          show: true,
-          mode: 'time'
-        }
+    this.setState({
+      [location]: {
+        ...this.state[location],
+        show: true
       }
     });
     Keyboard.dismiss();
@@ -84,26 +84,26 @@ class SignUpCareHour extends SignUpBaseStep {
           <TextInput placeholder="Hora"
                      value={this.props.timeStart}
                      style={styles.timeInput}
-                     onFocus={() => this.showTimePicker('timePickerStartStatus', 'timeStart')} />
+                     onFocus={() => this.showTimePicker('tStart')} />
           <Text>a</Text>
           <TextInput placeholder="Hora"
                      value={this.props.timeEnd}
                      style={styles.timeInput}
-                     onFocus={() => this.showTimePicker('timePickerEndStatus', 'timeEnd')} />
+                     onFocus={() => this.showTimePicker('tEnd')} />
         </View>
         {
-          this.props.timeStartShow && 
+          this.state.tStart.show && 
           <DateTimePicker value={getDateTimeFromStr(this.props.timeStart, 'HH:mm')}
-                          mode={this.props.timeStartMode}
+                          mode={'time'}
                           is24Hour={true}
-                          onChange={(event, time) => this.setTimePicker(event, time, 'timePickerStartStatus', 'timeStart')} />
+                          onChange={(event, time) => this.setTimePicker(event, time, 'tStart', 'timeStart')} />
         }
         {
-          this.props.timeEndShow && 
+          this.state.tEnd.show && 
           <DateTimePicker value={getDateTimeFromStr(this.props.timeEnd, 'HH:mm')}
-                          mode={this.props.timeEndMode}
+                          mode={'time'}
                           is24Hour={true}
-                          onChange={(event, time) => this.setTimePicker(event, time, 'timePickerEndStatus', 'timeEnd')} />
+                          onChange={(event, time) => this.setTimePicker(event, time, 'tEnd', 'timeEnd')} />
         }
       </View>
     );
@@ -113,11 +113,7 @@ function mapStateToProps (state) {
   return {
     language: state.language,
     timeStart: state.profile.time.start,
-    timeEnd: state.profile.time.end,
-    timeStartShow: state.registerStatus.timePickerStartStatus.show,
-    timeEndShow: state.registerStatus.timePickerEndStatus.show,
-    timeStartMode: state.registerStatus.timePickerStartStatus.mode,
-    timeEndMode: state.registerStatus.timePickerEndStatus.mode
+    timeEnd: state.profile.time.end
   };
 }
 export default connect(mapStateToProps, null)(SignUpCareHour);

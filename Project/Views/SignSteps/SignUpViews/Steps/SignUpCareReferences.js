@@ -22,9 +22,9 @@ class SignUpCareReferences extends SignUpBaseStep {
     const langProvider = LanguageProvider(this.props.language);
 
     // FIXME: Validate automatically step
-    if (!this.props.checkedStep) {
-      this.validateStep();
-    }
+    // if (!this.props.checkedStep) {
+    //   this.validateStep();
+    // }
 
     return (    
       <View style={styles.container}>
@@ -40,8 +40,7 @@ class SignUpCareReferences extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
-    checkedStep: state.registerStatus.nextStep // Remove this state
+    language: state.language
   };
 }
 export default connect(mapStateToProps, null)(SignUpCareReferences);

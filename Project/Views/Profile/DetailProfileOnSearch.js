@@ -150,9 +150,9 @@ class DetailProfileOnSearch extends React.Component {
 function mapStateToProps (state) {
   function _mapPKToServices(_state) {
     let services = {};
-    Object.keys(_state.registerStatus.careListServicesAPIMap).forEach(careServiceKey => {
-      const careServiceId = _state.registerStatus.careListServicesAPIMap[careServiceKey].id;
-      const careServiceObj = _state.registerStatus.careListServices.find(
+    Object.keys(_state.categories.careListServices.careListServicesAPIMap).forEach(careServiceKey => {
+      const careServiceId = _state.categories.careListServices.careListServicesAPIMap[careServiceKey].id;
+      const careServiceObj = _state.categories.careListServices.careListServicesName.find(
         careService => careService.name === careServiceKey);
       services[careServiceId] = careServiceObj;
     });

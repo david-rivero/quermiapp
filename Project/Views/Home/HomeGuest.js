@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
 
 import { LOAD_LIST_LANGUAGES } from '../../Store/Actions/DetailProfile';
-import { LOAD_SERVICES_API } from '../../Store/Actions/UserAuth';
+import { LOAD_SERVICES_API } from '../../Store/Actions/Categories';
 import store from '../../Store/store';
 
 import LanguageProvider from '../../Providers/LanguageProvider';

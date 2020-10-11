@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../Store/Actions/UserAuth';

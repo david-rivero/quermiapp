@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StyleSheet, View, Text, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { SIGN_UP_STEP_SET_PROFILE_INFO, SIGN_UP_STEP_DATETIMEPICKER } from '../../../../Store/Actions/UserAuth';
+import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import { getDateTimeFromStr, getAgeFromDate, formatDate } from '../../../../Providers/TimeUtilsProvider'; 
 import LanguageProvider from '../../../../Providers/LanguageProvider';
@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
 });
 
 class SignUpBirthDate extends SignUpBaseStep {
+  state = {
+    showDatePicker: false
+  };
+
   _isLegalAge = date => {
     const MIN_AGE = 18;
     if (date) {
@@ -37,15 +41,8 @@ class SignUpBirthDate extends SignUpBaseStep {
   }
 
   setDate = (e, selectedDate) => {
-    store.dispatch({
-      type: SIGN_UP_STEP_DATETIMEPICKER,
-      payload: {
-        pickerType: 'datePickerStatus',
-        data: {
-          mode: 'date',
-          show: false
-        }
-      }
+    this.setState({
+      showDatePicker: false
     });
 
     if (e.type === 'set' && selectedDate) {
@@ -65,15 +62,8 @@ class SignUpBirthDate extends SignUpBaseStep {
   }
 
   showDatepicker = () => {
-    store.dispatch({
-      type: SIGN_UP_STEP_DATETIMEPICKER,
-      payload: {
-        pickerType: 'datePickerStatus',
-        data: {
-          mode: 'date',
-          show: true
-        }
-      }
+    this.setState({
+      showDatePicker: true
     });
     Keyboard.dismiss();
   }
@@ -89,9 +79,9 @@ class SignUpBirthDate extends SignUpBaseStep {
           <Text style={styles.legalAgeWarning}>{langProvider.views.signUp.signUpBirthNotLegalAge}</Text>
         }
         {
-          this.props.datePickerStatus.show &&
+          this.state.showDatePicker &&
           <DateTimePicker value={getDateTimeFromStr(this.props.date, 'dd/MM/yyyy')}
-                          mode={this.props.datePickerStatus.mode}
+                          mode={'date'}
                           onChange={this.setDate} />
         }
       </View>
@@ -101,7 +91,6 @@ class SignUpBirthDate extends SignUpBaseStep {
 function mapStateToProps (state) {
   return {
     language: state.language,
-    datePickerStatus: state.registerStatus.datePickerStatus,
     date: state.profile.birthDate
   };
 }

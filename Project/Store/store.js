@@ -37,34 +37,9 @@ let initialState = {
       profileLoveStatus: 0
     }
   },
-  // Login status
-  loginStatus: {
-    loginError: false,
-    loginMessage: ''
-  },
-  // Register status
-  registerStatus: {
-    nextStep: false,
-    indexActive: 0,
-    lastActionFromIDPhoto: '',
-    lastActionFromProfilePhoto: '',
-    termsAndConditions: {
-      termsNCondsChecked: 'unchecked',
-      termsNCondsBool: false
-    },
-    datePickerStatus: {
-      mode: 'date',
-      show: false
-    },
-    timePickerStartStatus: {
-      mode: 'time',
-      show: false
-    },
-    timePickerEndStatus: {
-      mode: 'time',
-      show: false
-    },
-    careListServices: [
+  categories: {
+    careListServices: {
+      careListServicesName: [
       {
         label: 'homeCareLabel',
         status: 'unchecked',
@@ -115,6 +90,7 @@ let initialState = {
       }
     ],
     careListServicesAPIMap: {}
+    }
   },
   profilesLoaded: [],
   profileSearchStatus: {
