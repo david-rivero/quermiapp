@@ -1,16 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { concatMap } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 import { View, Text, Image, TouchableOpacity, BackHandler, StyleSheet } from 'react-native';
 
 import { Layout } from '../../Theme/Layout';
 import { Colors } from '../../Theme/Colors';
 
 import { LOG_OUT, INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
-import { LOAD_PROFILES_TO_SEARCH, SET_ENABLED_CONTRACTS } from '../../Store/Actions/ProfilesToSearch';
+import { LOAD_PROFILES_TO_SEARCH } from '../../Store/Actions/ProfilesToSearch';
 import { TOGGLE_MENU_OPEN } from '../../Store/Actions/DetailProfile';
 
 import LanguageProvider from '../../Providers/LanguageProvider';
+import { mapContractsToProfiles } from '../../Providers/StoreUtilProvider';
+import { ProfileSerializer } from '../../Providers/SerializerProvider';
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
 import store from '../../Store/store';
 
@@ -71,20 +73,7 @@ const styles = StyleSheet.create({
 });
 
 class HomeSignedIn extends React.Component {
-  fakeBackPress = () => {
-    return true;
-  }
-
-  componentDidMount() {
-    this.props.navigation.addListener('focus', () => {
-      this.backHandler = BackHandler.addEventListener(
-        'hardwareBackPress', this.fakeBackPress);
-    });
-    this.props.navigation.addListener('blur', () => {
-      BackHandler.removeEventListener(
-        'hardwareBackPress', this.fakeBackPress);
-    });
-
+  _getContracts = () => {
     let profileRoleToSearch;
     let queryFieldToContract;
     if (this.props.profile.profileRole === 'PATIENT') {
@@ -98,25 +87,36 @@ class HomeSignedIn extends React.Component {
       ...DEFAULT_HEADERS,
       'Authorization': `Bearer ${this.props.token}`
     };
-    const contractsObservable = requestDataEndpoint(
-      'contracts', undefined, 'GET', `${queryFieldToContract}=${this.props.profile.username}`, [], headers);
-    requestDataEndpoint('profile', undefined, 'GET', `role=${profileRoleToSearch}`).pipe(
-      concatMap(data => {
+    forkJoin({
+      contracts: requestDataEndpoint(
+        'contracts', undefined, 'GET', `${queryFieldToContract}=${this.props.profile.username}`, [], headers),
+      profiles: requestDataEndpoint('profile', undefined, 'GET', `role=${profileRoleToSearch}`)
+    }).subscribe(result => {
+      if (!result.contracts.error && !result.profiles.error) {
+        const profilesLoaded = mapContractsToProfiles(
+          this.props.profile.profileRole, result.contracts, result.profiles);
         store.dispatch({
           type: LOAD_PROFILES_TO_SEARCH,
-          payload: data
+          payload: profilesLoaded.map(profile => ProfileSerializer.fromAPIToView(profile))
         });
-        return contractsObservable;
-      })
-    ).subscribe(contractsData => {
-      store.dispatch({
-        type: SET_ENABLED_CONTRACTS,
-        payload: {
-          contracts: contractsData,
-          profileFromId: this.props.profile.id,
-          profileRole: this.props.profile.profileRole
+      }
+    });
+  }
+
+  fakeBackPress = () => {
+    return true;
         }
+
+  componentDidMount() {
+    this.props.navigation.addListener('focus', e => {
+      this.backHandler = BackHandler.addEventListener(
+        'hardwareBackPress', this.fakeBackPress);
+      // TODO: Replace this call to use only from SearchProfiles focus
+      this._getContracts();
       });
+    this.props.navigation.addListener('blur', () => {
+      BackHandler.removeEventListener(
+        'hardwareBackPress', this.fakeBackPress);
     });
   }
 

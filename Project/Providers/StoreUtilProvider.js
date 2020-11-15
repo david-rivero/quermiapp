@@ -26,3 +26,26 @@ export function toggleLanguage(lang) {
     payload: toggledLang
   });
 }
+
+export function mapContractsToProfiles(profileRole, contracts, profiles) {
+  const roleDestination = profileRole === 'PATIENT' ? 'care_person' : 'patient';
+  const contractsId = contracts.map(contract => {
+    return {
+      ...contract[roleDestination],
+      status: contract.status,
+      pk: contract.pk
+    };
+  });
+  const newProfiles = profiles.map(profile => {
+    const contractFound = contractsId.find(p => p.id === profile.id);
+    if (contractFound) {
+      profile.contractWithCurrentProfile = {
+        state: true,
+        type: contractFound.status,
+        contractId: contractFound.pk
+      };
+    }
+    return profile;
+  });
+  return [...newProfiles];
+}
