@@ -86,7 +86,7 @@ class SearchProfile extends React.Component {
   };
 
   render() {
-    const profile = this.props.profiles[this.props.currentProfileIndex];
+    const currentProfile = this.props.profiles[this.props.currentProfileIndex];
     const isLastProfile = this.props.currentProfileIndex +1 === this.props.profiles.length;
     const isFirstProfile = this.props.currentProfileIndex === 0;
 
@@ -134,10 +134,11 @@ class SearchProfile extends React.Component {
                 }}>
           <ProfileActions actionsStyles={styles.actionsStyles}
                           navigation={this.props.navigation}
-                          profile={profile}
-                          loveProfile={_ => this.props.loveProfile(profile)}
-                          sendContactRequest={_ => this.props.sendContactRequest(profile, this.props.myProfile)}
-                          rateProfile={_ => this.props.rateProfile(profile)} />
+                          profile={currentProfile}
+                          loveProfile={_ => this.props.loveProfile(currentProfile)}
+                          sendContactRequest={_ => this.props.sendContactRequest(currentProfile, this.props.myProfile)}
+                          rateProfile={_ => this.props.rateProfile(currentProfile)}
+                          acceptRequest={_ => this.props.acceptRequest(currentProfile.contractWithCurrentProfile.contractId)} />
         </Swiper>
       </View>
     );
@@ -146,10 +147,12 @@ class SearchProfile extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    language: state.language,
     currentProfileIndex: state.profileSearchStatus.currentProfileIndex,
     galleryEnabledIndex: state.profileSearchStatus.galleryEnabledIndex,
     profiles: state.profilesLoaded,
-    myProfile: state.profile
+    myProfile: state.profile,
+    token: state._userToken.token
   };
 }
 

@@ -13,6 +13,7 @@ const endpointsNames = {
   profileDetail: 'api/profiles/profile/$profile_id/',
   contracts: 'api/contracts',
   contractsCreate: 'api/contracts/create',
+  contractsDetail: 'api/contracts/$contract_id/',
   nameLang: 'api/name/languages/',
   nameServices: 'api/name/services/',
   apiTokenRefresh: 'api/token/refresh/',

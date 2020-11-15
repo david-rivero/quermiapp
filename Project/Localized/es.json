@@ -36,7 +36,9 @@
       "actionLikeNotifTitle": "Perfil favorito",
       "actionLikeNotifMessage": "Le diste like a este perfil",
       "actionSendReqNotifTitle": "Solicitud enviada",
-      "actionSendReqNotifMessage": "La solicitud de contacto quedó enviada"
+      "actionSendReqNotifMessage": "La solicitud de contacto quedó enviada",
+      "actionAcceptReqNotifTitle": "Solicitud aceptada",
+      "actionAcceptReqNotifMessage": "Aceptaste una solicitud"
     }
   },
   "views": {
@@ -55,7 +57,9 @@
       "scheduleActivitiesAction": "Escribe a tu acompañante",
       "rateProfileTitle": "Califica a tu acompañante",
       "rateProfileDesc": "Califica tu experiencia con tu actual acompañante para mejorar nuestros servicios",
-      "rateProfileAction": "Califica a tu acompañante"
+      "rateProfileAction": "Califica a tu acompañante",
+      "pendingRequestsTitle": "Recibiste una solicitud de contacto",
+      "pendingRequestsMessage": "Revisa las solicitudes pendientes."
     },
     "detailProfileOnSearch": {
       "yearLabel": "años",

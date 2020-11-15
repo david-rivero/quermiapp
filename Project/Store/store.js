@@ -5,6 +5,16 @@ import { ENGLISH_LANG } from './Reducers/LoadLanguage';
 import { formatDate, formatTime } from '../Providers/TimeUtilsProvider';
 
 
+/**
+ * Store information of all application:
+ * - Current profile
+ * - Profiles
+ * - Language
+ * - Items
+ *  - Services
+ *  - Languages
+ */
+
 let initialState = {
   // Current app language
   language: ENGLISH_LANG,
@@ -40,56 +50,56 @@ let initialState = {
   categories: {
     careListServices: {
       careListServicesName: [
-      {
-        label: 'homeCareLabel',
-        status: 'unchecked',
-        name: 'HCR',
-        checked: false
-      },
-      {
-        label: 'marketLabel',
-        status: 'unchecked',
-        name: 'MOR',
-        checked: false
-      },
-      {
-        label: 'walkLabel',
-        status: 'unchecked',
-        name: 'WKR',
-        checked: false
-      },
-      {
-        label: 'procedureLabel',
-        status: 'unchecked',
-        name: 'PRO',
-        checked: false
-      },
-      {
-        label: 'pharmaLabel',
-        status: 'unchecked',
-        name: 'PHY',
-        checked: false
-      },
-      {
-        label: 'homeCleanLabel',
-        status: 'unchecked',
-        name: 'HCL',
-        checked: false
-      },
-      {
-        label: 'hygieneServiceLabel',
-        status: 'unchecked',
-        name: 'SFC',
-        checked: false
-      },
-      {
-        label: 'otherOptLabel',
-        status: 'unchecked',
-        name: 'OTH',
-        checked: false
-      }
-    ],
-    careListServicesAPIMap: {}
+        {
+          label: 'homeCareLabel',
+          status: 'unchecked',
+          name: 'HCR',
+          checked: false
+        },
+        {
+          label: 'marketLabel',
+          status: 'unchecked',
+          name: 'MOR',
+          checked: false
+        },
+        {
+          label: 'walkLabel',
+          status: 'unchecked',
+          name: 'WKR',
+          checked: false
+        },
+        {
+          label: 'procedureLabel',
+          status: 'unchecked',
+          name: 'PRO',
+          checked: false
+        },
+        {
+          label: 'pharmaLabel',
+          status: 'unchecked',
+          name: 'PHY',
+          checked: false
+        },
+        {
+          label: 'homeCleanLabel',
+          status: 'unchecked',
+          name: 'HCL',
+          checked: false
+        },
+        {
+          label: 'hygieneServiceLabel',
+          status: 'unchecked',
+          name: 'SFC',
+          checked: false
+        },
+        {
+          label: 'otherOptLabel',
+          status: 'unchecked',
+          name: 'OTH',
+          checked: false
+        }
+      ],
+      careListServicesAPIMap: {}
     }
   },
   profilesLoaded: [],

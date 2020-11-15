@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
-import store from '../../Store/store';
 import LanguageProvider from '../../Providers/LanguageProvider';
 
 import { AuthViewCheckProvider } from '../Components/AuthViewCheck';
@@ -65,12 +63,6 @@ const styles = StyleSheet.create({
 });
 
 class ChatList extends React.Component {
-  componentDidMount() {
-    store.dispatch({
-      type: INVALIDATE_TOKEN
-    });
-  }
-
   redirectToChatDetail = chatProfile => {
     this.props.navigation.navigate('ChatDetail', {'chatProfile': chatProfile});
   }
@@ -93,7 +85,8 @@ class ChatList extends React.Component {
           <ScrollView style={styles.scrollSection}>
             {
               this.props.profiles.map((profile, index) => {
-                if (profile.contractWithCurrentProfile) {
+                if (profile.contractWithCurrentProfile &&
+                  ['CADD', 'CACT'].find(i => i === profile.contractWithCurrentProfile.type)) {
                   const fromProfile = this.props.myProfile;
                   const toProfile = profile;
                   const chatProfile = {

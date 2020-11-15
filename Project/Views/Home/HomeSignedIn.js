@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { forkJoin } from 'rxjs';
 import { View, Text, Image, TouchableOpacity, BackHandler, StyleSheet } from 'react-native';
+import { withInAppNotification } from 'react-native-in-app-notification';
 
 import { Layout } from '../../Theme/Layout';
 import { Colors } from '../../Theme/Colors';
@@ -105,7 +106,7 @@ class HomeSignedIn extends React.Component {
 
   fakeBackPress = () => {
     return true;
-        }
+  }
 
   componentDidMount() {
     this.props.navigation.addListener('focus', e => {
@@ -113,7 +114,7 @@ class HomeSignedIn extends React.Component {
         'hardwareBackPress', this.fakeBackPress);
       // TODO: Replace this call to use only from SearchProfiles focus
       this._getContracts();
-      });
+    });
     this.props.navigation.addListener('blur', () => {
       BackHandler.removeEventListener(
         'hardwareBackPress', this.fakeBackPress);
@@ -128,6 +129,7 @@ class HomeSignedIn extends React.Component {
     store.dispatch({
       type: INVALIDATE_TOKEN
     });
+    // FIXME: Are LOG_OUT or LOG_OUT_PROFILE used?
     store.dispatch({
       type: LOG_OUT
     });
@@ -145,6 +147,25 @@ class HomeSignedIn extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    const langProvider = LanguageProvider(this.props.language);
+    const roleRequested = this.props.profile.profileRole === 'PATIENT' ? 'CARE_PROVIDER' : 'PATIENT' 
+    const pendingProfiles = this.props.profilesLoaded.filter(
+      profile => {
+        return profile.contractWithCurrentProfile &&
+               profile.contractWithCurrentProfile.type === 'CPEN' &&
+               profile.profileRole === roleRequested;
+      });
+
+    if (pendingProfiles.length && !prevProps.profilesLoaded.length) {
+      this.props.showNotification({
+        title: langProvider.views.homeSignedIn.pendingRequestsTitle,
+        message: langProvider.views.homeSignedIn.pendingRequestsMessage,
+        vibrate: false
+      });
+    }
+  }
+
   render() {
     const langProvider = LanguageProvider(this.props.language);
     const textConfig = {
@@ -152,7 +173,7 @@ class HomeSignedIn extends React.Component {
       logoutLabel: langProvider.components.sidebar.logoutLabel
     };
     const profilesLoadedWithContract = this.props.profilesLoaded.filter(
-      profile => profile.contractWithCurrentProfile);
+      profile => profile.contractWithCurrentProfile && ['CADD', 'CACT'].find(i => i === profile.contractWithCurrentProfile.type));
 
     return (
       <View style={[styles.superContainer]}>
@@ -220,4 +241,5 @@ function mapStateToProps (state) {
     token: state._userToken.token
   };
 }
-export default connect(mapStateToProps, null)(AuthViewCheckProvider(HomeSignedIn));
+export default connect(mapStateToProps, null)(
+  withInAppNotification(AuthViewCheckProvider(HomeSignedIn)));

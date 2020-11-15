@@ -80,7 +80,8 @@ class RateProfileList extends React.Component {
           <ScrollView style={styles.scrollSection}>
             {
               this.props.profiles.map((profile, index) => {
-                if (profile.contractWithCurrentProfile) {
+                if (profile.contractWithCurrentProfile && 
+                  ['CADD', 'CACT'].find(i => i === profile.contractWithCurrentProfile.type)) {
                   return (
                     <View key={`rate-profile-item-${index}`}>
                       <TouchableOpacity style={styles.chatItem} onPress={() => this.redirectToRateProfile(profile)}>
@@ -91,9 +92,9 @@ class RateProfileList extends React.Component {
                           <Text style={styles.textName}>{profile.name}</Text>
                           <View style={styles.starContainer}>
                             {
-                              Array.from(Array(5), (_, index) => {
+                              Array.from(Array(5), (_, ix) => {
                                 let imageStar;
-                                if (index + 1 <= profile.rate) {
+                                if (ix + 1 <= profile.rate) {
                                   imageStar = require('../../Assets/images/star-selected.png')
                                 } else {
                                   imageStar = require('../../Assets/images/star.png')
@@ -101,7 +102,7 @@ class RateProfileList extends React.Component {
                                 return <Image source={imageStar}
                                               style={styles.imageStar}
                                               resizeMode='contain'
-                                              key={`star-profile-${index}`} />;
+                                              key={`star-profile-${ix}`} />;
                               })
                             }
                           </View>

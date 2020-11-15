@@ -141,7 +141,8 @@ class DetailProfileOnSearch extends React.Component {
                         isDetail={true}
                         loveProfile={_ => this.props.loveProfile(profile)}
                         sendContactRequest={_ => this.props.sendContactRequest(profile, this.props.myProfile)}
-                        rateProfile={_ => this.props.rateProfile(profile)} />
+                        rateProfile={_ => this.props.rateProfile(profile)}
+                        acceptRequest={_ => this.props.acceptRequest(profile.contractWithCurrentProfile.contractId)} />
       </View>
     );
   }
@@ -160,10 +161,12 @@ function mapStateToProps (state) {
   }
 
   return {
+    language: state.language,
     langProvider: LanguageProvider(state.language),
     careServices: _mapPKToServices(state),
     listLanguages: state.availableLangs,
-    myProfile: state.profile
+    myProfile: state.profile,
+    token: state._userToken.token
   };
 }
 export default connect(mapStateToProps, null)(

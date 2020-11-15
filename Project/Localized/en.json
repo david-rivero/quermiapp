@@ -36,7 +36,9 @@
       "actionLikeNotifTitle": "Profile liked",
       "actionLikeNotifMessage": "You're liked this profile",
       "actionSendReqNotifTitle": "Request sent",
-      "actionSendReqNotifMessage": "You sent a request to this profile"
+      "actionSendReqNotifMessage": "You sent a request to this profile",
+      "actionAcceptReqNotifTitle": "Accepted request",
+      "actionAcceptReqNotifMessage": "You accepted request"
     }
   },
   "views": {
@@ -55,7 +57,9 @@
       "scheduleActivitiesAction": "Write to your partner",
       "rateProfileTitle": "Rate your partner",
       "rateProfileDesc": "Rate your experience with your current partner to improve our services",
-      "rateProfileAction": "Rate"
+      "rateProfileAction": "Rate",
+      "pendingRequestsTitle": "You received a request for contact",
+      "pendingRequestsMessage": "Check the requests received recently."
     },
     "detailProfileOnSearch": {
       "yearLabel": "years",

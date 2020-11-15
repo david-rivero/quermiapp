@@ -12,6 +12,7 @@ import { catchError } from 'rxjs/operators';
 const loveIcon = require('../../Assets/images/heart-pink.png');
 const contactIcon = require('../../Assets/images/social-orange.png');
 const rateIcon = require('../../Assets/images/star-border.png');
+const acceptIcon = require('../../Assets/images/checked.png');
 const styles = StyleSheet.create({
   actionsContainer: {
     flexDirection: 'row',
@@ -88,14 +89,14 @@ export function ProfileActionsWrapper (ViewWrapper) {
         .subscribe(resp => {
           if (!resp.error) {
             this._generateNotification('actionLikeNotif');
-    }
+          }
         });
     }
 
     sendContactRequest = (profile, myProfile) => {
       const [patientId, carePersonId] = profile.profileRole === 'PATIENT' ?
         [profile.id, myProfile.id] : [myProfile.id, profile.id];
-      const formattedDate = formatDate(new Date(), 'api');
+      const formattedDate = `${formatDate(new Date(), 'api')}Z`;
       const data = {
         start_date: formattedDate,
         end_date: formattedDate,
@@ -112,8 +113,8 @@ export function ProfileActionsWrapper (ViewWrapper) {
         .pipe(catchError(e => of({...e})))
         .subscribe(resp => {
           if (!resp.error) {
-          this.props.navigation.navigate('HomeSignedIn');
-          this._generateNotification('actionSendReqNotif');
+            this.props.navigation.navigate('HomeSignedIn');
+            this._generateNotification('actionSendReqNotif');
           }
         });
     }
@@ -122,11 +123,34 @@ export function ProfileActionsWrapper (ViewWrapper) {
       this.props.navigation.navigate('RateProfile', { profile: profile });
     }
 
+    acceptRequest = contractId => {
+      const data = {
+        status: 'CADD'
+      };
+      const headers = {
+        ...DEFAULT_HEADERS,
+        'Authorization': `Bearer ${this.props.token}`
+      };
+      const rules = [
+        {key: '$contract_id', value: contractId},
+      ];
+
+      requestEndpoint('contractsDetail', data, 'PATCH', '', rules, headers)
+        .pipe(catchError(e => of({...e})))
+        .subscribe(resp => {
+          if (!resp.error) {
+            this.props.navigation.navigate('HomeSignedIn');
+            this._generateNotification('actionAcceptReqNotif');
+          }
+        });
+    }
+
     render() {
       return <ViewWrapper {...this.props}
                           rateProfile={this.rateProfile}
                           sendContactRequest={this.sendContactRequest}
-                          loveProfile={this.loveProfile} />
+                          loveProfile={this.loveProfile}
+                          acceptRequest={this.acceptRequest} />
     }
   });
 }
@@ -147,9 +171,18 @@ export function ProfileActions (props) {
       }
       {
         props.profile.contractWithCurrentProfile &&
+        ['CADD', 'CACT'].find(i => i === props.profile.contractWithCurrentProfile.type) &&
         <TouchableOpacity style={[styles.actionItem, styles.actionItemRight, props.isDetail && styles.actionDetail]}
                           onPress={_ => props.rateProfile()}>
           <Image resizeMode='cover' source={rateIcon} style={styles.actionIcon} />
+        </TouchableOpacity>
+      }
+      {
+        props.profile.contractWithCurrentProfile &&
+        props.profile.contractWithCurrentProfile.type === 'CPEN' &&
+        <TouchableOpacity style={[styles.actionItem, styles.actionItemRight, props.isDetail && styles.actionDetail]}
+                          onPress={_ => props.acceptRequest()}>
+          <Image resizeMode='cover' source={acceptIcon} style={styles.actionIcon} />
         </TouchableOpacity>
       }
     </View>

@@ -1,4 +1,4 @@
-import { formatDate, formatTime, getDateTimeFromStr } from './TimeUtilsProvider';
+import { formatDate, getDateTimeFromStr } from './TimeUtilsProvider';
 
 export class ProfileSerializer {
   static fromAPIToView = (data={}) => {
@@ -10,7 +10,8 @@ export class ProfileSerializer {
       rate: data.rate,
       birthDate: data.birth_date,
       description: data.profile_description,
-      contractWithCurrentProfile: data.contractWithCurrentProfile,
+      contractWithCurrentProfile: data.contractWithCurrentProfile ? 
+        { ...data.contractWithCurrentProfile } : null,
       experience: data.experience,
       pictsOnRegister: {
         documentID: data.doc_id_photo_url,
