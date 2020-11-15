@@ -1,6 +1,6 @@
-import { throwError, pipe, of } from 'rxjs';
+import { throwError, of } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
-import { catchError, map, concatMap } from 'rxjs/operators';
+import { catchError, concatMap } from 'rxjs/operators';
 
 import ConfigProvider from './ConfigProvider';
 
@@ -47,22 +47,27 @@ export function requestEndpoint (endpointName, data, method='GET', queryParams='
     bodyData = JSON.stringify(data);
   }
 
+  // TODO: All catchError should return of({}) on items --> Improve error handling
   return fromFetch(url, {
     method: method,
     body: bodyData,
     headers: {...headers}
   }).pipe(
-    map(r => {
+    concatMap(r => {
       if (r.status >= CLIENT_ERROR_STATUS_CODE) {
-        throwError({ status: r.status, message: r.message });
+        return throwError({
+          error: true, status: r.status, message: r.statusText
+        });
       }
-      return r;
-    }),
-    catchError(e => of({ error: true, message: e.message }))
+      return of(r);
+    })
   );
 }
 
 export function requestDataEndpoint (endpointName, data, method='GET', queryParams='', formatRulesUrl=[], headers=DEFAULT_HEADERS) {
   return requestEndpoint(endpointName, data, method, queryParams, formatRulesUrl, headers)
-    .pipe(concatMap(r => r.json()));
+    .pipe(
+      concatMap(r => r.json()),
+      catchError(e => of(e))
+    );
 }

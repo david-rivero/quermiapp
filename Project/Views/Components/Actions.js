@@ -6,6 +6,8 @@ import { withInAppNotification } from 'react-native-in-app-notification';
 import { formatDate } from '../../Providers/TimeUtilsProvider';
 import { requestEndpoint, requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
 import LanguageProvider from '../../Providers/LanguageProvider';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 const loveIcon = require('../../Assets/images/heart-pink.png');
 const contactIcon = require('../../Assets/images/social-orange.png');
@@ -83,7 +85,11 @@ export function ProfileActionsWrapper (ViewWrapper) {
         'Authorization': `Bearer ${this.props.token}`
       };
       requestDataEndpoint('profileDetail', data, 'PATCH', '', rules, headers)
-        .subscribe(_ => this._generateNotification('actionLikeNotif'));
+        .subscribe(resp => {
+          if (!resp.error) {
+            this._generateNotification('actionLikeNotif');
+    }
+        });
     }
 
     sendContactRequest = (profile, myProfile) => {
@@ -102,11 +108,13 @@ export function ProfileActionsWrapper (ViewWrapper) {
         'Authorization': `Bearer ${this.props.token}`
       };
 
-      // FIXME: Contracts creation is not working properly
       requestEndpoint('contractsCreate', data, 'POST', '', [], headers)
-        .subscribe(_ => {
+        .pipe(catchError(e => of({...e})))
+        .subscribe(resp => {
+          if (!resp.error) {
           this.props.navigation.navigate('HomeSignedIn');
           this._generateNotification('actionSendReqNotif');
+          }
         });
     }
 

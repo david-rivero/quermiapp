@@ -96,16 +96,18 @@ class RateProfile extends React.Component {
       'Authorization': `Bearer ${this.props.token}` 
     };
     requestDataEndpoint('reports', data, 'POST', '', [], headers)
-      .subscribe(_ => {
-        this.props.showNotification({
-          title: langProvider.views.rateProfile.rateProfileNotifTitle,
-          message: langProvider.views.rateProfile.rateProfileNotifMessage,
-          vibrate: false
-        });
-        store.dispatch({
-          type: RESET_RATE_INFO_PROFILE
-        });
-        this.props.navigation.navigate('HomeSignedIn');
+      .subscribe(reportsData => {
+        if (!reportsData.error) {
+          this.props.showNotification({
+            title: langProvider.views.rateProfile.rateProfileNotifTitle,
+            message: langProvider.views.rateProfile.rateProfileNotifMessage,
+            vibrate: false
+          });
+          store.dispatch({
+            type: RESET_RATE_INFO_PROFILE
+          });
+          this.props.navigation.navigate('HomeSignedIn');
+        }
       });
   }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { pipe, concatMap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { UPDATE_MY_PROFILE } from '../../Store/Actions/DetailProfile';
@@ -15,6 +16,7 @@ import { setToken } from '../../Providers/AuthUtilProvider';
 import { Colors } from '../../Theme/Colors';
 import { Layout } from '../../Theme/Layout';
 import FullLogo from '../Components/FullLogo';
+import { throwError } from 'rxjs';
 
 
 const styles = StyleSheet.create({
@@ -82,20 +84,12 @@ class SignIn extends React.Component {
   getRequestObservable = requestInstance => {
     return requestInstance.pipe(
       concatMap(data => {
-        setToken(data.access, data.refresh);
-        const useremail = `user__email=${this.props.email}`;
-        return requestDataEndpoint('profile', undefined, 'GET', useremail);
-      }),
-      catchError(e => {
-        if (e.status === AUTHENTICATION_ERROR_STATUS_CODE) {
-          this.setState({
-            loginError: true, loginMessage: 'Username or password are not valid'
-          });
-        } else {
-          this.setState({
-            loginError: true, loginMessage: 'There was an unexpected error'
-          });
+        if (!data.error) {
+          setToken(data.access, data.refresh);
+          const useremail = `user__email=${this.props.email}`;
+          return requestDataEndpoint('profile', undefined, 'GET', useremail);
         }
+        return of(data);
       })
     );
   }
@@ -116,15 +110,27 @@ class SignIn extends React.Component {
         email: this.props.email.trim(),
         password: this.props.password
       };
-      this.setLoginErrorStatus(false, '');
+      this.setState({ loginError: false, loginMessage: '' });
       this.getRequestObservable(requestDataEndpoint('login', data, 'POST'))
         .subscribe(profileData => {
-          store.dispatch({
-            type: UPDATE_MY_PROFILE,
-            payload: ProfileSerializer.fromAPIToView(profileData.pop())
-          });
-          this.setState({ loginError: false, loginMessage: '' });
-          this.props.navigation.navigate('HomeSignedIn');
+          if (!profileData.error) {
+            store.dispatch({
+              type: UPDATE_MY_PROFILE,
+              payload: ProfileSerializer.fromAPIToView(profileData.pop())
+            });
+            this.setState({ loginError: false, loginMessage: '' });
+            this.props.navigation.navigate('HomeSignedIn');
+          } else {
+            if (profileData.status === AUTHENTICATION_ERROR_STATUS_CODE) {
+              this.setState({
+                loginError: true, loginMessage: 'Username or password are not valid'
+              });
+            } else {
+              this.setState({
+                loginError: true, loginMessage: 'There was an unexpected error'
+              });
+            }
+          }
         });
     } else {
       this.setState({
@@ -152,8 +158,8 @@ class SignIn extends React.Component {
                      style={Layout.textInput}></TextInput>
         </View>
         {
-          this.props.loginError &&
-          <Text>{this.props.loginMessage}</Text>
+          this.state.loginError &&
+          <Text>{this.state.loginMessage}</Text>
         }
         <View style={styles.loginActions}>
           <TouchableOpacity style={[styles.button, styles.buttonPrimary]}

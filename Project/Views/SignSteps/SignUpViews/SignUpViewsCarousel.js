@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 
 import { StyleSheet, View, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
@@ -155,49 +155,52 @@ class SignUpCarousel extends React.Component {
       ...this.props.profile.account, first_name, last_name
     };
 
-    /**
-     * switchMap(rowData => {
-        let profileData = ProfileSerializer.fromViewToAPI(
-          this.props.profile, this.props.careServicesAPI, data.id, this.state.defaultLang);
-        return requestEndpoint('profile', profileData, 'POST');
-      }),
-
-      requestDataEndpoint('login', {
-        email: email,
-        password: password
-      }, 'POST')
-     */
-
     this.setLoadStatus(true);
+    // FIXME: Check if this works!
     requestDataEndpoint('user', userData, 'POST').pipe(
       switchMap(uData => {
-        let profileData = ProfileSerializer.fromViewToAPI(
-          this.props.profile, this.props.careServicesAPI, uData.id, this.state.defaultLang);
-        return requestEndpoint('profile', profileData, 'POST');
+        if (!uData.error) {
+          let profileData = ProfileSerializer.fromViewToAPI(
+            this.props.profile, this.props.careServicesAPI, uData.id, this.state.defaultLang);
+          return requestEndpoint('profile', profileData, 'POST');
+        }
+        return throwError({...uData});
       }),
-      switchMap(_ => {
-        return requestDataEndpoint('login', { ...this.props.profile.account }, 'POST');
+      switchMap(resp => {
+        if (!resp.error) {
+          return requestDataEndpoint('login', { ...this.props.profile.account }, 'POST');
+        }
+        return throwError({...uData});
       }),
       switchMap(tokenData => {
-        setToken(tokenData.access, tokenData.refresh);
-        return of({});
+        if (!tokenData.error) {
+          setToken(tokenData.access, tokenData.refresh);
+          return of({});
+        }
+        return throwError({...uData});
       }),
-      switchMap(_ => {
-        const email = this.props.profile.account.email;
-        const username = email.split('@').shift();
-        return requestDataEndpoint('profile',  undefined, 'GET', `user__email=${username}`)
+      switchMap(rowData => {
+        if (!rowData.error) {
+          const email = this.props.profile.account.email;
+          const username = email.split('@').shift();
+          return requestDataEndpoint('profile',  undefined, 'GET', `user__email=${username}`);
+        }
+        return throwError({...uData});
       }),
-      catchError(_ => {
+      catchError(e => {
         this.setLoadStatus(false);
+        return of({...e});
       })
     ).subscribe(ppData => {
-      store.dispatch({
-        type: UPDATE_MY_PROFILE,
-        payload: ProfileSerializer.fromAPIToView(ppData.pop())
-      });
-      this.setLoadStatus(false);
-      this.setState({ nextStep: false, indexActive: 0, isPatient: false });
-      this.props.navigation.navigate('HomeSignedIn');
+      if (!ppData.error) {
+        store.dispatch({
+          type: UPDATE_MY_PROFILE,
+          payload: ProfileSerializer.fromAPIToView(ppData.pop())
+        });
+        this.setLoadStatus(false);
+        this.setState({ nextStep: false, indexActive: 0, isPatient: false });
+        this.props.navigation.navigate('HomeSignedIn');
+      }
     });
   }
 

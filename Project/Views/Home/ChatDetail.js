@@ -96,16 +96,18 @@ class ChatDetail extends React.Component {
     };
     requestDataEndpoint('chatRoom', undefined, 'GET', '', rules, headers)
       .subscribe(data => {
-        const chatUrl = `${serverURI}/ws/chat/${data.chat_room_id}/${chatProfile.fromProfile.username}/${chatProfile.toProfile.username}/`.replace(/http[s]?/g, 'ws');
-        this.socket = new WebSocket(chatUrl);
-        this.socket.onmessage = e => this.getResponse(e);
-        this.socket.onopen = () => {
-          this.socket.send(JSON.stringify(
-            {
-              command: 'fetch_messages'
-            }
-          ));
-        };
+        if (!data.error) {
+          const chatUrl = `${serverURI}/ws/chat/${data.chat_room_id}/${chatProfile.fromProfile.username}/${chatProfile.toProfile.username}/`.replace(/http[s]?/g, 'ws');
+          this.socket = new WebSocket(chatUrl);
+          this.socket.onmessage = e => this.getResponse(e);
+          this.socket.onopen = () => {
+            this.socket.send(JSON.stringify(
+              {
+                command: 'fetch_messages'
+              }
+            ));
+          };
+        }
       });
 
     this.state = {

@@ -59,17 +59,21 @@ class HomeGuest extends React.Component {
   componentDidMount() {
     requestDataEndpoint('nameLang', undefined, 'GET')
       .subscribe(data => {
-        store.dispatch({
-          type: LOAD_LIST_LANGUAGES,
-          payload: data
-        });
+        if (!data.error) {
+          store.dispatch({
+            type: LOAD_LIST_LANGUAGES,
+            payload: data
+          });
+        }
       });
     requestDataEndpoint('nameServices', undefined, 'GET')
       .subscribe(data => {
-        store.dispatch({
-          type: LOAD_SERVICES_API,
-          payload: data
-        });
+        if (!data.error) {
+          store.dispatch({
+            type: LOAD_SERVICES_API,
+            payload: data
+          });
+        }
       });
   }
 

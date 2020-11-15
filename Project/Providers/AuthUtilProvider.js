@@ -3,7 +3,8 @@ import {
   AUTHENTICATION_ERROR_STATUS_CODE,
   CLIENT_ERROR_STATUS_CODE
 } from './EndpointServiceProvider';
-import { catchError, pipe } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { SET_TOKEN, INVALIDATE_TOKEN } from '../Store/Actions/UserAuth';
 import store from '../Store/store';
@@ -14,11 +15,12 @@ export function verifyIsValidToken(token) {
     .pipe(
       catchError(e => {
         if (e.status === AUTHENTICATION_ERROR_STATUS_CODE ||
-            e.status === CLIENT_ERROR_STATUS_CODE) {
+          e.status === CLIENT_ERROR_STATUS_CODE) {
           store.dispatch({
             type: INVALIDATE_TOKEN
           });
         }
+        return of({...e});
       })
     );
 }
