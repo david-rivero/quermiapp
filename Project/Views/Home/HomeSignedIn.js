@@ -7,7 +7,7 @@ import { withInAppNotification } from 'react-native-in-app-notification';
 import { Layout } from '../../Theme/Layout';
 import { Colors } from '../../Theme/Colors';
 
-import { LOG_OUT, INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
+import { LOG_OUT_PROFILE, INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
 import { LOAD_PROFILES_TO_SEARCH } from '../../Store/Actions/ProfilesToSearch';
 import { TOGGLE_MENU_OPEN } from '../../Store/Actions/DetailProfile';
 
@@ -131,7 +131,7 @@ class HomeSignedIn extends React.Component {
     });
     // FIXME: Are LOG_OUT or LOG_OUT_PROFILE used?
     store.dispatch({
-      type: LOG_OUT
+      type: LOG_OUT_PROFILE
     });
     store.dispatch({
       type: TOGGLE_MENU_OPEN,

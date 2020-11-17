@@ -156,12 +156,11 @@ class SignUpCarousel extends React.Component {
     };
 
     this.setLoadStatus(true);
-    // FIXME: Check if this works!
     requestDataEndpoint('user', userData, 'POST').pipe(
       switchMap(uData => {
         if (!uData.error) {
           let profileData = ProfileSerializer.fromViewToAPI(
-            this.props.profile, this.props.careServicesAPI, uData.id, this.state.defaultLang);
+            this.props.profile, this.props.careServicesAPI, uData, this.state.defaultLang);
           return requestEndpoint('profile', profileData, 'POST');
         }
         return throwError({...uData});
@@ -260,9 +259,10 @@ class SignUpCarousel extends React.Component {
                   return SignUpStepTemplate(SignUpDisclaimer, sdprops);
                 case 10:
                   if (!this.state.isPatient) {
-                    const sdprops = {...baseProps, checkFinalStep: this.signUpToHome };
-                    return SignUpStepTemplate(SignUpDisclaimer, sdprops);
+                    const sd_props = {...baseProps, checkFinalStep: this.signUpToHome };
+                    return SignUpStepTemplate(SignUpDisclaimer, sd_props);
                   }
+                  break;
               }
             })()
           }
