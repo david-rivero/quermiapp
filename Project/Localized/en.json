@@ -30,7 +30,8 @@
     },
     "sidebar": {
       "greeting": "Hi",
-      "logoutLabel": "Logout"
+      "logoutLabel": "Logout",
+      "navSettingsLabel": "Settings"
     },
     "actions": {
       "actionLikeNotifTitle": "Profile liked",

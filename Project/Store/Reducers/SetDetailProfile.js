@@ -1,4 +1,11 @@
-import { UPDATE_MY_PROFILE, TOGGLE_MENU_OPEN, SET_RATE_INFO_PROFILE, RESET_RATE_INFO_PROFILE } from '../Actions/DetailProfile';
+import {
+  UPDATE_MY_PROFILE,
+  TOGGLE_MENU_OPEN,
+  SET_RATE_INFO_PROFILE,
+  RESET_RATE_INFO_PROFILE,
+  LOAD_LINKED_PAYMENTS,
+  SET_ACTIVE_SUBSCRIPTIONS
+} from '../Actions/DetailProfile';
 import {
   SIGN_UP,
   SIGN_UP_STEP_SET_PROFILE_INFO,
@@ -31,7 +38,10 @@ export const defaultProfile = {
     autonomousProfessionalCheck: false,
     otherCareServiceDescription: '',
     profileLoveStatus: 0
-  }
+  },
+  paymentsLinked: [],
+  activeSubscription: {},
+  customerPaymentId: null
 };
 
 export function setDetailProfile(state, action) {
@@ -41,6 +51,16 @@ export function setDetailProfile(state, action) {
       return {
         ...state,
         ...action.payload
+      };
+    case LOAD_LINKED_PAYMENTS:
+      return {
+        ...state,
+        paymentsLinked: [...action.payload]
+      };
+    case SET_ACTIVE_SUBSCRIPTIONS:
+      return {
+        ...state,
+        activeSubscription: {...action.payload}
       };
     case SIGN_UP_STEP_SET_PROFILE_INFO:
       return {

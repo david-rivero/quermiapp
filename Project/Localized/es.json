@@ -30,7 +30,8 @@
     },
     "sidebar": {
       "greeting": "Hola",
-      "logoutLabel": "Cerrar sesión"
+      "logoutLabel": "Cerrar sesión",
+      "navSettingsLabel": "Configuración"
     },
     "actions": {
       "actionLikeNotifTitle": "Perfil favorito",

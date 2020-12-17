@@ -18,7 +18,12 @@ const endpointsNames = {
   nameServices: 'api/name/services/',
   apiTokenRefresh: 'api/token/refresh/',
   chatRoom: 'api/chatroom/$from_profile/$to_profile/',
-  reports: 'api/reports'
+  reports: 'api/reports',
+  paymentsRegister: 'api/payments/payment-register',
+  paymentsRegisterDetail: 'api/payments/payment-register/$profile_pk/',
+  customerSubscriptions: 'api/payments/customer-subscriptions',
+  customerSubscriptionsDetail: 'api/payments/customer-subscriptions/$profile_pk/',
+  subscriptionPrices: 'api/payments/subscription-prices'
 };
 export const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'

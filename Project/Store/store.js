@@ -45,7 +45,10 @@ let initialState = {
       autonomousProfessionalCheck: false,
       otherCareServiceDescription: '',
       profileLoveStatus: 0
-    }
+    },
+    paymentsLinked: [],
+    activeSubscription: {},
+    customerPaymentId: null
   },
   categories: {
     careListServices: {
@@ -114,6 +117,7 @@ let initialState = {
     description: '',
     rate: 0
   },
+  subscriptionBillingOptions: [],
   _userToken: {
     token: '',
     refreshToken: '',

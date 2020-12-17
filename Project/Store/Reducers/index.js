@@ -4,6 +4,7 @@ import { setTokenState } from './SetLoginStatus';
 import { setDetailProfile, setHomeStatus, setRateProfile } from './SetDetailProfile';
 import { loadProfiles, updateProfileSearchStatus } from './ProfilesToSearch';
 import { setCategories } from './SetCategories';
+import { setBilling } from './Payments';
 
 const reducers = combineReducers({
   language: loadLanguage,
@@ -14,6 +15,7 @@ const reducers = combineReducers({
   homeStatus: setHomeStatus,
   rateProfileInfo: setRateProfile,
   categories: setCategories,
+  subscriptionBillingOptions: setBilling,
   _userToken: setTokenState
 });
 export default reducers;

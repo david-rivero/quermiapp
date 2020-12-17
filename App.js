@@ -24,6 +24,8 @@ import RateProfileList from './Project/Views/Profile/RateProfileList';
 import RateProfile from './Project/Views/Profile/RateProfile';
 import BaseConfiguration from './Project/Views/Configuration/BaseConfiguration';
 import Camera from './Project/Views/Home/Camera';
+import Payments from './Project/Views/Configuration/Payments';
+import Billing from './Project/Views/Configuration/Billing';
 
 const NOTIFICATION_CLOSE_INTERVAL = 5000;
 const iconAppSrc = require('./Project/Assets/nurse-pink-48.png');
@@ -52,6 +54,8 @@ export default function App() {
               <Stack.Screen name="RateProfileList" component={RateProfileList} />
               <Stack.Screen name="Settings" component={BaseConfiguration} />
               <Stack.Screen name="Camera" component={Camera} />
+              <Stack.Screen name="Payments" component={Payments} />
+              <Stack.Screen name="Billing" component={Billing} />
             </Stack.Navigator>
           </NavigationContainer>
         </PaperProvider>

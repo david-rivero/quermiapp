@@ -9,7 +9,7 @@ import { Colors } from '../../Theme/Colors';
 
 import { LOG_OUT_PROFILE, INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
 import { LOAD_PROFILES_TO_SEARCH } from '../../Store/Actions/ProfilesToSearch';
-import { TOGGLE_MENU_OPEN } from '../../Store/Actions/DetailProfile';
+import { TOGGLE_MENU_OPEN, LOAD_LINKED_PAYMENTS } from '../../Store/Actions/DetailProfile';
 
 import LanguageProvider from '../../Providers/LanguageProvider';
 import { mapContractsToProfiles } from '../../Providers/StoreUtilProvider';
@@ -118,7 +118,26 @@ class HomeSignedIn extends React.Component {
     this.props.navigation.addListener('blur', () => {
       BackHandler.removeEventListener(
         'hardwareBackPress', this.fakeBackPress);
+      store.dispatch({
+        type: TOGGLE_MENU_OPEN,
+        payload: false
+      });
     });
+
+    const headers = {
+      ...DEFAULT_HEADERS,
+      'Authorization': `Bearer ${this.props.token}`
+    };
+    requestDataEndpoint(
+      'paymentsRegister', undefined, 'GET',
+      `profile=${this.props.profile.username}`, [], headers).subscribe(data => {
+        if (!data.error) {
+          store.dispatch({
+            type: LOAD_LINKED_PAYMENTS,
+            payload: data
+          });
+        }
+      })
   }
 
   componentWillUnmount() {
@@ -129,7 +148,6 @@ class HomeSignedIn extends React.Component {
     store.dispatch({
       type: INVALIDATE_TOKEN
     });
-    // FIXME: Are LOG_OUT or LOG_OUT_PROFILE used?
     store.dispatch({
       type: LOG_OUT_PROFILE
     });
@@ -138,6 +156,10 @@ class HomeSignedIn extends React.Component {
       payload: false
     });
     this.props.navigation.navigate('SignIn');
+  }
+
+  navSettings = () => {
+    this.props.navigation.navigate('Settings');
   }
 
   openMenu = () => {
@@ -170,7 +192,8 @@ class HomeSignedIn extends React.Component {
     const langProvider = LanguageProvider(this.props.language);
     const textConfig = {
       greeting: langProvider.components.sidebar.greeting,
-      logoutLabel: langProvider.components.sidebar.logoutLabel
+      logoutLabel: langProvider.components.sidebar.logoutLabel,
+      navSettingsLabel: langProvider.components.sidebar.navSettingsLabel
     };
     const profilesLoadedWithContract = this.props.profilesLoaded.filter(
       profile => profile.contractWithCurrentProfile && ['CADD', 'CACT'].find(i => i === profile.contractWithCurrentProfile.type));
@@ -226,6 +249,7 @@ class HomeSignedIn extends React.Component {
           <Sidebar profileName={this.props.profile.name}
                    profilePhotoURI={this.props.profile.pictsOnRegister.profilePhoto}
                    logoutAction={this.logout}
+                   navSettingsAction={this.navSettings}
                    textConfig={textConfig} />
         }
       </View>

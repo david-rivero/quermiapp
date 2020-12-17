@@ -28,7 +28,10 @@ export class ProfileSerializer {
         start: data.available_hour_from,
         end: data.available_hour_to
       },
-      profileStatus: {...data.profile_status}
+      profileStatus: {...data.profile_status},
+      paymentsLinked: [],
+      activeSubscription: {},
+      customerPaymentId: data.customer_payment_id
     }
   }
 

@@ -42,6 +42,10 @@ export default function Sidebar (props) {
         <Image source={{uri: props.profilePhotoURI}} resize='cover' style={styles.profilePhoto}></Image>
         <Text style={styles.profileText}>{props.textConfig.greeting} {props.profileName}</Text>
       </View>
+      <TouchableOpacity onPress={() => props.navSettingsAction && props.navSettingsAction()}
+                        style={styles.menuLink}>
+        <Text style={styles.menuLinkText}>{props.textConfig.navSettingsLabel}</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => props.logoutAction && props.logoutAction()}
                         style={styles.menuLink}>
         <Text style={styles.menuLinkText}>{props.textConfig.logoutLabel}</Text>

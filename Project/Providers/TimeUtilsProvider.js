@@ -1,4 +1,8 @@
-import { format, differenceInYears, parse } from 'date-fns';
+import { format, differenceInYears, parse, fromUnixTime } from 'date-fns';
+
+export function formatDatefromUnixTime(unixTime) {
+  return formatDate(fromUnixTime(unixTime));
+}
 
 export function formatDate (date, formatMode='human') {
   if (date) {
