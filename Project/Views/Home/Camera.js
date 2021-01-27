@@ -19,7 +19,12 @@ class Camera extends React.Component {
         }
       }
     });
-    this.props.navigation.navigate('SignUp');
+
+    if (pageFrom === 'idPhoto') {
+      this.props.navigation.navigate('ValidateProfile');
+    } else {
+      this.props.navigation.navigate('SignUp');
+    }
   }
 
   render() {

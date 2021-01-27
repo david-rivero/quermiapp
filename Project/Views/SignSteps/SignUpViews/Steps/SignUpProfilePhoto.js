@@ -113,7 +113,7 @@ class SignUpProfilePhoto extends SignUpBaseStep {
           <TouchableOpacity style={[styles.photoInput, this.state.actionFrom === 'file' && this.props.nextStep ? styles.inputEnabled: null]}
                             onPress={() => this.showFilePicker()}>
             <Image source={imagePhoto} style={styles.img} resizeMode='contain' />
-            <Text>{langProvider.views.signUp.signUpPhotoFileLabel}</Text>
+            <Text>{langProvider.views.checkIdPhoto.signUpPhotoFileLabel}</Text>
           </TouchableOpacity>
         </View>
       </View>

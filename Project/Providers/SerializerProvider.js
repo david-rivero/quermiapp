@@ -31,7 +31,8 @@ export class ProfileSerializer {
       profileStatus: {...data.profile_status},
       paymentsLinked: [],
       activeSubscription: {},
-      customerPaymentId: data.customer_payment_id
+      customerPaymentId: data.customer_payment_id,
+      verifiedProfile: data.verified_profile
     }
   }
 
@@ -54,8 +55,8 @@ export class ProfileSerializer {
       ],
       experience: data.experience || 'Default experience',
       user: user.id,
-      id_doc_photo: data.pictsOnRegister.documentID.data,
-      profile_photo: data.pictsOnRegister.profilePhoto.data,
+      id_doc_photo: (data.pictsOnRegister.documentID || {}).data,
+      profile_photo: (data.pictsOnRegister.profilePhoto || {}).data,
       profile_status: { ...data.profileStatus }
     }
   }

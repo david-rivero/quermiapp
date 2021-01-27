@@ -41,7 +41,8 @@ export const defaultProfile = {
   },
   paymentsLinked: [],
   activeSubscription: {},
-  customerPaymentId: null
+  customerPaymentId: null,
+  verifiedProfile: false
 };
 
 export function setDetailProfile(state, action) {

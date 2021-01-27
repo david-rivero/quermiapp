@@ -25,13 +25,12 @@ const styles = StyleSheet.create({
 });
 
 export default function SignUpCarouselIndex(props) {
-  const PATIENT_INDEX = 9;
-  const CARE_PERSON_INDEX = 10;
+  const INDEX = 8;
 
   return (
     <View style={styles.carouselContainer}>
       {
-        [...Array(props.isPatient ? PATIENT_INDEX : CARE_PERSON_INDEX).keys()].map((_, index) => {
+        [...Array(INDEX).keys()].map((_, index) => {
           return <View key={index} style={[styles.carouselIndexItem, props.indexActive -1 == index ? styles.activeCarouselIndexItem: null]}>
                  </View>;
         })

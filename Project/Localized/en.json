@@ -50,6 +50,18 @@
       "chatLabel": "Messages"
     },
     "homeSignedIn": {
+      "validateIdTitle": "Validate your profile",
+      "validateIdDesc": "To start using our services, please take a photo of your document id to validate your profile.",
+      "validateIdAction": "Validate",
+      "validationInProcessTitle": "Validation in process",
+      "validationInProcessDesc": "Your identification is validating. Please wait for confirmation.",
+      "validationInProcessAction": "Check",
+      "addPayMethodTitle": "Add a payment method",
+      "addPayMethodDesc": "Link a debit or credit card and start to use Quermi",
+      "addPayMethodAction": "Add payment",
+      "activateSubscriptionTitle": "Add a plan",
+      "activateSubscriptionDesc": "Choose the best plan for yourself and start profile searching.",
+      "activateSubscriptionAction": "Look at subscription plans",
       "findPartnerTitle": "Find a partner",
       "findPartnerDesc": "Find a person who gives you the best service you need",
       "findPartnerAction": "Find your next partner",
@@ -82,6 +94,9 @@
     "rateProfileList": {
       "title": "Profiles to rate"
     },
+    "checkIdPhoto": {
+      "signUpPhotoFileLabel": "Upload image"
+    },
     "signIn": {
       "emailPlaceholder": "Your email",
       "passwordPlaceholder": "Your password"
@@ -107,7 +122,6 @@
       "signUpDisclaimerContinue": "Continue",
       "signUpIDPhotoTitle": "Please take a photo of your ID card to check your identity",
       "signUpPhotoCameraLabel": "Photo",
-      "signUpPhotoFileLabel": "Upload image",
       "signUpNameTitle": "What's your name?",
       "signUpNamePlaceholder": "Your name",
       "signUpProfileTitle": "Tells us who you are",

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { of } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { UPDATE_MY_PROFILE } from '../../Store/Actions/DetailProfile';
 import store from '../../Store/store';
@@ -16,7 +16,6 @@ import { setToken } from '../../Providers/AuthUtilProvider';
 import { Colors } from '../../Theme/Colors';
 import { Layout } from '../../Theme/Layout';
 import FullLogo from '../Components/FullLogo';
-import { throwError } from 'rxjs';
 
 
 const styles = StyleSheet.create({
@@ -144,33 +143,35 @@ class SignIn extends React.Component {
     const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
-        <FullLogo mode='medium' stylesContainer={styles.fullLogo}
-                  displayLabel={true} logoTitle={langProvider.components.fullLogo.logoTitle}></FullLogo>
-        <View>
-          <TextInput value={this.props.email}
-                     onChangeText={text => this.setLoginInputCredentials({email: text, password: this.props.password})}
-                     placeholder={langProvider.views.signIn.emailPlaceholder}
-                     style={Layout.textInput}></TextInput>
-          <TextInput value={this.props.password}
-                     onChangeText={text => this.setLoginInputCredentials({email: this.props.email, password: text})}
-                     placeholder={langProvider.views.signIn.passwordPlaceholder}
-                     secureTextEntry={true}
-                     style={Layout.textInput}></TextInput>
-        </View>
-        {
-          this.state.loginError &&
-          <Text>{this.state.loginMessage}</Text>
-        }
-        <View style={styles.loginActions}>
-          <TouchableOpacity style={[styles.button, styles.buttonPrimary]}
-                            onPress={() => this.performLogin()}>
-            <Text style={styles.buttonText}>{langProvider.components.loginActions.signIn}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonLinkContainer}
-                            onPress={() => this.props.navigation.navigate('SignUp')}>
-            <Text style={styles.buttonLink}>{langProvider.components.loginActions.registerFirstTime}</Text>
-          </TouchableOpacity>
-        </View>
+        <ScrollView>
+          <FullLogo mode='medium' stylesContainer={styles.fullLogo}
+                    displayLabel={true} logoTitle={langProvider.components.fullLogo.logoTitle}></FullLogo>
+          <View>
+            <TextInput value={this.props.email}
+                      onChangeText={text => this.setLoginInputCredentials({email: text, password: this.props.password})}
+                      placeholder={langProvider.views.signIn.emailPlaceholder}
+                      style={Layout.textInput}></TextInput>
+            <TextInput value={this.props.password}
+                      onChangeText={text => this.setLoginInputCredentials({email: this.props.email, password: text})}
+                      placeholder={langProvider.views.signIn.passwordPlaceholder}
+                      secureTextEntry={true}
+                      style={Layout.textInput}></TextInput>
+          </View>
+          {
+            this.state.loginError &&
+            <Text>{this.state.loginMessage}</Text>
+          }
+          <View style={styles.loginActions}>
+            <TouchableOpacity style={[styles.button, styles.buttonPrimary]}
+                              onPress={() => this.performLogin()}>
+              <Text style={styles.buttonText}>{langProvider.components.loginActions.signIn}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonLinkContainer}
+                              onPress={() => this.props.navigation.navigate('SignUp')}>
+              <Text style={styles.buttonLink}>{langProvider.components.loginActions.registerFirstTime}</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }

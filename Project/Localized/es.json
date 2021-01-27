@@ -50,6 +50,18 @@
       "chatLabel": "Mensajes"
     },
     "homeSignedIn": {
+      "validateIdTitle": "Valida tu perfil",
+      "validateIdDesc": "Para comenzar a usar los servicios, toma una foto de tu documento de identidad para validar tu perfil.",
+      "validateIdAction": "Valida tu identidad",
+      "validationInProcessTitle": "Validación en proceso",
+      "validationInProcessDesc": "Su identificación se está validando. Espere para su confirmación.",
+      "validationInProcessAction": "Chequear",
+      "addPayMethodTitle": "Agrega un método de pago",
+      "addPayMethodDesc": "Asocia una tarjeta de crédito o débito y comienza a usar Quermi",
+      "addPayMethodAction": "Agregar método de pago",
+      "activateSubscriptionTitle": "Agrega un plan",
+      "activateSubscriptionDesc": "Elige el plan que más te convenga y comienza a buscar perfiles.",
+      "activateSubscriptionAction": "Ver planes de subscripción",
       "findPartnerTitle": "Busca un acompañante",
       "findPartnerDesc": "Busca una persona que te brinde la mejor atención que necesitás",
       "findPartnerAction": "Busca un acompañante",
@@ -82,6 +94,9 @@
     "rateProfileList": {
       "title": "Perfiles disponibles para calificar"
     },
+    "checkIdPhoto": {
+      "signUpPhotoFileLabel": "Subir imagen"
+    },
     "signIn": {
       "emailPlaceholder": "Tu email",
       "passwordPlaceholder": "Tu contraseña"
@@ -107,7 +122,6 @@
       "signUpDisclaimerContinue": "Continuar",
       "signUpIDPhotoTitle": "Te pedimos la foto de tu DNI para comprobar tu identidad",
       "signUpPhotoCameraLabel": "Foto",
-      "signUpPhotoFileLabel": "Subir imagen",
       "signUpNameTitle": "¿Cómo te llamas?",
       "signUpNamePlaceholder": "Tu nombre",
       "signUpProfileTitle": "Cuéntanos quién eres",

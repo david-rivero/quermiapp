@@ -17,12 +17,10 @@ import SignUpProfile from './Steps/SignUpProfile';
 import SignUpName from './Steps/SignUpName';
 import SignUpBirthDate from './Steps/SignUpBirthDate';
 import SignUpProfilePhoto from './Steps/SignUpProfilePhoto';
-import SignUpIDPhoto from './Steps/SignUpIDPhoto';
 import SignUpCareList from './Steps/SignUpCareList';
 import SignUpCareHour from './Steps/SignUpCareHour';
 import SignUpAdditionalInfo from './Steps/SignUpAdditionalInfo';
 import SignUpUserPass from './Steps/SignUpUserPass';
-import SignUpCareReferences from './Steps/SignUpCareReferences';
 import SignUpDisclaimer from './Steps/SignUpDisclaimer';
 import { setToken } from '../../../Providers/AuthUtilProvider';
 
@@ -113,8 +111,7 @@ class SignUpCarousel extends React.Component {
   }
 
   checkIfLatestPage = () => {
-    return (this.state.indexActive === 10 && !this.state.isPatient) ||
-           (this.state.indexActive === 9 && this.state.isPatient);
+    return this.state.indexActive === 8;
   }
 
   checkIfFirstPage = () => {
@@ -182,7 +179,7 @@ class SignUpCarousel extends React.Component {
         if (!rowData.error) {
           const email = this.props.profile.account.email;
           const username = email.split('@').shift();
-          return requestDataEndpoint('profile',  undefined, 'GET', `user__email=${username}`);
+          return requestDataEndpoint('profile',  undefined, 'GET', `user__username=${username}`);
         }
         return throwError({...uData});
       }),
@@ -229,40 +226,18 @@ class SignUpCarousel extends React.Component {
                   };
                   return SignUpStepTemplate(SignUpProfilePhoto, phprops);
                 case 4:
-                  const idprops = {
-                    ...baseProps, goToCamera: this.goToCamera,
-                    nextStep: this.state.nextStep
-                  }
-                  return SignUpStepTemplate(SignUpIDPhoto, idprops);
-                case 5:
                   const clprops = {...baseProps, isPatient: this.state.isPatient};
                   return SignUpStepTemplate(SignUpCareList, clprops);
-                case 6:
+                case 5:
                   const chprops = {...baseProps, isPatient: this.state.isPatient};
                   return SignUpStepTemplate(SignUpCareHour, chprops);
-                case 7:
-                  if (!this.state.isPatient) {
-                    const refprops = {...baseProps, checkedStep: this.state.nextStep};
-                    return SignUpStepTemplate(SignUpCareReferences, refprops);
-                  }
+                case 6:
                   return SignUpStepTemplate(SignUpAdditionalInfo, baseProps);
-                case 8:
-                  if (!this.state.isPatient) {
-                    return SignUpStepTemplate(SignUpAdditionalInfo, baseProps);
-                  }
+                case 7:
                   return SignUpStepTemplate(SignUpUserPass, baseProps);
-                case 9:
-                  if (!this.state.isPatient) {
-                    return SignUpStepTemplate(SignUpUserPass, baseProps);
-                  }
-                  const sdprops = {...baseProps, checkFinalStep: this.signUpToHome };
-                  return SignUpStepTemplate(SignUpDisclaimer, sdprops);
-                case 10:
-                  if (!this.state.isPatient) {
-                    const sd_props = {...baseProps, checkFinalStep: this.signUpToHome };
-                    return SignUpStepTemplate(SignUpDisclaimer, sd_props);
-                  }
-                  break;
+                case 8:
+                  const sd_props = {...baseProps, checkFinalStep: this.signUpToHome };
+                  return SignUpStepTemplate(SignUpDisclaimer, sd_props);
               }
             })()
           }
@@ -270,15 +245,13 @@ class SignUpCarousel extends React.Component {
         <View style={styles.footerSignUp}>
           {
             this.state.indexActive > 0 &&
-            ((this.state.indexActive < 10 && !this.state.isPatient) ||
-              (this.state.indexActive < 9 && this.state.isPatient)) &&
+            this.state.indexActive < 8 &&
             <SignUpCarouselIndex style={styles.carousel} isPatient={this.state.isPatient}
               indexActive={this.state.indexActive} />
           }
           <View style={styles.actionSection}>
             {
-              ((this.state.indexActive < 10 && !this.state.isPatient) ||
-              (this.state.indexActive < 9 && this.state.isPatient)) && 
+              this.state.indexActive < 8 && 
               <TouchableOpacity style={styles.buttonNext}
                                 onPress={() => this.updateCarouselIndex('decrease')}>
                 <Image style={[styles.nextCaretLogo, styles.prevCaretLogo]}
@@ -287,8 +260,7 @@ class SignUpCarousel extends React.Component {
               </TouchableOpacity>
             }
             {
-              ((this.state.indexActive < 10 && !this.state.isPatient) ||
-              (this.state.indexActive < 9 && this.state.isPatient)) && 
+              this.state.indexActive < 8 && 
               <View>
                 <TouchableOpacity disabled={!this.state.nextStep}
                                   style={[styles.buttonNext, !this.state.nextStep ? styles.nextDisabledArea : null]}

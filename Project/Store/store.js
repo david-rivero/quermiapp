@@ -48,7 +48,8 @@ let initialState = {
     },
     paymentsLinked: [],
     activeSubscription: {},
-    customerPaymentId: null
+    customerPaymentId: null,
+    verifiedProfile: false
   },
   categories: {
     careListServices: {

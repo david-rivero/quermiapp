@@ -24,6 +24,13 @@ import Header from '../Components/Header';
 
 const caretLogoWhite = require('../../Assets/caret-right-white.png');
 const caretLogo = require('../../Assets/caret-right.png');
+const nurseWhite = require('../../Assets/nurse-white.png');
+const speechBubble = require('../../Assets/speech-bubble.png');
+const heartLogo = require('../../Assets/heart.png');
+const paymentsLogo = require('../../Assets/images/credit-card.png');
+const paymentsLogoWhite = require('../../Assets/images/credit-card-white.png');
+const docIdLogo = require('../../Assets/images/id-card-white.png');
+
 const styles = StyleSheet.create({
   superContainer: {
     flex: 1,
@@ -99,7 +106,8 @@ class HomeSignedIn extends React.Component {
           this.props.profile.profileRole, result.contracts, result.profiles);
         store.dispatch({
           type: LOAD_PROFILES_TO_SEARCH,
-          payload: profilesLoaded.map(profile => ProfileSerializer.fromAPIToView(profile))
+          payload: profilesLoaded.filter(prof => prof.verified_profile)
+            .map(profile => ProfileSerializer.fromAPIToView(profile))
         });
       }
     });
@@ -222,6 +230,102 @@ class HomeSignedIn extends React.Component {
     };
     const profilesLoadedWithContract = this.props.profilesLoaded.filter(
       profile => profile.contractWithCurrentProfile && ['CADD', 'CACT'].find(i => i === profile.contractWithCurrentProfile.type));
+    
+    const objModelInfo = {
+      logo: null,
+      title: '',
+      desc: '',
+      actionFn: () => {},
+      actionText: '',
+      actionLogo: null 
+    };
+    const dataRows = [];
+
+    const PROFILE_IS_VERIFIED = (
+      this.props.profile.pictsOnRegister.documentID && this.props.profile.verifiedProfile);
+    const PROFILE_DOC_SET_NO_VERIFIED = (
+      this.props.profile.pictsOnRegister.documentID && !this.props.profile.verifiedProfile);
+    const PROFILE_HAS_LINKED_PAYMENTS = this.props.profile.paymentsLinked.length;
+    const PROFILE_HAS_ACTIVE_SUBSCRIPTION = this.props.profile.activeSubscription.id;
+    const PROFILE_HAS_ACTIVE_CONTRACTS = profilesLoadedWithContract.length;
+
+    if (PROFILE_IS_VERIFIED && PROFILE_HAS_LINKED_PAYMENTS && PROFILE_HAS_ACTIVE_SUBSCRIPTION) {
+      dataRows.push({
+        ...objModelInfo,
+        logo: nurseWhite,
+        title: langProvider.views.homeSignedIn.findPartnerTitle,
+        desc: langProvider.views.homeSignedIn.findPartnerDesc,
+        actionFn: () => { this.props.navigation.navigate('SearchProfile'); },
+        actionText: langProvider.views.homeSignedIn.findPartnerAction,
+        actionLogo: caretLogoWhite
+      });
+
+      if (PROFILE_HAS_ACTIVE_CONTRACTS) {
+        dataRows.push({
+          ...objModelInfo,
+          logo: speechBubble,
+          title: langProvider.views.homeSignedIn.scheduleActivitiesTitle,
+          desc: langProvider.views.homeSignedIn.scheduleActivitiesDesc,
+          actionFn: () => { this.props.navigation.navigate('ChatList'); },
+          actionText: langProvider.views.homeSignedIn.scheduleActivitiesAction,
+          actionLogo: caretLogo
+        });
+        dataRows.push({
+          ...objModelInfo,
+          logo: heartLogo,
+          title: langProvider.views.homeSignedIn.rateProfileTitle,
+          desc: langProvider.views.homeSignedIn.rateProfileDesc,
+          actionFn: () => { this.props.navigation.navigate('RateProfileList') },
+          actionText: langProvider.views.homeSignedIn.rateProfileAction,
+          actionLogo: caretLogo
+        })
+      }
+    } else {
+      if (!PROFILE_IS_VERIFIED && !PROFILE_DOC_SET_NO_VERIFIED) {
+        dataRows.push({
+          ...objModelInfo,
+          logo: docIdLogo,
+          title: langProvider.views.homeSignedIn.validateIdTitle,
+          desc: langProvider.views.homeSignedIn.validateIdDesc,
+          actionFn: () => { this.props.navigation.navigate('ValidateProfile'); },
+          actionText: langProvider.views.homeSignedIn.validateIdAction,
+          actionLogo: caretLogoWhite
+        });
+      }
+      if (PROFILE_DOC_SET_NO_VERIFIED) {
+        dataRows.push({
+          ...objModelInfo,
+          logo: docIdLogo,
+          title: langProvider.views.homeSignedIn.validationInProcessTitle,
+          desc: langProvider.views.homeSignedIn.validationInProcessDesc,
+          actionFn: () => { this.props.navigation.navigate('ValidateProfile'); },
+          actionText: langProvider.views.homeSignedIn.validationInProcessAction,
+          actionLogo: caretLogoWhite
+        });
+      }
+      if (!PROFILE_HAS_LINKED_PAYMENTS) {
+        dataRows.push({
+          ...objModelInfo,
+          logo: dataRows.length ? paymentsLogo : paymentsLogoWhite,
+          title: langProvider.views.homeSignedIn.addPayMethodTitle,
+          desc: langProvider.views.homeSignedIn.addPayMethodDesc,
+          actionFn: () => { this.props.navigation.navigate('Payments', { from: 'home-signed' }); },
+          actionText: langProvider.views.homeSignedIn.addPayMethodAction,
+          actionLogo: dataRows.length ? caretLogo : caretLogoWhite
+        });
+      }
+      if (!PROFILE_HAS_ACTIVE_SUBSCRIPTION) {
+        dataRows.push({
+          ...objModelInfo,
+          logo: dataRows.length ? paymentsLogo : paymentsLogoWhite,
+          title: langProvider.views.homeSignedIn.activateSubscriptionTitle,
+          desc: langProvider.views.homeSignedIn.activateSubscriptionDesc,
+          actionFn: () => { this.props.navigation.navigate('Billing', { from: 'home-signed' }); },
+          actionText: langProvider.views.homeSignedIn.activateSubscriptionAction,
+          actionLogo: dataRows.length ? caretLogo : caretLogoWhite
+        });
+      }
+    }
 
     return (
       <View style={[styles.superContainer]}>
@@ -229,45 +333,36 @@ class HomeSignedIn extends React.Component {
           <Header onOpenMenu={this.openMenu} isCarePerson={this.props.profile.profileRole === 'CARE_PROVIDER'} />
           <View style={[styles.mainActionContent, this.props.profile.profileRole === 'CARE_PROVIDER' ? styles.mainActionCareProvider: null]}>
             <View style={styles.homeTitle}>
-              <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/nurse-white.png')} />
-              <Text style={[styles.mainActionText, Layout.title]}>{langProvider.views.homeSignedIn.findPartnerTitle}</Text>
+              <Image style={styles.homeTitleIcon} resizeMode='contain' source={dataRows[0].logo} />
+              <Text style={[styles.mainActionText, Layout.title]}>{dataRows[0].title}</Text>
             </View>
-            <Text style={styles.mainActionText}>{langProvider.views.homeSignedIn.findPartnerDesc}</Text>
+            <Text style={styles.mainActionText}>{dataRows[0].desc}</Text>
             <TouchableOpacity style={styles.homeRedirectAction}
-                              onPress={() => this.props.navigation.navigate('SearchProfile')}>
-              <Text style={styles.mainActionText}>{langProvider.views.homeSignedIn.findPartnerAction}</Text>
-              <Image style={styles.homeRedirectionIcon} source={caretLogoWhite} resizeMode='contain' />
+                              onPress={dataRows[0].actionFn}>
+              <Text style={styles.mainActionText}>{dataRows[0].actionText}</Text>
+              <Image style={styles.homeRedirectionIcon} source={dataRows[0].actionLogo} resizeMode='contain' />
             </TouchableOpacity>
           </View>
-          {
-            profilesLoadedWithContract.length > 0 && 
-            <View style={styles.homeViewContent}>
-              <View style={styles.homeSubView}>
-                <View style={styles.homeTitle}>
-                  <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/speech-bubble.png')} />
-                  <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.scheduleActivitiesTitle}</Text>
-                </View>
-                <Text>{langProvider.views.homeSignedIn.scheduleActivitiesDesc}</Text>
-                <TouchableOpacity style={styles.homeRedirectAction}
-                                  onPress={() => this.props.navigation.navigate('ChatList')}>
-                  <Text>{langProvider.views.homeSignedIn.scheduleActivitiesAction}</Text>
-                  <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.homeSubView}>
-                <View style={styles.homeTitle}>
-                  <Image style={styles.homeTitleIcon} resizeMode='contain' source={require('../../Assets/heart.png')} />
-                  <Text style={[Layout.title]}>{langProvider.views.homeSignedIn.rateProfileTitle}</Text>
-                </View>
-                <Text>{langProvider.views.homeSignedIn.rateProfileDesc}</Text>
-                <TouchableOpacity style={styles.homeRedirectAction}
-                                  onPress={() => this.props.navigation.navigate('RateProfileList')}>
-                  <Text>{langProvider.views.homeSignedIn.rateProfileAction}</Text>
-                  <Image style={styles.homeRedirectionIcon} source={caretLogo} resizeMode='contain' />
-                </TouchableOpacity>
-              </View>
-            </View>
-          }
+          <View style={styles.homeViewContent}>
+            {
+              dataRows.slice(1, dataRows.length).map((dataRow, index) => {
+                return (
+                  <View style={styles.homeSubView} key={`home_sub_${index}`}>
+                    <View style={styles.homeTitle}>
+                      <Image style={styles.homeTitleIcon} resizeMode='contain' source={dataRow.logo} />
+                      <Text style={[Layout.title]}>{dataRow.title}</Text>
+                    </View>
+                    <Text>{dataRow.desc}</Text>
+                    <TouchableOpacity style={styles.homeRedirectAction}
+                                      onPress={dataRow.actionFn}>
+                      <Text>{dataRow.actionText}</Text>
+                      <Image style={styles.homeRedirectionIcon} source={dataRow.actionLogo} resizeMode='contain' />
+                    </TouchableOpacity>
+                  </View>
+                );
+              })
+            }
+          </View>
         </View>
         {
           this.props.menuOpened && 

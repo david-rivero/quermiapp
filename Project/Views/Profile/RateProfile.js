@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     transform: [{rotate: '180deg'}]
   }
 });
+const caretLogo = require('../../Assets/caret-right.png');
 
 class RateProfile extends React.Component {
   redirectToHome = () => {
@@ -133,7 +134,6 @@ class RateProfile extends React.Component {
 
   render() {
     const langProvider = LanguageProvider(this.props.language);
-    const caretLogo = require('../../Assets/caret-right.png');
     const profile = this.props.route.params.profile;
 
     return (

@@ -26,6 +26,7 @@ import BaseConfiguration from './Project/Views/Configuration/BaseConfiguration';
 import Camera from './Project/Views/Home/Camera';
 import Payments from './Project/Views/Configuration/Payments';
 import Billing from './Project/Views/Configuration/Billing';
+import CheckIDPhoto from './Project/Views/Configuration/CheckIDPhoto';
 
 const NOTIFICATION_CLOSE_INTERVAL = 5000;
 const iconAppSrc = require('./Project/Assets/nurse-pink-48.png');
@@ -56,6 +57,7 @@ export default function App() {
               <Stack.Screen name="Camera" component={Camera} />
               <Stack.Screen name="Payments" component={Payments} />
               <Stack.Screen name="Billing" component={Billing} />
+              <Stack.Screen name="ValidateProfile" component={CheckIDPhoto} />
             </Stack.Navigator>
           </NavigationContainer>
         </PaperProvider>
