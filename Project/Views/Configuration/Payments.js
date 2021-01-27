@@ -175,7 +175,15 @@ class Payments extends React.Component {
   }
 
   backToSettings = () => {
-    this.props.navigation.navigate('Settings');
+    switch(this.props.route.params.from) {
+      case 'home-signed':
+        this.props.navigation.navigate('HomeSignedIn');
+        break;
+      case 'base-configuration':
+      default:
+        this.props.navigation.navigate('Settings');
+        break;
+    }
   }
 
   render() {

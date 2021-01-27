@@ -9,7 +9,8 @@ import { Colors } from '../../Theme/Colors';
 
 import { LOG_OUT_PROFILE, INVALIDATE_TOKEN } from '../../Store/Actions/UserAuth';
 import { LOAD_PROFILES_TO_SEARCH } from '../../Store/Actions/ProfilesToSearch';
-import { TOGGLE_MENU_OPEN, LOAD_LINKED_PAYMENTS } from '../../Store/Actions/DetailProfile';
+import { TOGGLE_MENU_OPEN, LOAD_LINKED_PAYMENTS, SET_ACTIVE_SUBSCRIPTIONS } from '../../Store/Actions/DetailProfile';
+import { SET_PAYMENT_OPTIONS } from '../../Store/Actions/Payments';
 
 import LanguageProvider from '../../Providers/LanguageProvider';
 import { mapContractsToProfiles } from '../../Providers/StoreUtilProvider';
@@ -104,6 +105,29 @@ class HomeSignedIn extends React.Component {
     });
   }
 
+  _retrieveSubscriptionInfo = () => {
+    const headers = {
+      ...DEFAULT_HEADERS,
+      'Authorization': `Bearer ${this.props.token}`
+    };
+    requestDataEndpoint('subscriptionPrices', undefined, 'GET', '', [], headers)
+      .subscribe(data => {
+        store.dispatch({
+          type: SET_PAYMENT_OPTIONS,
+          payload: data
+        });
+      });
+
+    requestDataEndpoint(
+      'customerSubscriptions', undefined, 'GET', `profile=${this.props.profile.username}`, [], headers)
+      .subscribe(data => {
+        store.dispatch({
+          type: SET_ACTIVE_SUBSCRIPTIONS,
+          payload: data
+        });
+      });
+  }
+
   fakeBackPress = () => {
     return true;
   }
@@ -114,6 +138,7 @@ class HomeSignedIn extends React.Component {
         'hardwareBackPress', this.fakeBackPress);
       // TODO: Replace this call to use only from SearchProfiles focus
       this._getContracts();
+      this._retrieveSubscriptionInfo();
     });
     this.props.navigation.addListener('blur', () => {
       BackHandler.removeEventListener(

@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Checkbox } from 'react-native-paper';
-
 import { concatMap } from 'rxjs/operators';
 
 import store from '../../Store/store';
 import { SET_ACTIVE_SUBSCRIPTIONS } from '../../Store/Actions/DetailProfile';
 
+import LanguageProvider from '../../Providers/LanguageProvider';
 import { parseCurrency } from '../../Providers/FormatStringProvider';
 import { formatDatefromUnixTime } from '../../Providers/TimeUtilsProvider';
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
@@ -15,6 +15,7 @@ import { requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointSe
 import Header from '../Components/Header';
 import { Spinner } from '../Components/Spinner';
 
+const caretLogo = require('../../Assets/caret-right.png');
 const styles = StyleSheet.create({
   billingView: {
     flex: 1,
@@ -76,6 +77,17 @@ const styles = StyleSheet.create({
   },
   activeSubscriptionRowLabel: {
     flexDirection: 'row'
+  },
+  backActionStyle: {
+    marginTop: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10
+  },
+  backActionIcon: {
+    marginRight: 5,
+    width: 10,
+    transform: [{rotate: '180deg'}]
   }
 });
 
@@ -183,7 +195,21 @@ class Billing extends React.Component {
     });
   }
 
+  backToSettings = () => {
+    switch(this.props.route.params.from) {
+      case 'home-signed':
+        this.props.navigation.navigate('HomeSignedIn');
+        break;
+      case 'base-configuration':
+      default:
+        this.props.navigation.navigate('Settings');
+        break;
+    }
+  }
+
   render() {
+    const langProvider = LanguageProvider(this.props.language);
+
     return (
       <View style={styles.billingView}>
         <Header></Header>
@@ -268,6 +294,10 @@ class Billing extends React.Component {
           this.state.loading && 
           <Spinner />
         }
+        <TouchableOpacity style={styles.backActionStyle} onPress={() => this.backToSettings()}>
+          <Image style={styles.backActionIcon} source={caretLogo} resizeMode='contain' />
+          <Text>{langProvider.components.backButton.backLabel}</Text>
+        </TouchableOpacity>
       </View>
     );
   }

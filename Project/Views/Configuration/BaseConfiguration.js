@@ -1,11 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import store from '../../Store/store';
-
-import { requestDataEndpoint, DEFAULT_HEADERS } from '../../Providers/EndpointServiceProvider';
-import { SET_ACTIVE_SUBSCRIPTIONS } from '../../Store/Actions/DetailProfile';
-import { SET_PAYMENT_OPTIONS } from '../../Store/Actions/Payments';
 
 import Header from '../Components/Header';
 
@@ -39,39 +34,16 @@ const paymentsLogo = require('../../Assets/images/credit-card.png');
 const configLogo = require('../../Assets/images/settings.png');
 
 class BaseConfiguration extends React.Component {
-  componentDidMount() {
-    const headers = {
-      ...DEFAULT_HEADERS,
-      'Authorization': `Bearer ${this.props.token}`
-    };
-    requestDataEndpoint('subscriptionPrices', undefined, 'GET', '', [], headers)
-      .subscribe(data => {
-        store.dispatch({
-          type: SET_PAYMENT_OPTIONS,
-          payload: data
-        });
-      });
-
-    requestDataEndpoint(
-      'customerSubscriptions', undefined, 'GET', `profile=${this.props.myProfile.username}`, [], headers)
-      .subscribe(data => {
-        store.dispatch({
-          type: SET_ACTIVE_SUBSCRIPTIONS,
-          payload: data
-        });
-      });
-  }
-
   backToHome = () => {
     this.props.navigation.navigate('HomeSignedIn');
   }
 
   goPayments = () => {
-    this.props.navigation.navigate('Payments');
+    this.props.navigation.navigate('Payments', { from: 'base-configuration' });
   }
 
   goBilling = () => {
-    this.props.navigation.navigate('Billing');
+    this.props.navigation.navigate('Billing', { from: 'base-configuration' });
   }
 
   render() {
