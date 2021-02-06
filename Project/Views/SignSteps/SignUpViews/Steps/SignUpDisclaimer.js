@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, Button } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, Button, TouchableOpacity } from 'react-native';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import { Checkbox } from 'react-native-paper';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import FilePickerManager from 'react-native-file-picker';
 import * as RNFS from 'react-native-fs';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
@@ -10,7 +10,6 @@ import store from '../../../../Store/store';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import styles from './Styles/SignUpProfilePhotoStyles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 const imageCamera = require('../../../../Assets/images/photo-camera.png');
