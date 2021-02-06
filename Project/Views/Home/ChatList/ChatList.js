@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, TouchableOpacity, Text, Image } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
 
 import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 
