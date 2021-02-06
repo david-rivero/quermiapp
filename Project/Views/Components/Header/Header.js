@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 
 import styles from './HeaderStyles';
 
-const logoSrc = require('../../../Assets/nurse-white.png');
+const logoSrc = require('../../../Assets/images/nurse-white.png');
 const menuIcon = require('../../../Assets/images/burger-menu.png');
 
 export default function Header (props) {

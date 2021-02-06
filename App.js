@@ -29,7 +29,7 @@ import Billing from './Project/Views/Configuration/Billing/Billing';
 import CheckIDPhoto from './Project/Views/Configuration/CheckIDPhoto/CheckIDPhoto';
 
 const NOTIFICATION_CLOSE_INTERVAL = 5000;
-const iconAppSrc = require('./Project/Assets/nurse-pink-48.png');
+const iconAppSrc = require('./Project/Assets/images/nurse-pink-48.png');
 const Stack = createStackNavigator();
 const screenOptions = {
   headerShown: false

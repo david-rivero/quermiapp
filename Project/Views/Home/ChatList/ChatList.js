@@ -20,7 +20,7 @@ class ChatList extends React.Component {
 
   render() {
     const langProvider = LanguageProvider(this.props.language);
-    const caretLogo = require('../../../Assets/caret-right.png');
+    const caretLogo = require('../../../Assets/images/caret-right.png');
 
     return (
       <View style={styles.container}>

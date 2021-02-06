@@ -22,11 +22,11 @@ import Sidebar from '../../Components/Sidebar/Sidebar';
 import Header from '../../Components/Header/Header';
 import styles from './HomeSignedInStyles';
 
-const caretLogoWhite = require('../../../Assets/caret-right-white.png');
-const caretLogo = require('../../../Assets/caret-right.png');
-const nurseWhite = require('../../../Assets/nurse-white.png');
-const speechBubble = require('../../../Assets/speech-bubble.png');
-const heartLogo = require('../../../Assets/heart.png');
+const caretLogoWhite = require('../../../Assets/images/caret-right-white.png');
+const caretLogo = require('../../../Assets/images/caret-right.png');
+const nurseWhite = require('../../../Assets/images/nurse-white.png');
+const speechBubble = require('../../../Assets/images/speech-bubble.png');
+const heartLogo = require('../../../Assets/images/heart.png');
 const paymentsLogo = require('../../../Assets/images/credit-card.png');
 const paymentsLogoWhite = require('../../../Assets/images/credit-card-white.png');
 const docIdLogo = require('../../../Assets/images/id-card-white.png');

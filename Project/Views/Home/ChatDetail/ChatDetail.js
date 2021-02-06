@@ -12,8 +12,8 @@ import { requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/Endpoin
 import styles from './ChatDetailStyles';
 
 const serverURI = ConfigProvider().serverUrl;
-const logoCaret = require('../../../Assets/caret-right.png');
-const sendButton = require('../../../Assets/send-button.png');
+const logoCaret = require('../../../Assets/images/caret-right.png');
+const sendButton = require('../../../Assets/images/send-button.png');
 
 class ChatDetail extends React.Component {
   constructor(props){

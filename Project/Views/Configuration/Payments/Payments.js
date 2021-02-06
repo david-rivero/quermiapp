@@ -19,8 +19,8 @@ import styles from './PaymentsStyles';
 
 const visaLogo = require('../../../Assets/images/visa.png');
 const mastercardLogo = require('../../../Assets/images/mastercard_1x.png');
-const removeLogo = require('../../../Assets/close-cross.png');
-const caretLogo = require('../../../Assets/caret-right.png');
+const removeLogo = require('../../../Assets/images/close-cross.png');
+const caretLogo = require('../../../Assets/images/caret-right.png');
 
 class Payments extends React.Component {
   state = {

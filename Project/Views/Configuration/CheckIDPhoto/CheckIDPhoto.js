@@ -19,8 +19,8 @@ import { requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/Endpoin
 import styles from './CheckIDPhotoStyles';
 
 const imageCamera = require('../../../Assets/images/photo-camera.png');
-const imagePhoto = require('../../../Assets/picture.png');
-const caretLogo = require('../../../Assets/caret-right.png');
+const imagePhoto = require('../../../Assets/images/picture.png');
+const caretLogo = require('../../../Assets/images/caret-right.png');
 const idDocLogo = require('../../../Assets/images/id-card.png');
 
 

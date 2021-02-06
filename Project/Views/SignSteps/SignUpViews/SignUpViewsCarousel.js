@@ -26,7 +26,7 @@ import { setToken } from '../../../Providers/AuthUtilProvider';
 
 import { signupViewsCarouselStyles as styles } from './SignUpViewsStyles';
 
-const nextCaretLogo = require('../../../Assets/caret-right.png');
+const nextCaretLogo = require('../../../Assets/images/caret-right.png');
 
 function SignUpStepTemplate (SignUpStepWrapper, basedProps={}) {
   const props = {...this.props, ...basedProps};

@@ -16,7 +16,7 @@ import Header from '../../Components/Header/Header';
 import styles from './BillingStyles';
 import { Spinner } from '../../Components/Spinner/Spinner';
 
-const caretLogo = require('../../../Assets/caret-right.png');
+const caretLogo = require('../../../Assets/images/caret-right.png');
 
 
 class Billing extends React.Component {

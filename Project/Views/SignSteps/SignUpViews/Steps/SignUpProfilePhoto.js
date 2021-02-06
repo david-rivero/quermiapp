@@ -14,7 +14,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 const imageCamera = require('../../../../Assets/images/photo-camera.png');
-const imagePhoto = require('../../../../Assets/picture.png');
+const imagePhoto = require('../../../../Assets/images/picture.png');
 
 class SignUpProfilePhoto extends SignUpBaseStep {
   state = {

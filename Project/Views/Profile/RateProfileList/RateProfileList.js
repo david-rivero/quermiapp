@@ -8,7 +8,7 @@ import { AuthViewCheckProvider } from '../../Components/AuthViewCheck/AuthViewCh
 import Header from '../../Components/Header/Header';
 import styles from './RateProfileListStyles';
 
-const caretLogo = require('../../../Assets/caret-right.png');
+const caretLogo = require('../../../Assets/images/caret-right.png');
 
 
 class RateProfileList extends React.Component {

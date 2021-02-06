@@ -13,7 +13,7 @@ import styles from './RateProfileStyles';
 import { AuthViewCheckProvider } from '../../Components/AuthViewCheck/AuthViewCheck';
 import Header from '../../Components/Header/Header';
 
-const caretLogo = require('../../../Assets/caret-right.png');
+const caretLogo = require('../../../Assets/images/caret-right.png');
 
 class RateProfile extends React.Component {
   redirectToHome = () => {
