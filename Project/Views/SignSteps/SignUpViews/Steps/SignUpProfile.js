@@ -6,7 +6,7 @@ import store from '../../../../Store/store';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
-import './Styles/SignUpProfileStyles';
+import styles from './Styles/SignUpProfileStyles';
 import { RadioButton } from 'react-native-paper';
 
 

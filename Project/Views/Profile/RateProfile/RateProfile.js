@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Image, Text, Button, ScrollView } from 'react-native';
+import { View, Image, Text, Button, ScrollView, TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { withInAppNotification } from 'react-native-in-app-notification';
-import { TextInput } from 'react-native-paper';
 import { SET_RATE_INFO_PROFILE, RESET_RATE_INFO_PROFILE } from '../../../Store/Actions/DetailProfile';
 import store from '../../../Store/store';
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/EndpointServiceProvider';

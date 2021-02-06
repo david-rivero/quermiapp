@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, Keyboard } from 'react-native';
+import { View, Text, Keyboard, TextInput } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { TextInput } from 'react-native-paper';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import { formatTime, getDateTimeFromStr } from '../../../../Providers/TimeUtilsProvider'; 

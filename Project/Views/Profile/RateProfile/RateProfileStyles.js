@@ -49,7 +49,9 @@ const styles = StyleSheet.create({
   },
   textAreaComment: {
     backgroundColor: 'transparent',
-    marginVertical: 10
+    marginVertical: 10,
+    borderBottomColor: '#A2A2A2',
+    borderBottomWidth: 1
   },
   rateSection: {
     marginVertical: 15

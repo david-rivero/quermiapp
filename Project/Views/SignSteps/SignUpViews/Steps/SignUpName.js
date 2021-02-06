@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { View, Text, TextInput } from 'react-native';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import LanguageProvider from '../../../../Providers/LanguageProvider';

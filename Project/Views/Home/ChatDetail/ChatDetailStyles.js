@@ -55,7 +55,9 @@ const styles = StyleSheet.create({
   },
   chatInput: {
     height: 48,
-    borderColor: 'black'
+    borderBottomColor: '#A1A1A1',
+    borderBottomWidth: 1,
+    borderStyle: 'solid'
   },
   chatSendIconContainer: {
     position: 'absolute',

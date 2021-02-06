@@ -12,8 +12,10 @@ const styles = StyleSheet.create({
   timeInput: {
     margin: 12,
     flex: 1,
-    paddingBottom: 0,
-    backgroundColor: 'transparent'
+    paddingBottom: 10,
+    backgroundColor: 'transparent',
+    borderBottomColor: '#A2A2A2',
+    borderBottomWidth: 1
   }
 });
 

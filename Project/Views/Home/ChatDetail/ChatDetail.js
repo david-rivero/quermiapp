@@ -1,8 +1,7 @@
 import React from 'react';
 import { getUnixTime } from 'date-fns';
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { connect } from 'react-redux';
-import { TextInput } from 'react-native-paper';
 
 import { AuthViewCheckProvider } from '../../Components/AuthViewCheck/AuthViewCheck';
 import Header from '../../Components/Header/Header';
