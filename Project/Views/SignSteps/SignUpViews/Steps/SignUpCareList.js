@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, ScrollView, TextInput } from 'react-native';
+import { View, Text, ScrollView, TextInput } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import { SIGN_UP_STEP_PROFILE_SERVICES } from '../../../../Store/Actions/Categories';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
@@ -8,24 +8,7 @@ import store from '../../../../Store/store';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
-  textProfileTitle: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase'
-  },
-  checkItem: {
-    color: 'black'
-  },
-  otherOptInput: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1
-  }
-});
+import styles from './Styles/SignUpCareListStyles';
 
 
 class SignUpCareList extends SignUpBaseStep {

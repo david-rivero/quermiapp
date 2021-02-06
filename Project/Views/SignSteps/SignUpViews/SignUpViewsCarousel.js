@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { of, throwError } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 
-import { StyleSheet, View, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
 import SignUpCarouselIndex from './SignUpCarouselIndex';
 import { UPDATE_MY_PROFILE } from '../../../Store/Actions/DetailProfile';
 import { SPANISH_LANG } from '../../../Store/Reducers/LoadLanguage';
@@ -24,52 +24,8 @@ import SignUpUserPass from './Steps/SignUpUserPass';
 import SignUpDisclaimer from './Steps/SignUpDisclaimer';
 import { setToken } from '../../../Providers/AuthUtilProvider';
 
+import { signupViewsCarouselStyles as styles } from './SignUpViewsStyles';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    margin: 5
-  },
-  subContainer: {
-    flex: 1,
-    margin: 5
-  },
-  signUpView: {
-    flex: 1,
-    justifyContent: 'center'
-  },
-  nextDisabledArea: {
-    opacity: 0.5
-  },
-  footerSignUp: {
-    backgroundColor: 'white',
-    paddingTop: 5
-  },
-  buttonNext: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    color: 'black',
-    marginRight: 10
-  },
-  actionSection: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  nextCaretLogo: {
-    width: 7,
-    height: 10,
-    marginLeft: 8
-  },
-  prevCaretLogo: {
-    marginLeft: 0,
-    marginRight: 8,
-    transform: [{rotate: '180deg'}]
-  },
-  carouselCaretText: {
-    fontSize: 16
-  }
-});
 const nextCaretLogo = require('../../../Assets/caret-right.png');
 
 function SignUpStepTemplate (SignUpStepWrapper, basedProps={}) {

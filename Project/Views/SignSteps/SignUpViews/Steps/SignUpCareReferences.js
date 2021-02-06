@@ -1,21 +1,13 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import { Layout } from '../../../../Theme/Layout';
+import styles from './Styles/SignUpCareReferencesStyles';
 
-const styles = StyleSheet.create({
-  textProfileTitle: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase'
-  },
-  referencesForm: {
-    marginBottom: 30
-  }
-});
 
 class SignUpCareReferences extends SignUpBaseStep {
   render() {

@@ -1,43 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, Text, Button } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import { Checkbox } from 'react-native-paper';
 
 import SignUpBaseStep from './SignUpBaseStep';
+import styles from './Styles/SignUpDisclaimerStyles';
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-end'
-  },
-  textContainer: {
-    flex: 1,
-    marginBottom: '100%'
-  },
-  title: {
-    textTransform: 'uppercase',
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 20
-  },
-  checkRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: -25,
-    marginBottom: 10
-  },
-  declarationText: {
-  
-  },
-  checkboxDisclaimerText: {
-    flex: 1
-  }
-});
 
 class SignUpDisclaimer extends SignUpBaseStep {
   state = {

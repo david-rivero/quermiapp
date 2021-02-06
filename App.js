@@ -11,22 +11,22 @@ import { Provider } from 'react-redux';
 import store from './Project/Store/store';
 
 /**** Views ****/
-import HomeGuest from './Project/Views/Home/HomeGuest';
-import SignIn from './Project/Views/SignSteps/SignIn';
-import SignUp from './Project/Views/SignSteps/SignUp';
-import HomeSignedIn from './Project/Views/Home/HomeSignedIn';
-import SearchProfile from './Project/Views/Profile/SearchProfile';
-import DetailProfileOnSearch from './Project/Views/Profile/DetailProfileOnSearch';
-import Match from './Project/Views/Profile/Match';
-import ChatList from './Project/Views/Home/ChatList';
-import ChatDetail from './Project/Views/Home/ChatDetail';
-import RateProfileList from './Project/Views/Profile/RateProfileList';
-import RateProfile from './Project/Views/Profile/RateProfile';
-import BaseConfiguration from './Project/Views/Configuration/BaseConfiguration';
-import Camera from './Project/Views/Home/Camera';
-import Payments from './Project/Views/Configuration/Payments';
-import Billing from './Project/Views/Configuration/Billing';
-import CheckIDPhoto from './Project/Views/Configuration/CheckIDPhoto';
+import HomeGuest from './Project/Views/Home/HomeGuest/HomeGuest';
+import SignIn from './Project/Views/SignSteps/SignIn/SignIn';
+import SignUp from './Project/Views/SignSteps/SignUp/SignUp';
+import HomeSignedIn from './Project/Views/Home/HomeSignedIn/HomeSignedIn';
+import SearchProfile from './Project/Views/Profile/SearchProfile/SearchProfile';
+import DetailProfileOnSearch from './Project/Views/Profile/DetailProfileOnSearch/DetailProfileOnSearch';
+import Match from './Project/Views/Profile/Match/Match';
+import ChatList from './Project/Views/Home/ChatList/ChatList';
+import ChatDetail from './Project/Views/Home/ChatDetail/ChatDetail';
+import RateProfileList from './Project/Views/Profile/RateProfileList/RateProfileList';
+import RateProfile from './Project/Views/Profile/RateProfile/RateProfile';
+import BaseConfiguration from './Project/Views/Configuration/BaseConfiguration/BaseConfiguration';
+import Camera from './Project/Views/Home/Camera/Camera';
+import Payments from './Project/Views/Configuration/Payments/Payments';
+import Billing from './Project/Views/Configuration/Billing/Billing';
+import CheckIDPhoto from './Project/Views/Configuration/CheckIDPhoto/CheckIDPhoto';
 
 const NOTIFICATION_CLOSE_INTERVAL = 5000;
 const iconAppSrc = require('./Project/Assets/nurse-pink-48.png');

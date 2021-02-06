@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import FilePickerManager from 'react-native-file-picker';
 import * as RNFS from 'react-native-fs';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
@@ -9,40 +9,12 @@ import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAut
 import store from '../../../../Store/store';
 
 import SignUpBaseStep from './SignUpBaseStep';
+import styles from './Styles/SignUpProfilePhotoStyles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 
 const imageCamera = require('../../../../Assets/images/photo-camera.png');
 const imagePhoto = require('../../../../Assets/picture.png');
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    paddingTop: 10
-  },
-  textProfileTitle: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase'
-  },
-  inputContent: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 25
-  },
-  photoInput: {
-    width: 135,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  img: {
-    width: 50
-  },
-  inputEnabled: {
-    borderWidth: 3,
-    borderColor: '#F28998',
-    padding: 5
-  }
-});
 
 class SignUpProfilePhoto extends SignUpBaseStep {
   state = {

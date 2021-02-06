@@ -1,23 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
+import styles from './Styles/SignUpUserPassStyles';
 import { Layout } from '../../../../Theme/Layout';
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%'
-  },
-  textProfileTitle: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase'
-  }
-});
 
 class SignUpUserPass extends SignUpBaseStep {
   setUserPass = (field, value) => {

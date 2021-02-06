@@ -1,36 +1,15 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
+import './Styles/SignUpProfileStyles';
 import { RadioButton } from 'react-native-paper';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 2,
-    justifyContent: 'flex-start',
-    paddingTop: 10
-  },
-  textProfileTitle: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase'
-  },
-  radioBtnContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomColor: '#424242',
-    borderBottomWidth: 0.5,
-    borderStyle: 'solid',
-    paddingVertical: 12,
-    marginBottom: 10
-  },
-  radioText: {
-    flex: 1
-  }
-});
+
 const itemsOptions = [
   {
     label: 'signUpProfilePatientOption',

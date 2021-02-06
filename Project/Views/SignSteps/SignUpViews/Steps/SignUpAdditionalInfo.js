@@ -1,30 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
+import styles from './Styles/SignUpAdditionalInfoStyles';
 import SignUpBaseStep from './SignUpBaseStep';
 
-const styles = StyleSheet.create({
-  containerView: {
-    flex: 1
-  },
-  textProfileTitle: {
-    marginBottom: 20,
-    fontWeight: 'bold',
-    textTransform: 'uppercase'
-  },
-  checkboxAdditional: {
-    marginLeft: -15,
-    width: '95%'
-  },
-  checkLabel: {
-    color: 'black'
-  }
-});
 
 class SignUpAdditionalInfo extends SignUpBaseStep {
   toggleCheck = field => {

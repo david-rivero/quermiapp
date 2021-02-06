@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { StyleSheet, View, Text, Keyboard } from 'react-native';
+import { View, Text, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
@@ -9,23 +9,9 @@ import { getDateTimeFromStr, getAgeFromDate, formatDate } from '../../../../Prov
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
+import styles from './Styles/SignUpBirthDateStyles';
 import { Layout } from '../../../../Theme/Layout';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    paddingTop: 10
-  },
-  textProfileTitle: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase'
-  },
-  legalAgeWarning: {
-    color: '#891101',
-    fontSize: 12
-  }
-});
 
 class SignUpBirthDate extends SignUpBaseStep {
   state = {

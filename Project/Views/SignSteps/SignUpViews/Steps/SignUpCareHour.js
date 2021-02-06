@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, Keyboard } from 'react-native';
+import { View, Text, Keyboard } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInput } from 'react-native-paper';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
@@ -9,23 +9,8 @@ import { formatTime, getDateTimeFromStr } from '../../../../Providers/TimeUtilsP
 import LanguageProvider from '../../../../Providers/LanguageProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
+import styles from './Styles/SignUpCareHourStyles';
 
-const styles = StyleSheet.create({
-  inputTimeRow: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  textProfileTitle: {
-    fontWeight: 'bold',
-    textTransform: 'uppercase'
-  },
-  timeInput: {
-    margin: 12,
-    flex: 1,
-    paddingBottom: 0,
-    backgroundColor: 'transparent'
-  }
-});
 
 class SignUpCareHour extends SignUpBaseStep {
   state = {

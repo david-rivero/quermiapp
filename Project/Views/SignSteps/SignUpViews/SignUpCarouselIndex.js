@@ -1,28 +1,7 @@
-import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 
-import { Colors } from '../../../Theme/Colors';
-
-const styles = StyleSheet.create({
-  carouselContainer: {
-    flexDirection: 'row',
-    padding: 2,
-    justifyContent: 'center'
-  },
-  carouselIndexItem: {
-    borderColor: Colors.black,
-    borderRadius: 100,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    width: 12,
-    height: 12,
-    margin: 3
-  },
-  activeCarouselIndexItem: {
-    backgroundColor: Colors.blue,
-    borderWidth: 0
-  }
-});
+import { carouselIndexStyles as styles } from './SignUpViewsStyles';
 
 export default function SignUpCarouselIndex(props) {
   const INDEX = 8;
