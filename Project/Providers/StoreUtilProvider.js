@@ -3,6 +3,8 @@ import { LOAD_LANGUAGE } from '../Store/Actions/DetailProfile';
 import { SPANISH_LANG, ENGLISH_LANG } from '../Store/Reducers/LoadLanguage';
 import { defaultProfile } from '../Store/Reducers/SetDetailProfile';
 import store from '../Store/store';
+import LanguageProvider from './LanguageProvider';
+
 
 export function resetProfileDataFromRegister() {
   store.dispatch({
@@ -48,4 +50,9 @@ export function mapContractsToProfiles(profileRole, contracts, profiles) {
     return profile;
   });
   return [...newProfiles];
+}
+
+export function getLocalizedTextFromLang () {
+  const currentLang = store.getState().language;
+  return LanguageProvider(currentLang);
 }

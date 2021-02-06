@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import FilePickerManager from 'react-native-file-picker';
-import LanguageProvider from '../../../Providers/LanguageProvider';
 import * as RNFS from 'react-native-fs';
 import { of } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
@@ -16,7 +15,11 @@ import { Spinner } from '../../Components/Spinner/Spinner';
 import Header from '../../Components/Header/Header';
 
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/EndpointServiceProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
+
 import styles from './CheckIDPhotoStyles';
+
+const langProvider = getLocalizedTextFromLang();
 
 const imageCamera = require('../../../Assets/images/photo-camera.png');
 const imagePhoto = require('../../../Assets/images/picture.png');
@@ -108,7 +111,6 @@ class CheckIDPhoto extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <Header></Header>
@@ -158,7 +160,6 @@ class CheckIDPhoto extends React.Component {
 
 function mapStateToProps (state) {
   return {
-    language: state.language,
     myProfile: state.profile,
     token: state._userToken.token
   };

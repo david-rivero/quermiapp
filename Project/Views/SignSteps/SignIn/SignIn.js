@@ -9,13 +9,14 @@ import { LOGIN } from '../../../Store/Actions/UserAuth';
 import { requestDataEndpoint, AUTHENTICATION_ERROR_STATUS_CODE } from '../../../Providers/EndpointServiceProvider';
 import { ProfileSerializer } from '../../../Providers/SerializerProvider';
 import { isValidEmail } from '../../../Providers/FormatStringProvider';
-import LanguageProvider from '../../../Providers/LanguageProvider';
 import { setToken } from '../../../Providers/AuthUtilProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 
 import { Layout } from '../../../Theme/Layout';
 import styles from './SignInStyles';
 import FullLogo from '../../Components/FullLogo/FullLogo';
 
+const langProvider = getLocalizedTextFromLang();
 
 class SignIn extends React.Component {
   state = {
@@ -99,7 +100,6 @@ class SignIn extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -137,7 +137,6 @@ class SignIn extends React.Component {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     email: state.profile.account.email,
     password: state.profile.account.password
   };

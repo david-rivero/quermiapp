@@ -2,13 +2,14 @@ import React from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
 
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 
 import { Spinner } from '../../Components/Spinner/Spinner';
 import styles from './SignUpStyles';
 import SignUpViewsCarousel from '../SignUpViews/SignUpViewsCarousel';
 import FullLogo from '../../Components/FullLogo/FullLogo';
 
+const langProvider = getLocalizedTextFromLang();
 
 class SignUp extends React.Component {
   state = {
@@ -22,7 +23,6 @@ class SignUp extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         {
@@ -39,10 +39,5 @@ class SignUp extends React.Component {
     );
   }
 }
-function mapStateToProps (state) {
-  return {
-    language: state.language
-  };
-}
 // FIXME: Remove connect definition on child components
-export default connect(mapStateToProps, null)(SignUp);
+export default SignUp;

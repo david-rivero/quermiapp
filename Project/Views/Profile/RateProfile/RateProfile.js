@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 import { View, Image, Text, Button, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { withInAppNotification } from 'react-native-in-app-notification';
 import { SET_RATE_INFO_PROFILE, RESET_RATE_INFO_PROFILE } from '../../../Store/Actions/DetailProfile';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 import store from '../../../Store/store';
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/EndpointServiceProvider';
-import LanguageProvider from '../../../Providers/LanguageProvider';
 import styles from './RateProfileStyles';
 
 import { AuthViewCheckProvider } from '../../Components/AuthViewCheck/AuthViewCheck';
 import Header from '../../Components/Header/Header';
 
+const langProvider = getLocalizedTextFromLang();
 const caretLogo = require('../../../Assets/images/caret-right.png');
 
 class RateProfile extends React.Component {
@@ -19,7 +20,6 @@ class RateProfile extends React.Component {
   }
 
   sendRateInformation = () => {
-    const langProvider = LanguageProvider(this.props.language);
     const data = {
       description: this.props.rateProfileInfo.description,
       rate: this.props.rateProfileInfo.rate,
@@ -67,7 +67,6 @@ class RateProfile extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     const profile = this.props.route.params.profile;
 
     return (
@@ -145,7 +144,6 @@ class RateProfile extends React.Component {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     rateProfileInfo: state.rateProfileInfo,
     myProfile: state.profile,
     token: state._userToken.token

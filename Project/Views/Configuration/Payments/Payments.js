@@ -5,9 +5,8 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { of } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 
-import LanguageProvider from '../../../Providers/LanguageProvider';
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/EndpointServiceProvider';
-
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 import { LOAD_LINKED_PAYMENTS } from '../../../Store/Actions/DetailProfile';
 import store from '../../../Store/store';
 
@@ -16,6 +15,8 @@ import Header from '../../Components/Header/Header';
 import { Spinner } from '../../Components/Spinner/Spinner';
 import { htmlStripeForm } from '../payments-utils/PaymentStripeForm';
 import styles from './PaymentsStyles';
+
+const langProvider = getLocalizedTextFromLang();
 
 const visaLogo = require('../../../Assets/images/visa.png');
 const mastercardLogo = require('../../../Assets/images/mastercard_1x.png');
@@ -123,7 +124,6 @@ class Payments extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.paymentsView}>
         <Header></Header>
@@ -184,7 +184,6 @@ function mapStateToProps(state) {
   return {
     myProfile: state.profile,
     payments: state.profile.paymentsLinked,
-    language: state.language,
     token: state._userToken.token
   };
 }

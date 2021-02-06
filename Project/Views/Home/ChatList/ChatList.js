@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import { View, TouchableOpacity, Text, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 
 import { AuthViewCheckProvider } from '../../Components/AuthViewCheck/AuthViewCheck';
 import Header from '../../Components/Header/Header';
 import styles from './ChatListStyles';
+
+const langProvider = getLocalizedTextFromLang();
 
 class ChatList extends React.Component {
   redirectToChatDetail = chatProfile => {
@@ -19,7 +21,6 @@ class ChatList extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     const caretLogo = require('../../../Assets/images/caret-right.png');
 
     return (
@@ -70,7 +71,6 @@ class ChatList extends React.Component {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     myProfile: state.profile,
     profiles: state.profilesLoaded
   };

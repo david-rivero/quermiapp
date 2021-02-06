@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 import { connect } from 'react-redux';
 
 import { AuthViewCheckProvider } from '../../Components/AuthViewCheck/AuthViewCheck';
 import Header from '../../Components/Header/Header';
 import styles from './RateProfileListStyles';
 
+const langProvider = getLocalizedTextFromLang();
 const caretLogo = require('../../../Assets/images/caret-right.png');
 
 
@@ -21,8 +22,6 @@ class RateProfileList extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
-
     return (
       <View style={styles.container}>
         <Header isCarePerson={this.props.myProfile.profileRole === 'CARE_PROVIDER'} />
@@ -77,7 +76,6 @@ class RateProfileList extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    language: state.language,
     profiles: state.profilesLoaded,
     myProfile: state.profile
   }

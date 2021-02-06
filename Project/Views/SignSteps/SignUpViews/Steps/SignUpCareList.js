@@ -5,11 +5,12 @@ import { Checkbox } from 'react-native-paper';
 import { SIGN_UP_STEP_PROFILE_SERVICES } from '../../../../Store/Actions/Categories';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import LanguageProvider from '../../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../../Providers/StoreUtilProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import styles from './Styles/SignUpCareListStyles';
 
+const langProvider = getLocalizedTextFromLang();
 
 class SignUpCareList extends SignUpBaseStep {
   _isOtherOptSelected = () => {
@@ -63,7 +64,6 @@ class SignUpCareList extends SignUpBaseStep {
   };
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     const labelText = this.props.isPatient ? langProvider.views.signUp.signUpCareListPersonToCareTitle : langProvider.views.signUp.signUpCareListCarePersonTitle;
   
     return (
@@ -93,7 +93,6 @@ class SignUpCareList extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     itemsOptions: state.categories.careListServices.careListServicesName
   };
 }

@@ -5,12 +5,13 @@ import { View, Text, Keyboard, TextInput } from 'react-native';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import { getDateTimeFromStr, getAgeFromDate, formatDate } from '../../../../Providers/TimeUtilsProvider'; 
-import LanguageProvider from '../../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../../Providers/StoreUtilProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import styles from './Styles/SignUpBirthDateStyles';
 import { Layout } from '../../../../Theme/Layout';
 
+const langProvider = getLocalizedTextFromLang();
 
 class SignUpBirthDate extends SignUpBaseStep {
   state = {
@@ -54,7 +55,6 @@ class SignUpBirthDate extends SignUpBaseStep {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpBirthDateTitle}</Text>
@@ -75,7 +75,6 @@ class SignUpBirthDate extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     date: state.profile.birthDate
   };
 }

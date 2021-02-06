@@ -7,8 +7,11 @@ import { AuthViewCheckProvider } from '../../Components/AuthViewCheck/AuthViewCh
 import Header from '../../Components/Header/Header';
 import ConfigProvider from '../../../Providers/ConfigProvider';
 import LanguageProvider from '../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/EndpointServiceProvider';
 import styles from './ChatDetailStyles';
+
+const langProvider = getLocalizedTextFromLang();
 
 const serverURI = ConfigProvider().serverUrl;
 const logoCaret = require('../../../Assets/images/caret-right.png');
@@ -107,8 +110,6 @@ class ChatDetail extends React.Component {
 
   render() {
     const chatProfile = this.props.route.params.chatProfile;
-    const langProvider = LanguageProvider(this.props.language);
-
     return (
       <View style={styles.container}>
         <Header isCarePerson={this.props.myProfile.profileRole === 'CARE_PROVIDER'} />
@@ -152,7 +153,6 @@ class ChatDetail extends React.Component {
 function mapStateToProps(state) {
   return {
     myProfile: state.profile,
-    language: state.language,
     token: state._userToken.token
   };
 }

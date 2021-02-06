@@ -5,11 +5,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
 import { formatTime, getDateTimeFromStr } from '../../../../Providers/TimeUtilsProvider'; 
-import LanguageProvider from '../../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../../Providers/StoreUtilProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import styles from './Styles/SignUpCareHourStyles';
 
+const langProvider = getLocalizedTextFromLang();
 
 class SignUpCareHour extends SignUpBaseStep {
   state = {
@@ -58,7 +59,6 @@ class SignUpCareHour extends SignUpBaseStep {
   }
   
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     const labelText = this.props.isPatient ? langProvider.views.signUp.signUpCareHourPersonToCareTitle : langProvider.views.signUp.signUpCareHourCarePersonTitle;
     return (
       <View style={styles.container}>
@@ -95,7 +95,6 @@ class SignUpCareHour extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     timeStart: state.profile.time.start,
     timeEnd: state.profile.time.end
   };

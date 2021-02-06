@@ -6,6 +6,8 @@ import { withInAppNotification } from 'react-native-in-app-notification';
 import { formatDate } from '../../../Providers/TimeUtilsProvider';
 import { requestEndpoint, requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/EndpointServiceProvider';
 import LanguageProvider from '../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
+
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import styles from './ActionsStyles';
@@ -18,7 +20,7 @@ const acceptIcon = require('../../../Assets/images/checked.png');
 export function ProfileActionsWrapper (ViewWrapper) {
   return withInAppNotification(class extends React.Component {
     _generateNotification = (typeNotification) => {
-      const langProvider = LanguageProvider(this.props.language);
+      const langProvider = getLocalizedTextFromLang();
       const title = `${typeNotification}Title`;
       const message = `${typeNotification}Message`;
 

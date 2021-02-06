@@ -1,19 +1,20 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
-import { connect } from 'react-redux';
 
 import { LOAD_LIST_LANGUAGES } from '../../../Store/Actions/DetailProfile';
 import { LOAD_SERVICES_API } from '../../../Store/Actions/Categories';
 import store from '../../../Store/store';
 
-import LanguageProvider from '../../../Providers/LanguageProvider';
 import { requestDataEndpoint } from '../../../Providers/EndpointServiceProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 
 import FullLogo from '../../Components/FullLogo/FullLogo';
 import LanguageSelector from '../../Components/LanguageSelector/LanguageSelector';
 import styles from './HomeGuestStyles';
 
 import { Layout } from '../../../Theme/Layout';
+
+const langProvider = getLocalizedTextFromLang();
 
 class HomeGuest extends React.Component {
   componentDidMount() {
@@ -38,7 +39,6 @@ class HomeGuest extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={[Layout.container, styles.container]}>
         <LanguageSelector language={this.props.language} />
@@ -61,10 +61,5 @@ class HomeGuest extends React.Component {
     );
   }
 }
-function mapStateToProps (state) {
-  return {
-    language: state.language
-  };
-}
-export default connect(mapStateToProps, null)(HomeGuest);
+export default HomeGuest;
 

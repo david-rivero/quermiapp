@@ -4,11 +4,12 @@ import { View, Text } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import LanguageProvider from '../../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../../Providers/StoreUtilProvider';
 
 import styles from './Styles/SignUpAdditionalInfoStyles';
 import SignUpBaseStep from './SignUpBaseStep';
 
+const langProvider = getLocalizedTextFromLang();
 
 class SignUpAdditionalInfo extends SignUpBaseStep {
   toggleCheck = field => {
@@ -36,8 +37,6 @@ class SignUpAdditionalInfo extends SignUpBaseStep {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
-
     return (
       <View style={styles.containerView}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpAdditionalInfoTitle}</Text>
@@ -60,7 +59,6 @@ class SignUpAdditionalInfo extends SignUpBaseStep {
 
 function mapStateToProps(state) {
   return {
-    language: state.language,
     autonomousProfessionalCheck: state.profile.profileStatus.autonomousProfessionalCheck,
     covidTestCheck: state.profile.profileStatus.covidTestCheck
   }

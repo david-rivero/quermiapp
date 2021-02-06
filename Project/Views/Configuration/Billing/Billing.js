@@ -7,17 +7,17 @@ import { concatMap } from 'rxjs/operators';
 import store from '../../../Store/store';
 import { SET_ACTIVE_SUBSCRIPTIONS } from '../../../Store/Actions/DetailProfile';
 
-import LanguageProvider from '../../../Providers/LanguageProvider';
 import { parseCurrency } from '../../../Providers/FormatStringProvider';
 import { formatDatefromUnixTime } from '../../../Providers/TimeUtilsProvider';
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/EndpointServiceProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 
 import Header from '../../Components/Header/Header';
 import styles from './BillingStyles';
 import { Spinner } from '../../Components/Spinner/Spinner';
 
 const caretLogo = require('../../../Assets/images/caret-right.png');
-
+const langProvider = getLocalizedTextFromLang();
 
 class Billing extends React.Component {
   state = {
@@ -135,8 +135,6 @@ class Billing extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
-
     return (
       <View style={styles.billingView}>
         <Header></Header>

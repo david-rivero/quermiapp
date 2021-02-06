@@ -11,8 +11,7 @@ import { LOAD_PROFILES_TO_SEARCH } from '../../../Store/Actions/ProfilesToSearch
 import { TOGGLE_MENU_OPEN, LOAD_LINKED_PAYMENTS, SET_ACTIVE_SUBSCRIPTIONS } from '../../../Store/Actions/DetailProfile';
 import { SET_PAYMENT_OPTIONS } from '../../../Store/Actions/Payments';
 
-import LanguageProvider from '../../../Providers/LanguageProvider';
-import { mapContractsToProfiles } from '../../../Providers/StoreUtilProvider';
+import { mapContractsToProfiles, getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 import { ProfileSerializer } from '../../../Providers/SerializerProvider';
 import { requestDataEndpoint, DEFAULT_HEADERS } from '../../../Providers/EndpointServiceProvider';
 import store from '../../../Store/store';
@@ -21,6 +20,8 @@ import { AuthViewCheckProvider } from '../../Components/AuthViewCheck/AuthViewCh
 import Sidebar from '../../Components/Sidebar/Sidebar';
 import Header from '../../Components/Header/Header';
 import styles from './HomeSignedInStyles';
+
+const langProvider = getLocalizedTextFromLang();
 
 const caretLogoWhite = require('../../../Assets/images/caret-right-white.png');
 const caretLogo = require('../../../Assets/images/caret-right.png');
@@ -154,7 +155,6 @@ class HomeSignedIn extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const langProvider = LanguageProvider(this.props.language);
     const roleRequested = this.props.profile.profileRole === 'PATIENT' ? 'CARE_PROVIDER' : 'PATIENT' 
     const pendingProfiles = this.props.profilesLoaded.filter(
       profile => {
@@ -173,7 +173,6 @@ class HomeSignedIn extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     const textConfig = {
       greeting: langProvider.components.sidebar.greeting,
       logoutLabel: langProvider.components.sidebar.logoutLabel,
@@ -329,7 +328,6 @@ class HomeSignedIn extends React.Component {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     menuOpened: state.homeStatus.menuOpened,
     profile: state.profile,
     profilesLoaded: state.profilesLoaded,

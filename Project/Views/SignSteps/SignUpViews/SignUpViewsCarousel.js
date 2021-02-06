@@ -9,7 +9,7 @@ import { UPDATE_MY_PROFILE } from '../../../Store/Actions/DetailProfile';
 import { SPANISH_LANG } from '../../../Store/Reducers/LoadLanguage';
 import store from '../../../Store/store';
 import { ProfileSerializer } from '../../../Providers/SerializerProvider';
-import LanguageProvider from '../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../Providers/StoreUtilProvider';
 import { requestEndpoint, requestDataEndpoint } from '../../../Providers/EndpointServiceProvider';
 
 /** Views */
@@ -26,6 +26,7 @@ import { setToken } from '../../../Providers/AuthUtilProvider';
 
 import { signupViewsCarouselStyles as styles } from './SignUpViewsStyles';
 
+const langProvider = getLocalizedTextFromLang();
 const nextCaretLogo = require('../../../Assets/images/caret-right.png');
 
 function SignUpStepTemplate (SignUpStepWrapper, basedProps={}) {
@@ -157,7 +158,6 @@ class SignUpCarousel extends React.Component {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <ScrollView style={styles.subContainer}>
@@ -235,7 +235,6 @@ class SignUpCarousel extends React.Component {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     profile: state.profile,
     careServicesAPI: state.categories.careListServices.careListServicesAPIMap,
     listLanguages: state.availableLangs

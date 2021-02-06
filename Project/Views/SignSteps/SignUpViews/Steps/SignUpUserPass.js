@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import { View, Text, TextInput } from 'react-native';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import LanguageProvider from '../../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../../Providers/StoreUtilProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import styles from './Styles/SignUpUserPassStyles';
 import { Layout } from '../../../../Theme/Layout';
+
+const langProvider = getLocalizedTextFromLang();
 
 class SignUpUserPass extends SignUpBaseStep {
   setUserPass = (field, value) => {
@@ -29,7 +31,6 @@ class SignUpUserPass extends SignUpBaseStep {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={Layout.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpUserPassTitle}</Text>
@@ -48,7 +49,6 @@ class SignUpUserPass extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     email: state.profile.account.email,
     password: state.profile.account.password
   };

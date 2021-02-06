@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import FilePickerManager from 'react-native-file-picker';
 import * as RNFS from 'react-native-fs';
-import LanguageProvider from '../../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../../Providers/StoreUtilProvider';
 import { getFormatFromImage } from '../../../../Providers/FileUtilsProvider';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
@@ -11,7 +11,7 @@ import store from '../../../../Store/store';
 import SignUpBaseStep from './SignUpBaseStep';
 import styles from './Styles/SignUpProfilePhotoStyles';
 
-
+const langProvider = getLocalizedTextFromLang();
 const imageCamera = require('../../../../Assets/images/photo-camera.png');
 const imagePhoto = require('../../../../Assets/images/picture.png');
 
@@ -71,7 +71,6 @@ class SignUpProfilePhoto extends SignUpBaseStep {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpProfilePhotoTitle}</Text>
@@ -93,7 +92,6 @@ class SignUpProfilePhoto extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     profilePhoto: state.profile.pictsOnRegister.profilePhoto,
     documentID: state.profile.pictsOnRegister.documentID
   };

@@ -1,13 +1,13 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { View, Text, Button, TouchableOpacity } from 'react-native';
-import LanguageProvider from '../../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../../Providers/StoreUtilProvider';
 
 import { Checkbox } from 'react-native-paper';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import styles from './Styles/SignUpDisclaimerStyles';
 
+const langProvider = getLocalizedTextFromLang();
 
 class SignUpDisclaimer extends SignUpBaseStep {
   state = {
@@ -31,7 +31,6 @@ class SignUpDisclaimer extends SignUpBaseStep {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <View style={styles.textContainer}>
@@ -55,9 +54,4 @@ class SignUpDisclaimer extends SignUpBaseStep {
     );
   }
 }
-function mapStateToProps (state) {
-  return {
-    language: state.language
-  };
-}
-export default connect(mapStateToProps, null)(SignUpDisclaimer);
+export default SignUpDisclaimer;

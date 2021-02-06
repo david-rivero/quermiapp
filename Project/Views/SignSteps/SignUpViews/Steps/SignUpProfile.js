@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { View, Text } from 'react-native';
 import { SIGN_UP_STEP_SET_PROFILE_INFO } from '../../../../Store/Actions/UserAuth';
 import store from '../../../../Store/store';
-import LanguageProvider from '../../../../Providers/LanguageProvider';
+import { getLocalizedTextFromLang } from '../../../../Providers/StoreUtilProvider';
 
 import SignUpBaseStep from './SignUpBaseStep';
 import styles from './Styles/SignUpProfileStyles';
 import { RadioButton } from 'react-native-paper';
 
-
+const langProvider = getLocalizedTextFromLang();
 const itemsOptions = [
   {
     label: 'signUpProfilePatientOption',
@@ -35,7 +35,6 @@ class SignUpProfile extends SignUpBaseStep {
   }
 
   render() {
-    const langProvider = LanguageProvider(this.props.language);
     return (
       <View style={styles.container}>
         <Text style={styles.textProfileTitle}>{langProvider.views.signUp.signUpProfileTitle}</Text>
@@ -58,7 +57,6 @@ class SignUpProfile extends SignUpBaseStep {
 }
 function mapStateToProps (state) {
   return {
-    language: state.language,
     profileValue: state.profile.profileRole
   };
 }
